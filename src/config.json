@@ -1,0 +1,9 @@
+{
+    "UPLOAD_DIR": "uploads",
+    "MAX_UPLOAD_SIZE": 52428800,
+    "BEARER_TOKEN": "mysecrettoken",
+    "FILE_RETENTION_DAYS": 2,
+    "APP_PORT": 8000,
+    "LOG_RETENTION_DAYS": 30
+}
+  

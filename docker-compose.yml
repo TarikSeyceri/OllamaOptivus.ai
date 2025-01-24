@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  video-processor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app  # Mount current directory to container's working directory
+    working_dir: /usr/src/app
+    command: ["python", "main.py"]

@@ -1,0 +1,6 @@
+ultralytics
+opencv-python-headless
+easyocr
+whisper
+torch
+numpy

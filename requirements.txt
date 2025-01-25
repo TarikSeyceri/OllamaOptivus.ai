@@ -3,3 +3,4 @@ ultralytics
 easyocr
 whisper
 ffmpeg-python
+python-dotenv

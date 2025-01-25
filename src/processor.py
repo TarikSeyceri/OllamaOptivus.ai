@@ -1,95 +1,143 @@
+import argparse
+from dotenv import load_dotenv
 import cv2
-import json
 from ultralytics import YOLO
 import easyocr
 import whisper
 import os
+import sys
+import json
+import logging
+import warnings
+from datetime import datetime
+
+# Create logs folder
+if not os.path.exists("logs"):
+    os.makedirs("logs")
+
+logFile = f"logs/processor_{datetime.now().strftime('%Y-%m-%d')}.log"
+logHandler = logging.FileHandler(logFile, mode='a')
+logHandler.setLevel(logging.DEBUG)
+logHandler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+
+logging.getLogger("easyocr").addHandler(logHandler)
+logging.getLogger("whisper").addHandler(logHandler)
+logging.getLogger("ultralytics").addHandler(logHandler)
+logging.getLogger("cv2").addHandler(logHandler)
+
+logging.getLogger("easyocr").setLevel(logging.ERROR)
+logging.getLogger("whisper").setLevel(logging.ERROR)
+logging.getLogger("ultralytics").setLevel(logging.ERROR)
+logging.getLogger("cv2").setLevel(logging.ERROR)
+warnings.filterwarnings("ignore")
+logging.captureWarnings(True)
+
+# Set up argparse to accept videoPath as a parameter
+parser = argparse.ArgumentParser(description="Process a video file.")
+parser.add_argument("videoPath", type=str, help="Path to the input video file")
+args = parser.parse_args()
+
+if not args.videoPath:
+    print("Error: Video path is null or empty.")
+    sys.exit(1)  # Exit with error code
+
+if not os.path.exists(args.videoPath):
+    print("Error: Video file does not exist.")
+    sys.exit(1)  # Exit with error code
+
+load_dotenv()
 
 # Load the YOLOv8 model
-model = YOLO("yolov8n.pt")  # Replace 'yolov8n.pt' with the path to your model if different
-ocrReader = easyocr.Reader(['en', 'tr']) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
+yoloModel = YOLO("yolov8n.pt") 
+
+# Load the EasyOCR model
+ocrReader = easyocr.Reader([os.getenv("PROCESSING_LANGUAGE", "en")]) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
 
 # Load Whisper model
-whisper_model = whisper.load_model("large")  # Choose model size: tiny, base, small, medium, large
+whisperModel = whisper.load_model(os.getenv("PROCESSING_WHISPER_MODEL", "base"))  # Choose model size: tiny, base, small, medium, large
 
-# Define the input video file
-video_path = "8047000029a4000c61f808dd2fd54bb4.mp4"  # Replace with your video file path
-output_json = "output_data.json"
+# Create audios folder
+if not os.path.exists("audios"):
+    os.makedirs("audios")
 
 # Extract audio from the video
-audio_path = "audio_temp.wav"
+audioPath = "audios/"+ os.path.splitext(os.path.basename(args.videoPath))[0] + ".wav"
+if not os.path.exists(audioPath):
+    os.system(f"ffmpeg -i {args.videoPath} -q:a 0 -map a {audioPath} -y -loglevel quiet")
 
-if not os.path.exists(audio_path):
-    os.system(f"ffmpeg -i {video_path} -q:a 0 -map a {audio_path} -y")
+if not os.path.exists(audioPath):
+    print("Error: Could not extract audio from the video.")
+    sys.exit(1)
 
 # Transcribe audio using Whisper
-audio_transcription = whisper_model.transcribe(audio_path, language="en")
-#print(f"Transcribed audio: {audio_transcription['text']}")
+audioTranscription = whisperModel.transcribe(audioPath, language=os.getenv("PROCESSING_LANGUAGE", "en"))
 
-if os.path.exists(audio_path):
-    os.remove(audio_path)
+# Remove the audio file after transcription
+if os.path.exists(audioPath):
+    os.remove(audioPath)
 
 # Open the video file
-cap = cv2.VideoCapture(video_path)
+video = cv2.VideoCapture(args.videoPath)
 
 # Check if the video file is opened
-if not cap.isOpened():
+if not video.isOpened():
     print("Error: Could not open video file.")
-    exit()
+    sys.exit(1)
 
 # Get video properties
-fps = int(cap.get(cv2.CAP_PROP_FPS))  # Original FPS of the video
-frame_skip = fps  # Number of frames to skip for 1 FPS processing // `fps * 2` => 1 frame every 2 seconds // `fps // 2` => 2 frames per second
+fps = int(video.get(cv2.CAP_PROP_FPS))  # Original FPS of the video
+frameSkip = fps * os.getenv("PROCESSING_FPS", 1)  # Number of frames to skip for 1 FPS processing // `fps * 2` => 1 frame every 2 seconds // `fps // 2` => 2 frames per second
 
-frame_count = 0
-detection_results = {
+frameCount = 0
+
+detectionResults = {
     "frames": [],
-    "audio_transcription": audio_transcription['text']
+    "audioTranscription": audioTranscription['segments']
 }
 
 # Process each frame of the video
 while True:
     # Skip frames to achieve 1 FPS
-    cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count * frame_skip)
-    ret, frame = cap.read()
+    video.set(cv2.CAP_PROP_POS_FRAMES, frameCount * frameSkip)
+    ret, frame = video.read()
     if not ret:
         break  # Break the loop if no frames are left
 
     # Perform object detection
-    results = model(frame)
+    yoloModelResults = yoloModel(frame)
 
     # Collect detections for the current frame
-    frame_data = {
-        "frame": frame_count,
+    frameData = {
+        "frame": frameCount,
         "detections": [],
         "texts": [],
     }
 
-    for result in results:
+    for result in yoloModelResults:
         for box in result.boxes:
-            x_min, y_min, x_max, y_max = map(int, box.xyxy[0])  # Bounding box coordinates
-            frame_data["detections"].append({
-                "class": model.names[int(box.cls[0].item())],  # Detected class name
+            #print(f"Detected {yoloModel.names[int(box.cls[0].item())]} with confidence {box.conf[0].item()}")
+            #x_min, y_min, x_max, y_max = map(int, box.xyxy[0])  # Bounding box coordinates
+            frameData["detections"].append({
+                "class": yoloModel.names[int(box.cls[0].item())],  # Detected class name
                 "confidence": float(box.conf[0].item()),  # Confidence score
             })
-            
-            
-    ocr_result = ocrReader.readtext(frame)
-    for (bbox, text, confidence) in ocr_result:
-        print(f"Detected text: {text} (Confidence: {confidence:.2f})")
-        frame_data["texts"].append({
+
+    ocrResults = ocrReader.readtext(frame)
+    for (bbox, text, confidence) in ocrResults:
+        #print(f"Detected text: {text} (Confidence: {confidence:.2f})")
+        frameData["texts"].append({
             "text": text,
             "confidence": f"{confidence:.2f}"
         })
     
-    detection_results["frames"].append(frame_data)
-    frame_count += 1
+    detectionResults["frames"].append(frameData)
+    frameCount += 1
 
 # Release video capture
-cap.release()
+video.release()
 
-# Save results to a JSON file
-with open(output_json, "w") as json_file:
-    json.dump(detection_results, json_file, indent=4)
+# Print detection results
+print(json.dumps(detectionResults))
 
-print(f"Detection results saved to {output_json}.")
+# Success exit code
+sys.exit(0)

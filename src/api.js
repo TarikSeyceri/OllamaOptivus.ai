@@ -48,6 +48,8 @@ const upload = multer({
 
 // Endpoint: Upload video file
 router.post("/upload", upload.single("file"), (req, res) => {
+    const file = req.file;
+    
     if(PROCESS_FILES_ONLY){
         console.warn("File upload disabled in this environment!");
         return res.status(403).json({ success: false, msg: "File upload disabled in this environment!" });
@@ -58,7 +60,6 @@ router.post("/upload", upload.single("file"), (req, res) => {
         return res.status(200).json({ success: true, msg: "File uploaded!", payload: { filePath: req.existingFilePath } });
     }
 
-    const file = req.file;
     if (!file){
         console.error("File not uploaded!");
         return res.status(400).json({ success: false, msg: "File not uploaded!" });
@@ -82,12 +83,13 @@ router.get("/files", (req, res) => {
 
 // Endpoint: Delete file by path
 router.delete("/delete", (req, res) => {
+    const { fileName } = req.query;
+
     if(PROCESS_FILES_ONLY){
         console.warn("File deletion disabled in this environment!");
         return res.status(403).json({ success: false, msg: "File deletion disabled in this environment!" });
     }
 
-    const { fileName } = req.query;
     if(!fileName){
         console.warn("File name not provided!");
         return res.status(400).json({ success: false, msg: "File name not provided!" });
@@ -132,7 +134,7 @@ router.post("/process", async (req, res) => {
     }
 
     try {
-        const { stdout, stderr } = await asyncExec(`python3 main.py ${filePath}`);
+        const { stdout, stderr } = await asyncExec(`python3 processor.py ${filePath}`);
         if (stderr){
             console.error("Processing failed for file", filePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });

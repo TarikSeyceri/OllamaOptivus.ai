@@ -1,0 +1,51 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "node": "node src/main.js",
+    "dev": "npm run node",
+    "start": "npm run node",
+    "serve": "npm run node",
+    "nodemon": "nodemon src/main.js",
+    "swagger-autogen": "node swagger-autogen.js"
+  },
+  "type": "commonjs",
+  "keywords": [
+    "node",
+    "express",
+    "swagger",
+    "ollama",
+    "optivus",
+    "python",
+    "vision",
+    "optical",
+    "video",
+    "analysis",
+    "ai",
+    "artificial",
+    "intelligence",
+    "detection",
+    "yolo",
+    "opencv",
+    "ocr",
+    "whisper"
+  ],
+  "author": "Tarik Seyceri",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "mime-types": "^2.1.35",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-schedule": "^2.1.1",
+    "nodemon": "^3.1.9",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  }
+}

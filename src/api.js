@@ -134,7 +134,7 @@ router.post("/process", async (req, res) => {
     }
 
     try {
-        const { stdout, stderr } = await asyncExec(`python3 processor.py ${filePath}`);
+        const { stdout, stderr } = await asyncExec(`python3 ${__dirname}/processor.py ${filePath}`);
         if (stderr){
             console.error("Processing failed for file", filePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });

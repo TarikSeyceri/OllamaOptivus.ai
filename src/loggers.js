@@ -4,13 +4,14 @@ const morgan = require("morgan");
 const fs = require("fs");
 
 const LOG_DIR = process.env.LOG_DIR || "logs";
+const LOG_LEVEL = process.env.LOG_LEVEL || "warn";
 const LOG_FILE_MAX_SIZE = process.env.LOG_FILE_MAX_SIZE || "10m";
 const LOG_RETENTION_DAYS = parseInt(process.env.LOG_RETENTION_DAYS || 30);
 
 if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR);
 
 const winstonLogger = winston.createLogger({
-    level: "debug",
+    level: LOG_LEVEL,
     format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.printf(
@@ -20,13 +21,19 @@ const winstonLogger = winston.createLogger({
     transports: [
         new winstonDailyRotateFile({
             dirname: LOG_DIR,
-            filename: "%DATE%.log",
+            filename: "node_%DATE%.log",
             datePattern: "YYYY-MM-DD",
             maxSize: LOG_FILE_MAX_SIZE,
             maxFiles: `${LOG_RETENTION_DAYS}d`,
         }),
-        new winston.transports.Console(),
+        /*
+        new winston.transports.Console({
+            level: "debug",
+            handleExceptions: true,
+        }),
+        */
     ],
+    exitOnError: false,
 });
 
 const consoleColors = {
@@ -45,22 +52,22 @@ const consoleError = console.error;
 function initWinston(){
     // Overriding console functions with winston logger
     console.log = (...messages) => {
-        //consoleLog(...messages);
+        consoleLog(...messages);
         winstonLogger.debug(JSON.stringify(messages));
     };
 
     console.info = (...messages) => {
-        //consoleInfo(consoleColors.green, ...messages, consoleColors.reset);
+        consoleInfo(consoleColors.green, ...messages, consoleColors.reset);
         winstonLogger.info(JSON.stringify(messages));
     };
 
     console.warn = (...messages) => {
-        //consoleWarn(consoleColors.yellow, ...messages, consoleColors.reset);
+        consoleWarn(consoleColors.yellow, ...messages, consoleColors.reset);
         winstonLogger.warn(JSON.stringify(messages));
     };
 
     console.error = (...messages) => {
-        //consoleError(consoleColors.red, ...messages, consoleColors.reset);
+        consoleError(consoleColors.red, ...messages, consoleColors.reset);
         winstonLogger.error(JSON.stringify(messages));
     };
 }

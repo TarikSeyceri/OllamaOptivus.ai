@@ -77,24 +77,33 @@ router.get("/files", (req, res) => {
     }
 
     const files = fs.readdirSync(FILE_UPLOAD_DIR);
+    if(files.length > 0){
+        for (let i = 0; i < files.length; i++) {
+            files[i] = path.join(FILE_UPLOAD_DIR, files[i]);
+        }
+    }
     console.log("Files listed!", files);
     return res.status(200).json({ success: true, msg: "Files listed!", payload: { files } });
 });
 
 // Endpoint: Delete file by path
 router.delete("/delete", (req, res) => {
-    const { fileName } = req.query;
+    const { filePath } = req.query;
 
     if(PROCESS_FILES_ONLY){
         console.warn("File deletion disabled in this environment!");
         return res.status(403).json({ success: false, msg: "File deletion disabled in this environment!" });
     }
 
-    if(!fileName){
-        console.warn("File name not provided!");
-        return res.status(400).json({ success: false, msg: "File name not provided!" });
+    if(!filePath){
+        console.warn("filePath not provided!");
+        return res.status(400).json({ success: false, msg: "filePath not provided!" });
     }
-    const filePath = path.join(FILE_UPLOAD_DIR, fileName);
+
+    if(!filePath.includes(path.join(FILE_UPLOAD_DIR, path.basename(filePath)))){
+        console.warn("File path not allowed!", filePath);
+        return res.status(403).json({ success: false, msg: "File path not allowed!" });
+    }
 
     if (!fs.existsSync(filePath)){
         console.warn("File not found!", filePath);
@@ -134,7 +143,7 @@ router.post("/process", async (req, res) => {
     }
 
     try {
-        const { stdout, stderr } = await asyncExec(`python3 ${__dirname}/processor.py ${filePath}`);
+        const { stdout, stderr } = await asyncExec(`python ${__dirname}/processor.py ${filePath}`);
         if (stderr){
             console.error("Processing failed for file", filePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });
@@ -149,5 +158,22 @@ router.post("/process", async (req, res) => {
     }
 });
 
-router.use("/api", router);
+router.post("/test", async (req, res) => {
+    const filePath = "";
+    try {
+        const { stdout, stderr } = await asyncExec(`python ${__dirname}/test.py`);
+        if (stderr){
+            console.error("Processing failed for file", filePath, stderr);
+            return res.status(500).json({ success: false, msg: "Processing failed" });
+        }
+
+        console.log("Processed file", filePath);
+        return res.status(200).json({ success: true, msg: "Processing completed", payload: { stdout } });
+    } 
+    catch (error) {
+        console.error("Processing failed for file", filePath, error);
+        return res.status(500).json({ success: false, msg: "Processing failed" });
+    }
+});
+
 module.exports = router;

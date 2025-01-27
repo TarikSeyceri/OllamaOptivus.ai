@@ -113,7 +113,7 @@ logFilesRetention()
 logger.warning("Processing started")
 
 # Load the YOLOv8 model
-yoloModel = YOLO("yolov8n.pt") 
+yoloModel = YOLO(os.path.dirname(os.path.abspath(__file__)) + "/yolov8n.pt") 
 
 # Load the EasyOCR model
 ocrReader = easyocr.Reader([PROCESSING_LANGUAGE]) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]

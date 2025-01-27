@@ -45,7 +45,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "fileName",
+            "name": "filePath",
             "in": "query",
             "type": "string"
           }

@@ -16,27 +16,25 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
 
     // Merging frames and audio transcriptions
     for (let i = 0; i < jsonData.frames.length; i++) {
-      let frame = jsonData.frames[i];
-      let audioText = jsonData.audioTranscription.find(item => item.start <= i && item.end > i);
-	  if(audioText){
-		  if(usedAudioTranscriptions[audioText.start] == audioText.end){
-			audioText.text = "";
-		  }
-		  else {
-			usedAudioTranscriptions[audioText.start] = audioText.end;
-		  }
-	  }
+		let frame = jsonData.frames[i];
+		let audioText = jsonData.audioTranscription.find(item => item.start <= i && item.end > i);
+		if(audioText){
+			if(usedAudioTranscriptions[audioText.start] == audioText.end){
+				audioText.text = "";
+			}
+			else {
+				usedAudioTranscriptions[audioText.start] = audioText.end;
+			}
+		}
 		  
+		// If there is an audio transcription for the frame, merge it
+		let frameContent = {
+			timestamp: i,
+			audioTranscription: audioText ? audioText.text : '',
+			detections: Array.from(new Set(frame.detections.map(detection => detection.class))),
+			screenTexts: Array.from(new Set(frame.texts.map(t => t.text))), 
+		};
 
-      
-      // If there is an audio transcription for the frame, merge it
-      let frameContent = {
-        timestamp: i,
-		audioTranscription: audioText ? audioText.text : '',
-        detections: frame.detections.map(detection => detection.class),
-        screenTexts: frame.texts.map(t => t.text), 
-      };
-	  
 		let prevFrame = refactoredContent[refactoredContent.length-1];
 		if(
 			(
@@ -46,24 +44,36 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
 			) ||
 			(
 				prevFrame &&
-				prevFrame.detections.join("") == frameContent.detections.join("") &&
-				prevFrame.screenTexts.join("") == frameContent.screenTexts.join("") && 
-				!frameContent.audioTranscription
-			) ||
-			(
-				prevFrame &&
 				(
 					prevFrame.detections.join("") == frameContent.detections.join("") ||
-					prevFrame.detections.includes(frameContent.detections)
+					prevFrame.detections.every(item => frameContent.detections.includes(item))
 				) &&
-				frameContent.screenTexts.length == 0 &&
+				(
+					prevFrame.screenTexts.join("") == frameContent.screenTexts.join("") ||
+					prevFrame.screenTexts.every(item => frameContent.screenTexts.includes(item))
+				) &&
 				!frameContent.audioTranscription
 			)
 		){
 			continue;
 		}
+		else if(
+			prevFrame &&
+			(
+				frameContent.detections.join("") == prevFrame.detections.join("") ||
+				frameContent.detections.every(item => prevFrame.detections.includes(item))
+			) &&
+			(
+				frameContent.screenTexts.join("") == prevFrame.screenTexts.join("") ||
+				frameContent.screenTexts.every(item => prevFrame.screenTexts.includes(item))
+			) &&
+			!prevFrame.audioTranscription
+		){
+			refactoredContent[refactoredContent.length-1] = frameContent;
+			continue;
+		}
 
-      refactoredContent.push(frameContent);
+      	refactoredContent.push(frameContent);
     }
 
     // Return the merged data

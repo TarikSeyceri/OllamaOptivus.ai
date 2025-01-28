@@ -15,7 +15,9 @@ import sys
 import types
 import time
 
+#----------------------------------------------------
 # Load environment variables
+#----------------------------------------------------
 load_dotenv()
 
 LOG_DIR = os.getenv("LOG_DIR", "logs")

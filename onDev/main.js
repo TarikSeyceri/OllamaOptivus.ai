@@ -18,6 +18,8 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
     for (let i = 0; i < jsonData.frames.length; i++) {
 		let frame = jsonData.frames[i];
 		let audioText = jsonData.audioTranscription.find(item => item.start <= i && item.end > i);
+
+		// Prevent duplicate audio transcriptions
 		if(audioText){
 			if(usedAudioTranscriptions[audioText.start] == audioText.end){
 				audioText.text = "";
@@ -29,13 +31,14 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
 		  
 		// If there is an audio transcription for the frame, merge it
 		let frameContent = {
-			timestamp: i,
-			audioTranscription: audioText ? audioText.text : '',
-			detections: Array.from(new Set(frame.detections.map(detection => detection.class))),
-			screenTexts: Array.from(new Set(frame.texts.map(t => t.text))), 
+			timestamp: frame.timestamp,
+			audioTranscription: audioText ? audioText.text : "",
+			detections: Array.from(new Set(frame.detections)),
+			screenTexts: Array.from(new Set(frame.texts)), 
 		};
 
-		let prevFrame = refactoredContent[refactoredContent.length-1];
+		let prevFrameContent = refactoredContent[refactoredContent.length-1];
+
 		if(
 			(
 				(frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") && 
@@ -43,31 +46,31 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
 				frameContent.screenTexts.length == 0
 			) ||
 			(
-				prevFrame &&
+				prevFrameContent &&
+				(frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") &&
 				(
-					prevFrame.detections.join("") == frameContent.detections.join("") ||
-					prevFrame.detections.every(item => frameContent.detections.includes(item))
+					(frameContent.detections.length == 0 && prevFrameContent.detections.length == 0) ||
+					frameContent.detections.every(item => prevFrameContent.detections.includes(item))
 				) &&
 				(
-					prevFrame.screenTexts.join("") == frameContent.screenTexts.join("") ||
-					prevFrame.screenTexts.every(item => frameContent.screenTexts.includes(item))
-				) &&
-				!frameContent.audioTranscription
+					(frameContent.screenTexts.length == 0 && prevFrameContent.screenTexts.length == 0) ||
+					frameContent.screenTexts.every(item => prevFrameContent.screenTexts.includes(item))
+				)
 			)
 		){
 			continue;
 		}
 		else if(
-			prevFrame &&
+			prevFrameContent &&
+			(prevFrameContent.audioTranscription == "" || prevFrameContent?.audioTranscription == " ") &&
 			(
-				frameContent.detections.join("") == prevFrame.detections.join("") ||
-				frameContent.detections.every(item => prevFrame.detections.includes(item))
+				(prevFrameContent.detections.length == 0 && frameContent.detections.length == 0) ||
+				prevFrameContent.detections.every(item => frameContent.detections.includes(item))
 			) &&
 			(
-				frameContent.screenTexts.join("") == prevFrame.screenTexts.join("") ||
-				frameContent.screenTexts.every(item => prevFrame.screenTexts.includes(item))
-			) &&
-			!prevFrame.audioTranscription
+				(prevFrameContent.screenTexts.length == 0 && frameContent.screenTexts.length == 0) ||
+				prevFrameContent.screenTexts.every(item => frameContent.screenTexts.includes(item))
+			)
 		){
 			refactoredContent[refactoredContent.length-1] = frameContent;
 			continue;
@@ -86,5 +89,5 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
   //for(
 
   // Now you can log or process the refactored data
-  console.log(JSON.stringify(refactoredContent, null, 2));
+  console.log(refactoredContent, refactoredContent.length);
 });

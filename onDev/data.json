@@ -1,3749 +1,1450 @@
 {
   "frames": [
     {
-      "frame": 0,
+      "timestamp": 0,
       "detections": [],
       "texts": []
     },
     {
-      "frame": 1,
+      "timestamp": 1,
       "detections": [],
       "texts": []
     },
     {
-      "frame": 2,
+      "timestamp": 2,
       "detections": [],
       "texts": [
-        {
-          "text": "Navteq call example",
-          "confidence": "1.00"
-        },
-        {
-          "text": "Building Rapport",
-          "confidence": "0.89"
-        },
-        {
-          "text": "Assuming the Sale",
-          "confidence": "0.99"
-        },
-        {
-          "text": "Overcoming Objections",
-          "confidence": "0.83"
-        }
+        "Navteq call example",
+        "Building Rapport",
+        "Assuming the Sale",
+        "Overcoming Objections"
       ]
     },
     {
-      "frame": 3,
+      "timestamp": 3,
       "detections": [],
       "texts": [
-        {
-          "text": "Navteq call example",
-          "confidence": "1.00"
-        },
-        {
-          "text": "Building Rapport",
-          "confidence": "0.82"
-        },
-        {
-          "text": "Assuming the Sale",
-          "confidence": "0.99"
-        },
-        {
-          "text": "Overcoming Objections",
-          "confidence": "0.82"
-        }
+        "Navteq call example",
+        "Building Rapport",
+        "Assuming the Sale",
+        "Overcoming Objections"
       ]
     },
     {
-      "frame": 4,
+      "timestamp": 4,
       "detections": [],
       "texts": [
-        {
-          "text": "Navteq call example",
-          "confidence": "1.00"
-        },
-        {
-          "text": "Building Rapport",
-          "confidence": "0.76"
-        },
-        {
-          "text": "Assuming the Sale",
-          "confidence": "0.97"
-        },
-        {
-          "text": "Overcoming Objections",
-          "confidence": "0.84"
-        }
+        "Navteq call example",
+        "Building Rapport",
+        "Assuming the Sale",
+        "Overcoming Objections"
       ]
     },
     {
-      "frame": 5,
+      "timestamp": 5,
       "detections": [],
       "texts": [
-        {
-          "text": "Navteq call example",
-          "confidence": "1.00"
-        },
-        {
-          "text": "Building Rapport",
-          "confidence": "0.76"
-        },
-        {
-          "text": "Assuming the Sale",
-          "confidence": "0.99"
-        },
-        {
-          "text": "Overcoming Objections",
-          "confidence": "0.82"
-        }
+        "Navteq call example",
+        "Building Rapport",
+        "Assuming the Sale",
+        "Overcoming Objections"
       ]
     },
     {
-      "frame": 6,
+      "timestamp": 6,
       "detections": [],
       "texts": [
-        {
-          "text": "Navteq call example",
-          "confidence": "1.00"
-        },
-        {
-          "text": "Building Rapport",
-          "confidence": "0.94"
-        },
-        {
-          "text": "Assuming the Sale",
-          "confidence": "1.00"
-        },
-        {
-          "text": "Overcoming Objections",
-          "confidence": "1.00"
-        }
+        "Navteq call example",
+        "Building Rapport",
+        "Assuming the Sale",
+        "Overcoming Objections"
       ]
     },
     {
-      "frame": 7,
+      "timestamp": 7,
       "detections": [],
       "texts": []
     },
     {
-      "frame": 8,
+      "timestamp": 8,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8611701130867004
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3788844347000122
-        }
+        "person",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 9,
+      "timestamp": 9,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8586776852607727
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.6015880107879639
-        },
-        {
-          "class": "cup",
-          "confidence": 0.4165259599685669
-        },
-        {
-          "class": "chair",
-          "confidence": 0.34174564480781555
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.26906952261924744
-        }
+        "person",
+        "mouse",
+        "cup",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 10,
+      "timestamp": 10,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8693456053733826
-        },
-        {
-          "class": "cup",
-          "confidence": 0.5392037630081177
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.41089826822280884
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3367854654788971
-        }
+        "person",
+        "cup",
+        "mouse",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 11,
+      "timestamp": 11,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8974572420120239
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.47924160957336426
-        },
-        {
-          "class": "cup",
-          "confidence": 0.4421102702617645
-        },
-        {
-          "class": "chair",
-          "confidence": 0.385994017124176
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2603265941143036
-        }
+        "person",
+        "mouse",
+        "cup",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 12,
+      "timestamp": 12,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9083166718482971
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3954305350780487
-        },
-        {
-          "class": "cup",
-          "confidence": 0.3564313054084778
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.29520291090011597
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.27498626708984375
-        }
+        "person",
+        "chair",
+        "cup",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 13,
+      "timestamp": 13,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9060209393501282
-        },
-        {
-          "class": "chair",
-          "confidence": 0.39924904704093933
-        },
-        {
-          "class": "cup",
-          "confidence": 0.38644149899482727
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.31194525957107544
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2716670632362366
-        }
+        "person",
+        "chair",
+        "cup",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 14,
+      "timestamp": 14,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9049975872039795
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3993125855922699
-        },
-        {
-          "class": "chair",
-          "confidence": 0.36850810050964355
-        },
-        {
-          "class": "cup",
-          "confidence": 0.28189602494239807
-        }
+        "person",
+        "mouse",
+        "chair",
+        "cup"
       ],
       "texts": []
     },
     {
-      "frame": 15,
+      "timestamp": 15,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9003934264183044
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5607180595397949
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.41961294412612915
-        },
-        {
-          "class": "cup",
-          "confidence": 0.37785205245018005
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.27398595213890076
-        }
+        "person",
+        "chair",
+        "mouse",
+        "cup",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Building Rapport",
-          "confidence": "0.62"
-        }
+        "Building Rapport"
       ]
     },
     {
-      "frame": 16,
+      "timestamp": 16,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.912395179271698
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5682081580162048
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5137320756912231
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3272801339626312
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Building Rapport",
-          "confidence": "0.99"
-        }
+        "Building Rapport"
       ]
     },
     {
-      "frame": 17,
+      "timestamp": 17,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9160953164100647
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.535571277141571
-        },
-        {
-          "class": "chair",
-          "confidence": 0.391499787569046
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3056540787220001
-        },
-        {
-          "class": "microwave",
-          "confidence": 0.28307056427001953
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard",
+        "microwave"
       ],
       "texts": [
-        {
-          "text": "Building Rapport",
-          "confidence": "0.83"
-        }
+        "Building Rapport"
       ]
     },
     {
-      "frame": 18,
+      "timestamp": 18,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.902595043182373
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5787251591682434
-        },
-        {
-          "class": "chair",
-          "confidence": 0.49493756890296936
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.3243923485279083
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.321077436208725
-        },
-        {
-          "class": "cup",
-          "confidence": 0.2500026226043701
-        }
+        "person",
+        "mouse",
+        "chair",
+        "laptop",
+        "keyboard",
+        "cup"
       ],
       "texts": []
     },
     {
-      "frame": 19,
+      "timestamp": 19,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9178991913795471
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4148460626602173
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.40968549251556396
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.33862027525901794
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.3314214050769806
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.292106956243515
-        }
+        "person",
+        "chair",
+        "mouse",
+        "laptop",
+        "cell phone",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 20,
+      "timestamp": 20,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9174496531486511
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5125166177749634
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4474528431892395
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.34922924637794495
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.28686046600341797
-        }
+        "person",
+        "mouse",
+        "chair",
+        "laptop",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 21,
+      "timestamp": 21,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9123348593711853
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.49463149905204773
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3530495762825012
-        },
-        {
-          "class": "cup",
-          "confidence": 0.3416483998298645
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2885916233062744
-        }
+        "person",
+        "mouse",
+        "chair",
+        "cup",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 22,
+      "timestamp": 22,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9086111783981323
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5868378281593323
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4798952341079712
-        },
-        {
-          "class": "cup",
-          "confidence": 0.37810981273651123
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.28635990619659424
-        }
+        "person",
+        "mouse",
+        "chair",
+        "cup",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 23,
+      "timestamp": 23,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9114612340927124
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5140780210494995
-        },
-        {
-          "class": "chair",
-          "confidence": 0.47921544313430786
-        },
-        {
-          "class": "cup",
-          "confidence": 0.36414653062820435
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.27360740303993225
-        }
+        "person",
+        "mouse",
+        "chair",
+        "cup",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Affirmation Statement",
-          "confidence": "0.79"
-        }
+        "Affirmation Statement"
       ]
     },
     {
-      "frame": 24,
+      "timestamp": 24,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9225283861160278
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5224896669387817
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5106075406074524
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3035847842693329
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Affirmation Statement",
-          "confidence": "0.99"
-        }
+        "Affirmation Statement"
       ]
     },
     {
-      "frame": 25,
+      "timestamp": 25,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9157863855361938
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5934305191040039
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5436318516731262
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.31512054800987244
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 26,
+      "timestamp": 26,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9156180620193481
-        },
-        {
-          "class": "chair",
-          "confidence": 0.39310604333877563
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3492029309272766
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2991102933883667
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 27,
+      "timestamp": 27,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9020553827285767
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5071976184844971
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.36974379420280457
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.287851482629776
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 28,
+      "timestamp": 28,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9114099144935608
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5726810097694397
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3018491566181183
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2655182182788849
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.2603631615638733
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard",
+        "cell phone"
       ],
       "texts": []
     },
     {
-      "frame": 29,
+      "timestamp": 29,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8802695870399475
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6054227352142334
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.37162157893180847
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2719264030456543
-        }
+        "person",
+        "chair",
+        "cell phone",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 30,
+      "timestamp": 30,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.899690568447113
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4407252371311188
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.33086156845092773
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.25724029541015625
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "cell phone"
       ],
       "texts": []
     },
     {
-      "frame": 31,
+      "timestamp": 31,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8938530683517456
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4695582687854767
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3505200445652008
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.3141823709011078
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "cell phone"
       ],
       "texts": []
     },
     {
-      "frame": 32,
+      "timestamp": 32,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.911176323890686
-        },
-        {
-          "class": "chair",
-          "confidence": 0.606867790222168
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.41487523913383484
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.33693617582321167
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 33,
+      "timestamp": 33,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9134082198143005
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6719712615013123
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.40393248200416565
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.2934706509113312
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 34,
+      "timestamp": 34,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9057119488716125
-        },
-        {
-          "class": "chair",
-          "confidence": 0.521056592464447
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4381536841392517
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3515293598175049
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.2551770508289337
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard",
+        "laptop"
       ],
       "texts": []
     },
     {
-      "frame": 35,
+      "timestamp": 35,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.909716010093689
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5167593359947205
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.49253731966018677
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3307802975177765
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 36,
+      "timestamp": 36,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9036884307861328
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.4500102698802948
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.37939515709877014
-        },
-        {
-          "class": "chair",
-          "confidence": 0.35336238145828247
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3280336260795593
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.2929297387599945
-        }
+        "person",
+        "suitcase",
+        "mouse",
+        "chair",
+        "keyboard",
+        "cell phone"
       ],
       "texts": []
     },
     {
-      "frame": 37,
+      "timestamp": 37,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.902019202709198
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.47974932193756104
-        },
-        {
-          "class": "cup",
-          "confidence": 0.43511804938316345
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4297851622104645
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.33999937772750854
-        }
+        "person",
+        "cell phone",
+        "cup",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 38,
+      "timestamp": 38,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8948988318443298
-        },
-        {
-          "class": "chair",
-          "confidence": 0.456870973110199
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.4278821349143982
-        },
-        {
-          "class": "cup",
-          "confidence": 0.3679693639278412
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.34456345438957214
-        }
+        "person",
+        "chair",
+        "cell phone",
+        "cup",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 39,
+      "timestamp": 39,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9078330397605896
-        },
-        {
-          "class": "cup",
-          "confidence": 0.5199454426765442
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5023502707481384
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.41126593947410583
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.317486435174942
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.2786842882633209
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2530464231967926
-        }
+        "person",
+        "cup",
+        "chair",
+        "mouse",
+        "cell phone",
+        "laptop",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 40,
+      "timestamp": 40,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8939715623855591
-        },
-        {
-          "class": "cup",
-          "confidence": 0.4213321805000305
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3003487288951874
-        },
-        {
-          "class": "chair",
-          "confidence": 0.2648572027683258
-        }
+        "person",
+        "cup",
+        "mouse",
+        "chair"
       ],
       "texts": [
-        {
-          "text": "Building Rapport",
-          "confidence": "0.99"
-        }
+        "Building Rapport"
       ]
     },
     {
-      "frame": 41,
+      "timestamp": 41,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9039937257766724
-        },
-        {
-          "class": "cup",
-          "confidence": 0.41062963008880615
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3580586016178131
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.35006046295166016
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2625123858451843
-        }
+        "person",
+        "cup",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Building Rapport",
-          "confidence": "0.90"
-        }
+        "Building Rapport"
       ]
     },
     {
-      "frame": 42,
+      "timestamp": 42,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9052773714065552
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5462644696235657
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4678734540939331
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": [
-        {
-          "text": "Buid",
-          "confidence": "0.28"
-        },
-        {
-          "text": " '",
-          "confidence": "0.56"
-        },
-        {
-          "text": "1",
-          "confidence": "0.06"
-        }
+        "Buid",
+        " '",
+        "1"
       ]
     },
     {
-      "frame": 43,
+      "timestamp": 43,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9048370718955994
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5266915559768677
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.2878850996494293
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.27933254837989807
-        }
+        "person",
+        "chair",
+        "cell phone",
+        "laptop"
       ],
       "texts": []
     },
     {
-      "frame": 44,
+      "timestamp": 44,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9157355427742004
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5460172891616821
-        },
-        {
-          "class": "chair",
-          "confidence": 0.47619807720184326
-        }
+        "person",
+        "mouse",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 45,
+      "timestamp": 45,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9116216897964478
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5559657216072083
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4557059705257416
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.331731915473938
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.2660491466522217
-        }
+        "person",
+        "mouse",
+        "chair",
+        "laptop",
+        "laptop"
       ],
       "texts": []
     },
     {
-      "frame": 46,
+      "timestamp": 46,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9011865258216858
-        },
-        {
-          "class": "chair",
-          "confidence": 0.44904473423957825
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.37105610966682434
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 47,
+      "timestamp": 47,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9059965014457703
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.561937153339386
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4179641902446747
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.27889060974121094
-        }
+        "person",
+        "mouse",
+        "chair",
+        "suitcase"
       ],
       "texts": []
     },
     {
-      "frame": 48,
+      "timestamp": 48,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9154794812202454
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.594925045967102
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5721479058265686
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.27988293766975403
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 49,
+      "timestamp": 49,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9075770974159241
-        },
-        {
-          "class": "chair",
-          "confidence": 0.606399655342102
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4532298743724823
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.27762937545776367
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 50,
+      "timestamp": 50,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8984407186508179
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5163404941558838
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5038015246391296
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2723677456378937
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 51,
+      "timestamp": 51,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.901452898979187
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5489712357521057
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.45759880542755127
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.3292028307914734
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3047757148742676
-        }
+        "person",
+        "chair",
+        "mouse",
+        "cell phone",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 52,
+      "timestamp": 52,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9056682586669922
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5129749178886414
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4524129331111908
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.30375924706459045
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2734091281890869
-        }
+        "person",
+        "chair",
+        "mouse",
+        "suitcase",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 53,
+      "timestamp": 53,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9016956686973572
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5522522330284119
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3530791997909546
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.31529924273490906
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 54,
+      "timestamp": 54,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9068688750267029
-        },
-        {
-          "class": "chair",
-          "confidence": 0.51820969581604
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.36548203229904175
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3189762234687805
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 55,
+      "timestamp": 55,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9076995253562927
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.41154229640960693
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3985191583633423
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3183540105819702
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 56,
+      "timestamp": 56,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9048367142677307
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4929206371307373
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4520769417285919
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3053095042705536
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 57,
+      "timestamp": 57,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.911643922328949
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.536512553691864
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4409205913543701
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3029029965400696
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 58,
+      "timestamp": 58,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9087549448013306
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5680056214332581
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5142087936401367
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.29511117935180664
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 59,
+      "timestamp": 59,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9015427231788635
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5172241926193237
-        },
-        {
-          "class": "chair",
-          "confidence": 0.40738531947135925
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.30479639768600464
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 60,
+      "timestamp": 60,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.897543728351593
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4964185655117035
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3952593505382538
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2673618197441101
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 61,
+      "timestamp": 61,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9028887748718262
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5821647047996521
-        },
-        {
-          "class": "chair",
-          "confidence": 0.424642413854599
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.27999958395957947
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 62,
+      "timestamp": 62,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.894926905632019
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5211214423179626
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.4880634546279907
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3018058240413666
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.26454830169677734
-        },
-        {
-          "class": "chair",
-          "confidence": 0.2547908127307892
-        }
+        "person",
+        "mouse",
+        "suitcase",
+        "keyboard",
+        "keyboard",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 63,
+      "timestamp": 63,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8746114373207092
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4259517192840576
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.41005298495292664
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2786250412464142
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 64,
+      "timestamp": 64,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9026798009872437
-        },
-        {
-          "class": "chair",
-          "confidence": 0.519182562828064
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.4466213881969452
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.34862470626831055
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.32839271426200867
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "laptop",
+        "suitcase"
       ],
       "texts": []
     },
     {
-      "frame": 65,
+      "timestamp": 65,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9085943102836609
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5290001630783081
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4643652141094208
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.25822898745536804
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 66,
+      "timestamp": 66,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8855582475662231
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4715074598789215
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.44131359457969666
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.31074750423431396
-        }
+        "person",
+        "chair",
+        "mouse",
+        "suitcase"
       ],
       "texts": []
     },
     {
-      "frame": 67,
+      "timestamp": 67,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.890857458114624
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.47807446122169495
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.40741607546806335
-        },
-        {
-          "class": "chair",
-          "confidence": 0.32058215141296387
-        }
+        "person",
+        "mouse",
+        "suitcase",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 68,
+      "timestamp": 68,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9115086793899536
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4307098686695099
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3793477714061737
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2927001118659973
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 69,
+      "timestamp": 69,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9167235493659973
-        },
-        {
-          "class": "chair",
-          "confidence": 0.47513726353645325
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3649098873138428
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3269798159599304
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.25192707777023315
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard",
+        "laptop"
       ],
       "texts": []
     },
     {
-      "frame": 70,
+      "timestamp": 70,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.902449369430542
-        },
-        {
-          "class": "chair",
-          "confidence": 0.40944918990135193
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3307057321071625
-        }
+        "person",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 71,
+      "timestamp": 71,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8930225968360901
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4957057237625122
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3164006173610687
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.29072701930999756
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 72,
+      "timestamp": 72,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.916917622089386
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5161874890327454
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3380521237850189
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3014605939388275
-        },
-        {
-          "class": "cup",
-          "confidence": 0.2602192759513855
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard",
+        "cup"
       ],
       "texts": []
     },
     {
-      "frame": 73,
+      "timestamp": 73,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9153380990028381
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.48601841926574707
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4075945019721985
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3059748113155365
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 74,
+      "timestamp": 74,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9075948596000671
-        },
-        {
-          "class": "chair",
-          "confidence": 0.509273886680603
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4693053066730499
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 75,
+      "timestamp": 75,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8864151835441589
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6099925637245178
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.51767897605896
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.2980208694934845
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.29048773646354675
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.25985196232795715
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "cell phone",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 76,
+      "timestamp": 76,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9099062085151672
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5233396887779236
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4253559112548828
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2604353427886963
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 77,
+      "timestamp": 77,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9138281345367432
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.6270309090614319
-        },
-        {
-          "class": "chair",
-          "confidence": 0.46444445848464966
-        },
-        {
-          "class": "microwave",
-          "confidence": 0.38336870074272156
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.31368646025657654
-        }
+        "person",
+        "mouse",
+        "chair",
+        "microwave",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Assuming the Salel",
-          "confidence": "0.56"
-        }
+        "Assuming the Salel"
       ]
     },
     {
-      "frame": 78,
+      "timestamp": 78,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9195320010185242
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5048614144325256
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.48962029814720154
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2797556221485138
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Assuming the Sale!",
-          "confidence": "0.81"
-        }
+        "Assuming the Sale!"
       ]
     },
     {
-      "frame": 79,
+      "timestamp": 79,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9257562756538391
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4739874005317688
-        },
-        {
-          "class": "chair",
-          "confidence": 0.43640634417533875
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2900843918323517
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Assuming Lie Sulel",
-          "confidence": "0.19"
-        }
+        "Assuming Lie Sulel"
       ]
     },
     {
-      "frame": 80,
+      "timestamp": 80,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9252272248268127
-        },
-        {
-          "class": "chair",
-          "confidence": 0.49352729320526123
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.40562233328819275
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 81,
+      "timestamp": 81,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9128459692001343
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6328783631324768
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5216184854507446
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 82,
+      "timestamp": 82,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9076831340789795
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5044024586677551
-        },
-        {
-          "class": "chair",
-          "confidence": 0.46896377205848694
-        }
+        "person",
+        "mouse",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 83,
+      "timestamp": 83,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9100589752197266
-        },
-        {
-          "class": "chair",
-          "confidence": 0.45129144191741943
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3681158721446991
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.25004708766937256
-        }
+        "person",
+        "chair",
+        "mouse",
+        "cell phone"
       ],
       "texts": []
     },
     {
-      "frame": 84,
+      "timestamp": 84,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9040546417236328
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5266575813293457
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.2852746844291687
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 85,
+      "timestamp": 85,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8940764665603638
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.7455391883850098
-        },
-        {
-          "class": "chair",
-          "confidence": 0.41672858595848083
-        }
+        "person",
+        "keyboard",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 86,
+      "timestamp": 86,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9140030741691589
-        },
-        {
-          "class": "chair",
-          "confidence": 0.44371727108955383
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3797823488712311
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.26864227652549744
-        }
+        "person",
+        "chair",
+        "mouse",
+        "laptop"
       ],
       "texts": [
-        {
-          "text": "Overcoming Objections",
-          "confidence": "0.99"
-        }
+        "Overcoming Objections"
       ]
     },
     {
-      "frame": 87,
+      "timestamp": 87,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9206889867782593
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4110708236694336
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4068051874637604
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": [
-        {
-          "text": "Overcoming Objections",
-          "confidence": "0.96"
-        }
+        "Overcoming Objections"
       ]
     },
     {
-      "frame": 88,
+      "timestamp": 88,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9209885001182556
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5021594166755676
-        },
-        {
-          "class": "chair",
-          "confidence": 0.38442423939704895
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2647729218006134
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Overcomi",
-          "confidence": "0.54"
-        }
+        "Overcomi"
       ]
     },
     {
-      "frame": 89,
+      "timestamp": 89,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9100880026817322
-        },
-        {
-          "class": "chair",
-          "confidence": 0.34718966484069824
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.28349795937538147
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 90,
+      "timestamp": 90,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9073150753974915
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3948386013507843
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3319718837738037
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3204295039176941
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 91,
+      "timestamp": 91,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.89458167552948
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5211599469184875
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3880663216114044
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2611793577671051
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 92,
+      "timestamp": 92,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9173845052719116
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.6000080704689026
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.47740644216537476
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4046429693698883
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3562202751636505
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.25029271841049194
-        }
+        "person",
+        "mouse",
+        "keyboard",
+        "chair",
+        "keyboard",
+        "laptop"
       ],
       "texts": []
     },
     {
-      "frame": 93,
+      "timestamp": 93,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9108665585517883
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5093205571174622
-        },
-        {
-          "class": "chair",
-          "confidence": 0.43596184253692627
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3281414210796356
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.2712356746196747
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.26853495836257935
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard",
+        "laptop",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 94,
+      "timestamp": 94,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.907174289226532
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.42284128069877625
-        },
-        {
-          "class": "chair",
-          "confidence": 0.30625811219215393
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.29248300194740295
-        }
+        "person",
+        "cell phone",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 95,
+      "timestamp": 95,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9090194702148438
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.3872467875480652
-        },
-        {
-          "class": "suitcase",
-          "confidence": 0.36330997943878174
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.32439571619033813
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.30525633692741394
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.2826581299304962
-        },
-        {
-          "class": "chair",
-          "confidence": 0.2761213779449463
-        }
+        "person",
+        "cell phone",
+        "suitcase",
+        "keyboard",
+        "keyboard",
+        "laptop",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 96,
+      "timestamp": 96,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9062362909317017
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.4321286678314209
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3478754162788391
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.3431311249732971
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.251176655292511
-        }
+        "person",
+        "laptop",
+        "chair",
+        "cell phone",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 97,
+      "timestamp": 97,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9127572774887085
-        },
-        {
-          "class": "chair",
-          "confidence": 0.38735565543174744
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.34271737933158875
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2547619640827179
-        }
+        "person",
+        "chair",
+        "cell phone",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Overcoming Objections 2",
-          "confidence": "0.95"
-        }
+        "Overcoming Objections 2"
       ]
     },
     {
-      "frame": 98,
+      "timestamp": 98,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9204940795898438
-        },
-        {
-          "class": "chair",
-          "confidence": 0.42178091406822205
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3612833023071289
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.2956307530403137
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2894788384437561
-        }
+        "person",
+        "chair",
+        "keyboard",
+        "mouse",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Overcoming Objections 2",
-          "confidence": "0.97"
-        }
+        "Overcoming Objections 2"
       ]
     },
     {
-      "frame": 99,
+      "timestamp": 99,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9088245630264282
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5510905981063843
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3170311450958252
-        }
+        "person",
+        "chair",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 100,
+      "timestamp": 100,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9102463126182556
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5403116345405579
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2509954869747162
-        }
+        "person",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 101,
+      "timestamp": 101,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9173567295074463
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6149718165397644
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.2851296067237854
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.25470948219299316
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 102,
+      "timestamp": 102,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9028372168540955
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5800561308860779
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.37801194190979004
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.25881293416023254
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 103,
+      "timestamp": 103,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9058157801628113
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6214377284049988
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.38192206621170044
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2710040211677551
-        }
+        "person",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 104,
+      "timestamp": 104,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9029183387756348
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.573977530002594
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5281736254692078
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.33957505226135254
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 105,
+      "timestamp": 105,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9147639870643616
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5630767345428467
-        },
-        {
-          "class": "chair",
-          "confidence": 0.37809473276138306
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.33823853731155396
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 106,
+      "timestamp": 106,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9101973176002502
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5496573448181152
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5412631034851074
-        },
-        {
-          "class": "cup",
-          "confidence": 0.5386332273483276
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.35149791836738586
-        }
+        "person",
+        "chair",
+        "mouse",
+        "cup",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 107,
+      "timestamp": 107,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.900974690914154
-        },
-        {
-          "class": "cup",
-          "confidence": 0.6862905621528625
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5747584104537964
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5625138878822327
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.37005722522735596
-        }
+        "person",
+        "cup",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 108,
+      "timestamp": 108,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9112343788146973
-        },
-        {
-          "class": "cup",
-          "confidence": 0.6982161402702332
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6304554343223572
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.43515878915786743
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.34539422392845154
-        }
+        "person",
+        "cup",
+        "chair",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 109,
+      "timestamp": 109,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8867668509483337
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.5723770260810852
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3781692683696747
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.325350821018219
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.261095255613327
-        }
+        "person",
+        "mouse",
+        "chair",
+        "cell phone",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 110,
+      "timestamp": 110,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9013572931289673
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6061280965805054
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.36585772037506104
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2734401226043701
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.2533152401447296
-        }
+        "person",
+        "chair",
+        "laptop",
+        "keyboard",
+        "cell phone"
       ],
       "texts": []
     },
     {
-      "frame": 111,
+      "timestamp": 111,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8584074378013611
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.7263847589492798
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6030924916267395
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.33311155438423157
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2685690224170685
-        },
-        {
-          "class": "laptop",
-          "confidence": 0.2614251971244812
-        }
+        "person",
+        "cell phone",
+        "chair",
+        "mouse",
+        "keyboard",
+        "laptop"
       ],
       "texts": []
     },
     {
-      "frame": 112,
+      "timestamp": 112,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9002297520637512
-        },
-        {
-          "class": "cup",
-          "confidence": 0.5824268460273743
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5323829054832458
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.4356381297111511
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.25867897272109985
-        }
+        "person",
+        "cup",
+        "chair",
+        "cell phone",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 113,
+      "timestamp": 113,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8832570314407349
-        },
-        {
-          "class": "chair",
-          "confidence": 0.6263726353645325
-        },
-        {
-          "class": "cup",
-          "confidence": 0.5552473664283752
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.3842366933822632
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.29497382044792175
-        }
+        "person",
+        "chair",
+        "cup",
+        "mouse",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 114,
+      "timestamp": 114,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8991406559944153
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5317258834838867
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.305794894695282
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.30303046107292175
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.28681305050849915
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.2755793333053589
-        }
+        "person",
+        "chair",
+        "cell phone",
+        "cell phone",
+        "keyboard",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 115,
+      "timestamp": 115,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9113878607749939
-        },
-        {
-          "class": "chair",
-          "confidence": 0.623613715171814
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.41051530838012695
-        },
-        {
-          "class": "cell phone",
-          "confidence": 0.3140935003757477
-        }
+        "person",
+        "chair",
+        "mouse",
+        "cell phone"
       ],
       "texts": []
     },
     {
-      "frame": 116,
+      "timestamp": 116,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9220738410949707
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4565306007862091
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.31090450286865234
-        },
-        {
-          "class": "chair",
-          "confidence": 0.29960134625434875
-        }
+        "person",
+        "mouse",
+        "keyboard",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 117,
+      "timestamp": 117,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9312360882759094
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4783663749694824
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4098297357559204
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.3697884976863861
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.307801753282547
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 118,
+      "timestamp": 118,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9167386889457703
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.6538617610931396
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5470890998840332
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.30900838971138
-        }
+        "person",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Assuming the Salel ",
-          "confidence": "0.87"
-        }
+        "Assuming the Salel "
       ]
     },
     {
-      "frame": 119,
+      "timestamp": 119,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9172540307044983
-        },
-        {
-          "class": "cup",
-          "confidence": 0.6274272203445435
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.509411096572876
-        },
-        {
-          "class": "chair",
-          "confidence": 0.5042039155960083
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2716467082500458
-        }
+        "person",
+        "cup",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": [
-        {
-          "text": "Assuming the Salel",
-          "confidence": "0.95"
-        }
+        "Assuming the Salel"
       ]
     },
     {
-      "frame": 120,
+      "timestamp": 120,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.9042142629623413
-        },
-        {
-          "class": "cup",
-          "confidence": 0.537023663520813
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4423712491989136
-        },
-        {
-          "class": "chair",
-          "confidence": 0.4095992147922516
-        },
-        {
-          "class": "keyboard",
-          "confidence": 0.2803828716278076
-        }
+        "person",
+        "cup",
+        "mouse",
+        "chair",
+        "keyboard"
       ],
       "texts": []
     },
     {
-      "frame": 121,
+      "timestamp": 121,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.8871191740036011
-        },
-        {
-          "class": "cup",
-          "confidence": 0.5763546824455261
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.4166955351829529
-        },
-        {
-          "class": "chair",
-          "confidence": 0.3734377920627594
-        }
+        "person",
+        "cup",
+        "mouse",
+        "chair"
       ],
       "texts": []
     },
     {
-      "frame": 122,
+      "timestamp": 122,
       "detections": [
-        {
-          "class": "person",
-          "confidence": 0.5269278287887573
-        },
-        {
-          "class": "mouse",
-          "confidence": 0.48642051219940186
-        }
+        "person",
+        "mouse"
       ],
       "texts": []
     },
     {
-      "frame": 123,
+      "timestamp": 123,
       "detections": [],
       "texts": [
-        {
-          "text": "End of clip",
-          "confidence": "0.50"
-        }
+        "End of clip"
       ]
     },
     {
-      "frame": 124,
+      "timestamp": 124,
       "detections": [],
       "texts": [
-        {
-          "text": "End of clip",
-          "confidence": "0.56"
-        }
+        "End of clip"
       ]
     },
     {
-      "frame": 125,
+      "timestamp": 125,
       "detections": [],
       "texts": [
-        {
-          "text": "End of clip",
-          "confidence": "0.55"
-        }
+        "End of clip"
       ]
     },
     {
-      "frame": 126,
+      "timestamp": 126,
       "detections": [],
       "texts": []
     }
   ],
   "audioTranscription": [
     {
-      "id": 0,
-      "seek": 0,
       "start": 0,
       "end": 11,
-      "text": " Thank you for calling me, son. My name is Lauren. Can I have your name?",
-      "tokens": [
-        50364,
-        1044,
-        291,
-        337,
-        5141,
-        385,
-        11,
-        1872,
-        13,
-        1222,
-        1315,
-        307,
-        18915,
-        13,
-        1664,
-        286,
-        362,
-        428,
-        1315,
-        30,
-        50914
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.19481704974996633,
-      "compression_ratio": 1.4873096446700507,
-      "no_speech_prob": 0.3246736526489258
+      "text": " Thank you for calling me, son. My name is Lauren. Can I have your name?"
     },
     {
-      "id": 1,
-      "seek": 0,
       "start": 11,
       "end": 16,
-      "text": " My name is John Smith. Thank you, John. How can I help you?",
-      "tokens": [
-        50914,
-        1222,
-        1315,
-        307,
-        2619,
-        8538,
-        13,
-        1044,
-        291,
-        11,
-        2619,
-        13,
-        1012,
-        393,
-        286,
-        854,
-        291,
-        30,
-        51164
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.19481704974996633,
-      "compression_ratio": 1.4873096446700507,
-      "no_speech_prob": 0.3246736526489258
+      "text": " My name is John Smith. Thank you, John. How can I help you?"
     },
     {
-      "id": 2,
-      "seek": 0,
       "start": 16,
       "end": 20,
-      "text": " I was just calling about to see how much it would cost to update the map in my car.",
-      "tokens": [
-        51164,
-        286,
-        390,
-        445,
-        5141,
-        466,
-        281,
-        536,
-        577,
-        709,
-        309,
-        576,
-        2063,
-        281,
-        5623,
-        264,
-        4471,
-        294,
-        452,
-        1032,
-        13,
-        51364
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.19481704974996633,
-      "compression_ratio": 1.4873096446700507,
-      "no_speech_prob": 0.3246736526489258
+      "text": " I was just calling about to see how much it would cost to update the map in my car."
     },
     {
-      "id": 3,
-      "seek": 0,
       "start": 20,
       "end": 24,
-      "text": " I'd be happy to help you with that today. Did you receive a mail-air from us?",
-      "tokens": [
-        51364,
-        286,
-        1116,
-        312,
-        2055,
-        281,
-        854,
-        291,
-        365,
-        300,
-        965,
-        13,
-        2589,
-        291,
-        4774,
-        257,
-        10071,
-        12,
-        1246,
-        490,
-        505,
-        30,
-        51564
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.19481704974996633,
-      "compression_ratio": 1.4873096446700507,
-      "no_speech_prob": 0.3246736526489258
+      "text": " I'd be happy to help you with that today. Did you receive a mail-air from us?"
     },
     {
-      "id": 4,
-      "seek": 2400,
       "start": 24,
       "end": 27,
-      "text": " I did. Do you need a customer number? Yes, please.",
-      "tokens": [
-        50364,
-        286,
-        630,
-        13,
-        1144,
-        291,
-        643,
-        257,
-        5474,
-        1230,
-        30,
-        1079,
-        11,
-        1767,
-        13,
-        50514
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15955964112893128,
-      "compression_ratio": 1.4606299212598426,
-      "no_speech_prob": 0.40715280175209045
+      "text": " I did. Do you need a customer number? Yes, please."
     },
     {
-      "id": 5,
-      "seek": 2400,
       "start": 27,
       "end": 33,
-      "text": " Okay. It's 15243. Thank you. And the year-making model of your vehicle?",
-      "tokens": [
-        50514,
-        1033,
-        13,
-        467,
-        311,
-        2119,
-        7911,
-        18,
-        13,
-        1044,
-        291,
-        13,
-        400,
-        264,
-        1064,
-        12,
-        12402,
-        2316,
-        295,
-        428,
-        5864,
-        30,
-        50814
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15955964112893128,
-      "compression_ratio": 1.4606299212598426,
-      "no_speech_prob": 0.40715280175209045
+      "text": " Okay. It's 15243. Thank you. And the year-making model of your vehicle?"
     },
     {
-      "id": 6,
-      "seek": 2400,
       "start": 33,
       "end": 38,
-      "text": " Yeah, I have a 2009 Nissan Altima. Oh, nice car.",
-      "tokens": [
-        50814,
-        865,
-        11,
-        286,
-        362,
-        257,
-        11453,
-        38166,
-        15992,
-        4775,
-        13,
-        876,
-        11,
-        1481,
-        1032,
-        13,
-        51064
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15955964112893128,
-      "compression_ratio": 1.4606299212598426,
-      "no_speech_prob": 0.40715280175209045
+      "text": " Yeah, I have a 2009 Nissan Altima. Oh, nice car."
     },
     {
-      "id": 7,
-      "seek": 2400,
       "start": 38,
       "end": 41,
-      "text": " Yeah, thank you. We really enjoy it.",
-      "tokens": [
-        51064,
-        865,
-        11,
-        1309,
-        291,
-        13,
-        492,
-        534,
-        2103,
-        309,
-        13,
-        51214
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15955964112893128,
-      "compression_ratio": 1.4606299212598426,
-      "no_speech_prob": 0.40715280175209045
+      "text": " Yeah, thank you. We really enjoy it."
     },
     {
-      "id": 8,
-      "seek": 2400,
       "start": 41,
       "end": 46,
-      "text": " Okay, I think I found your profile here. Can I have you verify your address and phone number, please?",
-      "tokens": [
-        51214,
-        1033,
-        11,
-        286,
-        519,
-        286,
-        1352,
-        428,
-        7964,
-        510,
-        13,
-        1664,
-        286,
-        362,
-        291,
-        16888,
-        428,
-        2985,
-        293,
-        2593,
-        1230,
-        11,
-        1767,
-        30,
-        51464
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15955964112893128,
-      "compression_ratio": 1.4606299212598426,
-      "no_speech_prob": 0.40715280175209045
+      "text": " Okay, I think I found your profile here. Can I have you verify your address and phone number, please?"
     },
     {
-      "id": 9,
-      "seek": 2400,
       "start": 46,
       "end": 53,
-      "text": " Yes. It's 1255 North Research Way. That's an ORM Utah 84097.",
-      "tokens": [
-        51464,
-        1079,
-        13,
-        467,
-        311,
-        2272,
-        13622,
-        4067,
-        10303,
-        9558,
-        13,
-        663,
-        311,
-        364,
-        19654,
-        44,
-        20226,
-        1649,
-        5254,
-        23247,
-        13,
-        51814
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15955964112893128,
-      "compression_ratio": 1.4606299212598426,
-      "no_speech_prob": 0.40715280175209045
+      "text": " Yes. It's 1255 North Research Way. That's an ORM Utah 84097."
     },
     {
-      "id": 10,
-      "seek": 5300,
       "start": 53,
       "end": 58,
-      "text": " And my phone number is A-01-431-1000.",
-      "tokens": [
-        50364,
-        400,
-        452,
-        2593,
-        1230,
-        307,
-        316,
-        12,
-        10607,
-        12,
-        17201,
-        16,
-        12,
-        21199,
-        13,
-        50614
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.13295760381789434,
-      "compression_ratio": 1.4523809523809523,
-      "no_speech_prob": 0.019696468487381935
+      "text": " And my phone number is A-01-431-1000."
     },
     {
-      "id": 11,
-      "seek": 5300,
       "start": 58,
       "end": 65,
-      "text": " Thanks, John. I located your information. The newest version we have available for your vehicle is version 7.7,",
-      "tokens": [
-        50614,
-        2561,
-        11,
-        2619,
-        13,
-        286,
-        6870,
-        428,
-        1589,
-        13,
-        440,
-        17569,
-        3037,
-        321,
-        362,
-        2435,
-        337,
-        428,
-        5864,
-        307,
-        3037,
-        1614,
-        13,
-        22,
-        11,
-        50964
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.13295760381789434,
-      "compression_ratio": 1.4523809523809523,
-      "no_speech_prob": 0.019696468487381935
+      "text": " Thanks, John. I located your information. The newest version we have available for your vehicle is version 7.7,"
     },
     {
-      "id": 12,
-      "seek": 5300,
       "start": 65,
       "end": 72,
-      "text": " which was released in March of 2012. The price of the new map is $99, plus shipping and tax.",
-      "tokens": [
-        50964,
-        597,
-        390,
-        4736,
-        294,
-        6129,
-        295,
-        9125,
-        13,
-        440,
-        3218,
-        295,
-        264,
-        777,
-        4471,
-        307,
-        1848,
-        8494,
-        11,
-        1804,
-        14122,
-        293,
-        3366,
-        13,
-        51314
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.13295760381789434,
-      "compression_ratio": 1.4523809523809523,
-      "no_speech_prob": 0.019696468487381935
+      "text": " which was released in March of 2012. The price of the new map is $99, plus shipping and tax."
     },
     {
-      "id": 13,
-      "seek": 5300,
       "start": 72,
       "end": 74,
-      "text": " Let me go ahead and set up this order for you.",
-      "tokens": [
-        51314,
-        961,
-        385,
-        352,
-        2286,
-        293,
-        992,
-        493,
-        341,
-        1668,
-        337,
-        291,
-        13,
-        51414
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.13295760381789434,
-      "compression_ratio": 1.4523809523809523,
-      "no_speech_prob": 0.019696468487381935
+      "text": " Let me go ahead and set up this order for you."
     },
     {
-      "id": 14,
-      "seek": 5300,
       "start": 74,
       "end": 79,
-      "text": " Can we wait just a second? I'm not really sure if I can afford it right now.",
-      "tokens": [
-        51414,
-        1664,
-        321,
-        1699,
-        445,
-        257,
-        1150,
-        30,
-        286,
-        478,
-        406,
-        534,
-        988,
-        498,
-        286,
-        393,
-        6157,
-        309,
-        558,
-        586,
-        13,
-        51664
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.13295760381789434,
-      "compression_ratio": 1.4523809523809523,
-      "no_speech_prob": 0.019696468487381935
+      "text": " Can we wait just a second? I'm not really sure if I can afford it right now."
     },
     {
-      "id": 15,
-      "seek": 7900,
       "start": 79,
       "end": 83,
-      "text": " All right. Well, here are a few reasons to consider purchasing today.",
-      "tokens": [
-        50364,
-        1057,
-        558,
-        13,
-        1042,
-        11,
-        510,
-        366,
-        257,
-        1326,
-        4112,
-        281,
-        1949,
-        20906,
-        965,
-        13,
-        50564
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.0635399162222486,
-      "compression_ratio": 1.5851063829787233,
-      "no_speech_prob": 0.03834746405482292
+      "text": " All right. Well, here are a few reasons to consider purchasing today."
     },
     {
-      "id": 16,
-      "seek": 7900,
       "start": 83,
       "end": 87,
-      "text": " It looks as though you haven't updated your vehicle for three years.",
-      "tokens": [
-        50564,
-        467,
-        1542,
-        382,
-        1673,
-        291,
-        2378,
-        380,
-        10588,
-        428,
-        5864,
-        337,
-        1045,
-        924,
-        13,
-        50764
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.0635399162222486,
-      "compression_ratio": 1.5851063829787233,
-      "no_speech_prob": 0.03834746405482292
+      "text": " It looks as though you haven't updated your vehicle for three years."
     },
     {
-      "id": 17,
-      "seek": 7900,
       "start": 87,
       "end": 91,
-      "text": " So that would be the equivalent of getting three years worth of updates for the price of one.",
-      "tokens": [
-        50764,
-        407,
-        300,
-        576,
-        312,
-        264,
-        10344,
-        295,
-        1242,
-        1045,
-        924,
-        3163,
-        295,
-        9205,
-        337,
-        264,
-        3218,
-        295,
-        472,
-        13,
-        50964
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.0635399162222486,
-      "compression_ratio": 1.5851063829787233,
-      "no_speech_prob": 0.03834746405482292
+      "text": " So that would be the equivalent of getting three years worth of updates for the price of one."
     },
     {
-      "id": 18,
-      "seek": 7900,
       "start": 91,
       "end": 92,
-      "text": " Oh, okay.",
-      "tokens": [
-        50964,
-        876,
-        11,
-        1392,
-        13,
-        51014
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.0635399162222486,
-      "compression_ratio": 1.5851063829787233,
-      "no_speech_prob": 0.03834746405482292
+      "text": " Oh, okay."
     },
     {
-      "id": 19,
-      "seek": 7900,
       "start": 92,
       "end": 97,
-      "text": " In addition, special offers like the current promotion don't come around too often.",
-      "tokens": [
-        51014,
-        682,
-        4500,
-        11,
-        2121,
-        7736,
-        411,
-        264,
-        2190,
-        15783,
-        500,
-        380,
-        808,
-        926,
-        886,
-        2049,
-        13,
-        51264
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.0635399162222486,
-      "compression_ratio": 1.5851063829787233,
-      "no_speech_prob": 0.03834746405482292
+      "text": " In addition, special offers like the current promotion don't come around too often."
     },
     {
-      "id": 20,
-      "seek": 7900,
       "start": 97,
       "end": 102,
-      "text": " I would definitely recommend taking advantage of the extra $50 off before it expires.",
-      "tokens": [
-        51264,
-        286,
-        576,
-        2138,
-        2748,
-        1940,
-        5002,
-        295,
-        264,
-        2857,
-        1848,
-        2803,
-        766,
-        949,
-        309,
-        1278,
-        3145,
-        13,
-        51514
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.0635399162222486,
-      "compression_ratio": 1.5851063829787233,
-      "no_speech_prob": 0.03834746405482292
+      "text": " I would definitely recommend taking advantage of the extra $50 off before it expires."
     },
     {
-      "id": 21,
-      "seek": 7900,
       "start": 102,
       "end": 104,
-      "text": " Yeah, that does sound pretty good.",
-      "tokens": [
-        51514,
-        865,
-        11,
-        300,
-        775,
-        1626,
-        1238,
-        665,
-        13,
-        51614
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.0635399162222486,
-      "compression_ratio": 1.5851063829787233,
-      "no_speech_prob": 0.03834746405482292
+      "text": " Yeah, that does sound pretty good."
     },
     {
-      "id": 22,
-      "seek": 10400,
       "start": 104,
       "end": 109,
-      "text": " If I set this order up for you now, it'll ship out today and for $50 less.",
-      "tokens": [
-        50364,
-        759,
-        286,
-        992,
-        341,
-        1668,
-        493,
-        337,
-        291,
-        586,
-        11,
-        309,
-        603,
-        5374,
-        484,
-        965,
-        293,
-        337,
-        1848,
-        2803,
-        1570,
-        13,
-        50614
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15950256097512167,
-      "compression_ratio": 1.3624161073825503,
-      "no_speech_prob": 0.20103536546230316
+      "text": " If I set this order up for you now, it'll ship out today and for $50 less."
     },
     {
-      "id": 23,
-      "seek": 10400,
       "start": 109,
       "end": 113,
-      "text": " Do you have your credit card handy? And I can place this order for you now.",
-      "tokens": [
-        50614,
-        1144,
-        291,
-        362,
-        428,
-        5397,
-        2920,
-        13239,
-        30,
-        400,
-        286,
-        393,
-        1081,
-        341,
-        1668,
-        337,
-        291,
-        586,
-        13,
-        50814
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15950256097512167,
-      "compression_ratio": 1.3624161073825503,
-      "no_speech_prob": 0.20103536546230316
+      "text": " Do you have your credit card handy? And I can place this order for you now."
     },
     {
-      "id": 24,
-      "seek": 10400,
       "start": 113,
       "end": 118,
-      "text": " Yeah, let's go ahead and use a visa. My number is...",
-      "tokens": [
-        50814,
-        865,
-        11,
-        718,
-        311,
-        352,
-        2286,
-        293,
-        764,
-        257,
-        18589,
-        13,
-        1222,
-        1230,
-        307,
-        485,
-        51064
-      ],
-      "temperature": 0,
-      "avg_logprob": -0.15950256097512167,
-      "compression_ratio": 1.3624161073825503,
-      "no_speech_prob": 0.20103536546230316
+      "text": " Yeah, let's go ahead and use a visa. My number is..."
     }
   ]
 }

@@ -16,25 +16,24 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
     // Iterate over the audio transcriptions and match frames based on the time intervals
     jsonData.audioTranscription.forEach(audio => {
       // Find frames that overlap with the current audio transcription
-      let frameDetails = jsonData.frames.filter(frame => frame.frame >= audio.start && frame.frame < audio.end);
+      let frameDetails = jsonData.frames.filter(frame => frame.timestamp >= audio.start && frame.timestamp < audio.end);
 
       // Create a combined object with detections and audio text for that time interval
       let audioContent = {
-		startTimestamp: audio.start,
-		endTimestamp: audio.end,
+		    startTimestamp: audio.start,
+		    endTimestamp: audio.end,
         audioTranscription: audio.text,
-		screenTexts: new Set(),
+		    screenTexts: new Set(),
         detections: new Set(),
       };
 
       // Combine all the detections in the frame for this period
       frameDetails.forEach(frame => {
-	    frame.texts.forEach(text => {
-			audioContent.screenTexts.add(text.text);
+	      frame.texts.forEach(text => {
+			    audioContent.screenTexts.add(text);
         });
         frame.detections.forEach(detection => {
-          // Use detection class as detection label
-          audioContent.detections.add(detection.class);
+          audioContent.detections.add(detection);
         });
       });
 	  
@@ -53,5 +52,5 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
   const refactoredContent = refactorData();
 
   // Now you can log or process the refactored data
-  console.log(JSON.stringify(refactoredContent, null, 2));
+  console.log(refactoredContent, refactoredContent.length);
 });

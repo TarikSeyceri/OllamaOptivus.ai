@@ -138,6 +138,9 @@ if not os.path.exists(audioPath):
 
 # Transcribe audio using Whisper
 audioTranscription = whisperModel.transcribe(audioPath, language=PROCESSING_LANGUAGE)
+filteredAudioTranscription = [
+    {"start": int(item["start"]), "end": int(item["end"]), "text": item["text"]} for item in audioTranscription['segments']
+]
 
 # Remove the audio file after transcription
 if os.path.exists(audioPath):
@@ -153,13 +156,12 @@ if not video.isOpened():
 
 # Get video properties
 fps = int(video.get(cv2.CAP_PROP_FPS))  # Original FPS of the video
-frameSkip = fps * PROCESSING_FPS  # Number of frames to skip for 1 FPS processing // `fps * 2` => 1 frame every 2 seconds // `fps // 2` => 2 frames per second
-
+frameSkip = int(fps / PROCESSING_FPS)  # Skip frames based on desired processing FPS
 frameCount = 0
 
 detectionResults = {
     "frames": [],
-    "audioTranscription": audioTranscription['segments']
+    "audioTranscription": filteredAudioTranscription
 }
 
 # Process each frame of the video
@@ -175,7 +177,7 @@ while True:
 
     # Collect detections for the current frame
     frameData = {
-        "frame": frameCount,
+        "timestamp": frameCount * (1 / PROCESSING_FPS),
         "detections": [],
         "texts": [],
     }
@@ -184,18 +186,24 @@ while True:
         for box in result.boxes:
             #print(f"Detected {yoloModel.names[int(box.cls[0].item())]} with confidence {box.conf[0].item()}")
             #x_min, y_min, x_max, y_max = map(int, box.xyxy[0])  # Bounding box coordinates
+            '''
             frameData["detections"].append({
                 "class": yoloModel.names[int(box.cls[0].item())],  # Detected class name
                 "confidence": float(box.conf[0].item()),  # Confidence score
             })
+            '''
+            frameData["detections"].append(yoloModel.names[int(box.cls[0].item())])
 
     ocrResults = ocrReader.readtext(frame)
     for (bbox, text, confidence) in ocrResults:
         #print(f"Detected text: {text} (Confidence: {confidence:.2f})")
+        '''
         frameData["texts"].append({
             "text": text,
             "confidence": f"{confidence:.2f}"
         })
+        '''
+        frameData["texts"].append(text)
     
     detectionResults["frames"].append(frameData)
     frameCount += 1

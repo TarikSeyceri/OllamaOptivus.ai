@@ -6,7 +6,9 @@ const path = require('path');
 const mimeTypes = require('mime-types');
 const { exec } = require("child_process");
 const util = require("util");
-const axios = require("axios");
+const ollama = require('ollama').default;
+const { z } = require('zod');
+const { zodToJsonSchema } = require('zod-to-json-schema');
 
 const dataRefactory = require("./data-refactory");
 
@@ -22,6 +24,7 @@ const OLLAMA_AI_API_URL = process.env.OLLAMA_AI_API_URL || "http://host.docker.i
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
 const OLLAMA_AI_TEMPERATURE = process.env.OLLAMA_AI_TEMPERATURE || 0;
 
+ollama.config.host = OLLAMA_AI_API_URL;
 var lockProcess = false;
 
 // Ensure necessary directories exist
@@ -280,10 +283,10 @@ router.post("/test", async (req, res) => {
     }
     catch(error){
         ollamaAiApiUrl = undefined;
-        console.warn("Provided 'OLLAMA_AI_API_URL' from environment variables could not be reached!, using localhost url", error);
+        console.warn("Provided 'OLLAMA_AI_API_URL' from environment variables could not be reached!, using localhost url", error.message);
     }
     if(!ollamaAiApiUrl){
-        const ollamaLocalhostAiApiUrl = "http://localhost:11434";
+        const ollamaLocalhostAiApiUrl = "http://127.0.0.1:11434";
         try {
             const response = await axios.get(ollamaLocalhostAiApiUrl);
             if (response.status == 200) {
@@ -292,7 +295,7 @@ router.post("/test", async (req, res) => {
         }
         catch(error){
             ollamaAiApiUrl = undefined;
-            console.warn("OLLAMA Localhost AI API URL not reachable!", error);
+            console.warn("OLLAMA Localhost AI API URL not reachable!", error.message);
             return res.status(502).json({ success: false, msg: "OLLAMA AI API URL not reachable!" });
         }
     }

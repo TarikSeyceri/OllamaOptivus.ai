@@ -1,56 +1,5 @@
 const IS_AUDIO_SPEECH_GUARANTEED = process.env.IS_AUDIO_SPEECH_GUARANTEED == "true";
 
-function clearBackgroundOnScreenTextsData(refactoredData){
-    // Getting rid of onScreenTests that are too common // Possibly background Texts
-    let onScreenTextsToDiscard = {};
-    let onScreenTextsCount = 0;
-    for (let data of refactoredData) {
-        if(data.onScreenTexts.length > 0){
-            const text = data.onScreenTexts.join(", ");
-            if(onScreenTextsToDiscard[text])onScreenTextsToDiscard[text]++;
-            else onScreenTextsToDiscard[text] = 1;
-            onScreenTextsCount++;
-        }
-    }
-
-    //console.log(onScreenTextsToDiscard, onScreenTextsCount);
-
-    let onScreenTextsToFinalize = [];
-    for(let text in onScreenTextsToDiscard){
-        //console.log(onScreenTextsCount / onScreenTextsToDiscard[text], onScreenTextsCount / onScreenTextsToDiscard[text] <= 4);
-        if(onScreenTextsCount / onScreenTextsToDiscard[text] <= 4){
-            onScreenTextsToFinalize.push(text);
-        }
-    }
-    
-    //console.log(onScreenTextsToFinalize);
-
-    if(onScreenTextsToFinalize.length > 0){
-        for (let data of refactoredData) {
-            if(data.onScreenTexts.length > 0){
-                const text = data.onScreenTexts.join(", ");
-                if(onScreenTextsToFinalize.includes(text)){
-                    data.onScreenTexts = [];
-                } 
-            }
-        }
-    }
-    // End of getting rid of onScreenTests that are too common // Possibly background Texts
-
-    return refactoredData;
-}
-
-function secondsToClock(seconds, showHoursEvenIfZero = false) {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-  
-    if (hrs > 0 || showHoursEvenIfZero) {
-      return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-}
-
 function refactorMethod1(jsonData) {
     let refactoredData = [];
 
@@ -285,13 +234,53 @@ function refactorMethod3(jsonData) {
     return { refactoredData, detections: Array.from(new Set(detections)) };
 }
 
+function clearBackgroundOnScreenTextsData(refactoredData){
+    // Getting rid of onScreenTests that are too common // Possibly background Texts
+    let onScreenTextsToDiscard = {};
+    let onScreenTextsCount = 0;
+    for (let data of refactoredData) {
+        if(data.onScreenTexts.length > 0){
+            const text = data.onScreenTexts.join(", ");
+            if(onScreenTextsToDiscard[text])onScreenTextsToDiscard[text]++;
+            else onScreenTextsToDiscard[text] = 1;
+            onScreenTextsCount++;
+        }
+    }
+
+    //console.log(onScreenTextsToDiscard, onScreenTextsCount);
+
+    let onScreenTextsToFinalize = [];
+    for(let text in onScreenTextsToDiscard){
+        //console.log(onScreenTextsCount / onScreenTextsToDiscard[text], onScreenTextsCount / onScreenTextsToDiscard[text] <= 4);
+        if(onScreenTextsCount / onScreenTextsToDiscard[text] <= 4){
+            onScreenTextsToFinalize.push(text);
+        }
+    }
+    
+    //console.log(onScreenTextsToFinalize);
+
+    if(onScreenTextsToFinalize.length > 0){
+        for (let data of refactoredData) {
+            if(data.onScreenTexts.length > 0){
+                const text = data.onScreenTexts.join(", ");
+                if(onScreenTextsToFinalize.includes(text)){
+                    data.onScreenTexts = [];
+                } 
+            }
+        }
+    }
+    // End of getting rid of onScreenTests that are too common // Possibly background Texts
+
+    return refactoredData;
+}
+
 function generatePrompt1(refactoredData) {
     refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
 
-    let prompt = `### The following info is the output of an analysis of a video call conversation between an agent and customer:`;
+    let prompt = `The following info is the output of an analysis of a video call conversation between an agent and customer:`;
     for (let data of refactoredData) {
         prompt = `${prompt}
-- Between ${secondsToClock(data.startTimestamp)} and ${secondsToClock(data.endTimestamp)}${data.audioTranscription != "" && data.audioTranscription != " " ? ", Audio transcription:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". On screen text: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". Objects detected: " + data.detections.join(", ") + "." : ""}`;
+Between second ${data.startTimestamp} and second ${data.endTimestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", Audio transcription:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". On screen text: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". Objects detected: " + data.detections.join(", ") + "." : ""}`;
     }
 
     return prompt
@@ -300,10 +289,10 @@ function generatePrompt1(refactoredData) {
 function generatePrompt2(refactoredData) {
     refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
 
-    let prompt = `### The following info is the output of an analysis of a video call conversation between an agent and customer:`;
+    let prompt = `The following info is the output of an analysis of a video call conversation between an agent and customer:`;
     for (let data of refactoredData) {
         prompt = `${prompt}
-- At ${secondsToClock(data.timestamp)}${data.audioTranscription != "" && data.audioTranscription != " " ? ", Audio transcription:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". On screen text: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". Objects detected: " + data.detections.join(", ") + "." : ""}`;
+At second ${data.timestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", Audio transcription:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". On screen text: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". Objects detected: " + data.detections.join(", ") + "." : ""}`;
     }
 
     return prompt
@@ -332,13 +321,16 @@ Detected objects in the video: ${reworkedData.detections.join(", ")}.`;
 
 function getPrompt(jsonData) {
     if (IS_AUDIO_SPEECH_GUARANTEED) {
-        return generatePrompt1(refactorMethod1(jsonData));
+        return generatePrompt3(refactorMethod3(jsonData));
     }
     else {
         return generatePrompt2(refactorMethod2(jsonData));
     }
 }
 
+module.exports = getPrompt;
+
+/*
 const fs = require('fs');
 
 // Read the JSON file
@@ -353,5 +345,4 @@ fs.readFile('../onDev/data2.json', 'utf8', (err, data) => {
     console.log(generatePrompt3(refactorMethod3(jsonData)));
 
 });
-
-module.exports = getPrompt
+*/

@@ -52,6 +52,7 @@ if (NODE_ENV === 'production') {
 else {
   // Swagger works only on Dev-Environment
   app.use('/swagger', swaggerUIExpress.serve, swaggerUIExpress.setup(swaggerConfig));
+  console.log(`Swagger accessable at http://localhost:${HTTP_PORT}/swagger`);
 }
 app.use(require("./api"));
 
@@ -70,5 +71,5 @@ schedule.scheduleJob("0 * * * *", () => {
 
 // Start server
 app.listen(HTTP_PORT, () => {
-  console.log(`Server running on port ${HTTP_PORT}`);
+  console.log(`OLLAMA OPTIVUS Server running on port ${HTTP_PORT}`);
 });

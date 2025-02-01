@@ -21,11 +21,11 @@ import time
 load_dotenv()
 
 LOG_DIR = os.getenv("LOG_DIR", "logs")
-LOG_RETENTION_DAYS = os.getenv("LOG_RETENTION_DAYS", 30)
+LOG_RETENTION_DAYS = int(os.getenv("LOG_RETENTION_DAYS", 30))
 PROCESSING_LOG_LEVEL = os.getenv("PROCESSING_LOG_LEVEL", "WARNING")
 PROCESSING_LANGUAGE = os.getenv("PROCESSING_LANGUAGE", "en")
 PROCESSING_WHISPER_MODEL = os.getenv("PROCESSING_WHISPER_MODEL", "base")
-PROCESSING_FPS = os.getenv("PROCESSING_FPS", 1)
+PROCESSING_FPS = int(os.getenv("PROCESSING_FPS", 1))
 
 #----------------------------------------------------
 # Set up argparse to accept videoPath as a parameter
@@ -142,10 +142,6 @@ filteredAudioTranscription = [
     {"start": int(item["start"]), "end": int(item["end"]), "text": item["text"]} for item in audioTranscription['segments']
 ]
 
-# Remove the audio file after transcription
-if os.path.exists(audioPath):
-    os.remove(audioPath)
-
 # Open the video file
 video = cv2.VideoCapture(args.videoPath)
 
@@ -218,6 +214,10 @@ print(jsonResults)
 
 # Log the end of the processing
 logger.warning("Processing successfully completed")
+
+# Remove the audio file after transcription
+if os.path.exists(audioPath):
+    os.remove(audioPath)
 
 # Success exit code
 sys.exit(0)

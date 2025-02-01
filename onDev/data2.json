@@ -1,0 +1,2543 @@
+{
+    "frames": [
+      {
+        "timestamp": 0,
+        "detections": [
+          "person",
+          "person",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 1,
+        "detections": [
+          "person",
+          "person",
+          "person"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 2,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 3,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 4,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 5,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 6,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 7,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 8,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 9,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 10,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 11,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 12,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 13,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 14,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 15,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 16,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 17,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 18,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 19,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 20,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 21,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 22,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 23,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 24,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 25,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 26,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 27,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 28,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 29,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 30,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 31,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 32,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 33,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 34,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 35,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 36,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 37,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 38,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 39,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 40,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 41,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 42,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 43,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 44,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 45,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 46,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 47,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 48,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 49,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 50,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 51,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 52,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 53,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 54,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 55,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 56,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 57,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 58,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 59,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 60,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 61,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 62,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 63,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 64,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 65,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 66,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 67,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 68,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 69,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 70,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 71,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 72,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 73,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 74,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 75,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 76,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 77,
+        "detections": [
+          "person",
+          "couch",
+          "cake"
+        ],
+        "texts": [
+          "istan bulkar t",
+          "@R",
+          "ISTANBUL ",
+          "DUBAI ",
+          "0 )f",
+          "Voi",
+          "1a, } 16e"
+        ]
+      },
+      {
+        "timestamp": 78,
+        "detections": [
+          "person",
+          "person",
+          "couch"
+        ],
+        "texts": [
+          "istan bulkart",
+          "OR",
+          "ISTANBUL",
+          "DUBAI ",
+          "617 #Jol",
+          "41?, 3 152"
+        ]
+      },
+      {
+        "timestamp": 79,
+        "detections": [
+          "person",
+          "couch",
+          "person",
+          "couch"
+        ],
+        "texts": [
+          "istan bulkar t",
+          "GR",
+          "ISTANBUL",
+          "DUBAI ",
+          "6 1 VJOl",
+          "412,",
+          "3 162"
+        ]
+      },
+      {
+        "timestamp": 80,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 81,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 82,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 83,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 84,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 85,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 86,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 87,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 88,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 89,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 90,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 91,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 92,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 93,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 94,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 95,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 96,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 97,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 98,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 99,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 100,
+        "detections": [
+          "person",
+          "person",
+          "chair"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 101,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 102,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 103,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 104,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL ",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 105,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 106,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 107,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 108,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 109,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 110,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 111,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 112,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 113,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 114,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 115,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 116,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 117,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 118,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 119,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 120,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 121,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI"
+        ]
+      },
+      {
+        "timestamp": 122,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 123,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 124,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 125,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 126,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 127,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 128,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 129,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 130,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "cup",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 131,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair",
+          "cup"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 132,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 133,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 134,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 135,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 136,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 137,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 138,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 139,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 140,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 141,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "cup"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 142,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 143,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 144,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 145,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 146,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 147,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 148,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 149,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "GR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 150,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "chair",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 151,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 152,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "@R",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 153,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "OR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 154,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 155,
+        "detections": [
+          "person",
+          "person",
+          "couch",
+          "couch",
+          "chair"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 156,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 157,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      },
+      {
+        "timestamp": 158,
+        "detections": [
+          "person",
+          "person",
+          "chair",
+          "couch",
+          "couch"
+        ],
+        "texts": [
+          "CR",
+          "ISTANBUL",
+          "DUBAI "
+        ]
+      }
+    ],
+    "audioTranscription": [
+      {
+        "start": 0,
+        "end": 5,
+        "text": " Good afternoon. Thank you for calling Trust Bank. My name is Tariq and I'll be"
+      },
+      {
+        "start": 5,
+        "end": 7,
+        "text": " assisting you today. How may I help you?"
+      },
+      {
+        "start": 7,
+        "end": 12,
+        "text": " I have a lot of good stuff in my balance. Thank you, please."
+      },
+      {
+        "start": 12,
+        "end": 16,
+        "text": " Of course, I'd be happy to help you for security purposes. I will need to"
+      },
+      {
+        "start": 16,
+        "end": 20,
+        "text": " verify your identity. Let's start with your fill name as it appears on the"
+      },
+      {
+        "start": 20,
+        "end": 21,
+        "text": " account."
+      },
+      {
+        "start": 21,
+        "end": 28,
+        "text": " Thank you, Mr. Erzolo. Could you also confirm your date of birth?"
+      },
+      {
+        "start": 28,
+        "end": 33,
+        "text": " Sure. March 15, 18, sorry, 1985."
+      },
+      {
+        "start": 33,
+        "end": 38,
+        "text": " Perfect. Now, for added security, I'll be sending a one-time verification"
+      },
+      {
+        "start": 38,
+        "end": 43,
+        "text": " code to your registered mobile number, ending in 1562. Please let me know when"
+      },
+      {
+        "start": 43,
+        "end": 44,
+        "text": " you receive it."
+      },
+      {
+        "start": 44,
+        "end": 46,
+        "text": " Sure."
+      },
+      {
+        "start": 48,
+        "end": 53,
+        "text": " Got it. It's 568905."
+      },
+      {
+        "start": 53,
+        "end": 57,
+        "text": " Thank you for confirming the code. As additional step, could you provide the last"
+      },
+      {
+        "start": 57,
+        "end": 61,
+        "text": " four digits of your credit card linked to your account?"
+      },
+      {
+        "start": 61,
+        "end": 62,
+        "text": " Sure."
+      },
+      {
+        "start": 62,
+        "end": 64,
+        "text": " 8, 7, 8, 7."
+      },
+      {
+        "start": 64,
+        "end": 70,
+        "text": " Okay, thank you very much. One final step could you hold up a valid photo ID"
+      },
+      {
+        "start": 70,
+        "end": 75,
+        "text": " to the camera so I can visually confirm your identity?"
+      },
+      {
+        "start": 75,
+        "end": 77,
+        "text": " Sure, here it is."
+      },
+      {
+        "start": 77,
+        "end": 83,
+        "text": " Okay, thank you very much. Mr. Erzolo, your identity has been successfully verified."
+      },
+      {
+        "start": 83,
+        "end": 87,
+        "text": " Let me pull up your account details one moment please."
+      },
+      {
+        "start": 89,
+        "end": 99,
+        "text": " All right, your savings account balance as of now is $8,275 and 32 cents."
+      },
+      {
+        "start": 99,
+        "end": 103,
+        "text": " Great, thanks. Why do we order any fees for transferring money to an international"
+      },
+      {
+        "start": 103,
+        "end": 104,
+        "text": " account?"
+      },
+      {
+        "start": 104,
+        "end": 110,
+        "text": " Yes, for international transfers, there is a flat fee of $15 per transaction."
+      },
+      {
+        "start": 110,
+        "end": 115,
+        "text": " However, if you use our mobile banking app, the fee is reduced to $10."
+      },
+      {
+        "start": 115,
+        "end": 119,
+        "text": " Are you planning an international transfer soon?"
+      },
+      {
+        "start": 119,
+        "end": 124,
+        "text": " Yes, probably next week. Do I need to set anything up beforehand?"
+      },
+      {
+        "start": 124,
+        "end": 129,
+        "text": " If it's your first time, you will need to add recipient details in your online banking"
+      },
+      {
+        "start": 129,
+        "end": 134,
+        "text": " profile. It only takes a few minutes. If you'd like, I can send you a step by step"
+      },
+      {
+        "start": 134,
+        "end": 137,
+        "text": " guide by email or SMS."
+      },
+      {
+        "start": 137,
+        "end": 139,
+        "text": " Thank you."
+      },
+      {
+        "start": 139,
+        "end": 144,
+        "text": " No, I will send you to your registered email address within five minutes."
+      },
+      {
+        "start": 144,
+        "end": 147,
+        "text": " Is there anything else I can help you with today?"
+      },
+      {
+        "start": 147,
+        "end": 150,
+        "text": " No, that's all. Thank you very much."
+      },
+      {
+        "start": 150,
+        "end": 156,
+        "text": " It was my pleasure, Mr. Erzolo. Thank you for banking with Trust Bank. Have a wonderful day."
+      },
+      {
+        "start": 156,
+        "end": 157,
+        "text": " You too. Goodbye."
+      },
+      {
+        "start": 157,
+        "end": 158,
+        "text": " Goodbye."
+      }
+    ]
+  }

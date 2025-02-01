@@ -45,11 +45,11 @@ const consoleColors = {
 
 // Backing up main console functions because we are going to override them with winston logger
 const consoleLog = console.log;
-const consoleInfo = console.info; 
+const consoleInfo = console.info;
 const consoleWarn = console.warn;
 const consoleError = console.error;
 
-function initWinston(){
+function initWinston() {
     // Overriding console functions with winston logger
     console.log = (...messages) => {
         consoleLog(...messages);
@@ -72,7 +72,7 @@ function initWinston(){
     };
 }
 
-function initMorgan(){
+function initMorgan() {
     return morgan("combined", {
         stream: {
             write: (message) => {

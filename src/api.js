@@ -14,43 +14,45 @@ const FILE_MAX_UPLOAD_SIZE = parseInt(process.env.FILE_MAX_UPLOAD_SIZE || 500 * 
 const PROCESS_FILES_ONLY = process.env.PROCESS_FILES_ONLY == "true";
 const ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR = process.env.ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR == "true";
 
+var lockProcess = false;
+
 // Ensure necessary directories exist
 if (!fs.existsSync(FILE_UPLOAD_DIR)) fs.mkdirSync(FILE_UPLOAD_DIR);
 
 // Setup multer for file uploads
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, FILE_UPLOAD_DIR);
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, FILE_UPLOAD_DIR);
+        },
+        filename: (req, file, cb) => {
+            cb(null, file.originalname);
+        },
+    }),
+    limits: { fileSize: FILE_MAX_UPLOAD_SIZE },
+    fileFilter: (req, file, cb) => {
+        const filePath = path.join(FILE_UPLOAD_DIR, file.originalname);
+
+        // Check MIME type and extension
+        if (path.extname(file.originalname).toLowerCase() !== ".mp4" || !["video/mp4"].includes(file.mimetype)) {
+            return cb(new Error("Only .mp4 files are allowed"));
+        }
+
+        // Check if the file already exists
+        if (fs.existsSync(filePath)) {
+            req.existingFilePath = filePath; // Attach the existing file path to the request object
+            return cb(null, false); // Reject the file upload but proceed
+        }
+
+        cb(null, true);
     },
-    filename: (req, file, cb) => {
-      cb(null, file.originalname);
-    },
-  }),
-  limits: { fileSize: FILE_MAX_UPLOAD_SIZE },
-  fileFilter: (req, file, cb) => {
-    const filePath = path.join(FILE_UPLOAD_DIR, file.originalname);
-
-    // Check MIME type and extension
-    if (path.extname(file.originalname).toLowerCase() !== ".mp4" || !["video/mp4"].includes(file.mimetype)) {
-      return cb(new Error("Only .mp4 files are allowed"));
-    }
-
-    // Check if the file already exists
-    if (fs.existsSync(filePath)) {
-      req.existingFilePath = filePath; // Attach the existing file path to the request object
-      return cb(null, false); // Reject the file upload but proceed
-    }
-
-    cb(null, true);
-  },
 });
 
 // Endpoint: Upload video file
 router.post("/upload", upload.single("file"), (req, res) => {
     const file = req.file;
-    
-    if(PROCESS_FILES_ONLY){
+
+    if (PROCESS_FILES_ONLY) {
         console.warn("File upload disabled in this environment!");
         return res.status(403).json({ success: false, msg: "File upload disabled in this environment!" });
     }
@@ -60,24 +62,24 @@ router.post("/upload", upload.single("file"), (req, res) => {
         return res.status(200).json({ success: true, msg: "File uploaded!", payload: { filePath: req.existingFilePath } });
     }
 
-    if (!file){
+    if (!file) {
         console.error("File not uploaded!");
         return res.status(400).json({ success: false, msg: "File not uploaded!" });
     }
-    
+
     console.log("File uploaded!", file.originalname);
     return res.status(200).json({ success: true, msg: "File uploaded!", payload: { filePath: path.join(FILE_UPLOAD_DIR, file.originalname) } });
 });
 
 // Endpoint: List files
 router.get("/files", (req, res) => {
-    if(PROCESS_FILES_ONLY){
+    if (PROCESS_FILES_ONLY) {
         console.warn("File listing disabled in this environment!");
         return res.status(403).json({ success: false, msg: "File listing disabled in this environment!" });
     }
 
     const files = fs.readdirSync(FILE_UPLOAD_DIR);
-    if(files.length > 0){
+    if (files.length > 0) {
         for (let i = 0; i < files.length; i++) {
             files[i] = path.join(FILE_UPLOAD_DIR, files[i]);
         }
@@ -90,26 +92,26 @@ router.get("/files", (req, res) => {
 router.delete("/delete", (req, res) => {
     const { filePath } = req.query;
 
-    if(PROCESS_FILES_ONLY){
+    if (PROCESS_FILES_ONLY) {
         console.warn("File deletion disabled in this environment!");
         return res.status(403).json({ success: false, msg: "File deletion disabled in this environment!" });
     }
 
-    if(!filePath){
+    if (!filePath) {
         console.warn("filePath not provided!");
         return res.status(400).json({ success: false, msg: "filePath not provided!" });
     }
 
-    if(!filePath.includes(path.join(FILE_UPLOAD_DIR, path.basename(filePath)))){
+    if (!filePath.includes(path.join(FILE_UPLOAD_DIR, path.basename(filePath)))) {
         console.warn("File path not allowed!", filePath);
         return res.status(403).json({ success: false, msg: "File path not allowed!" });
     }
 
-    if (!fs.existsSync(filePath)){
+    if (!fs.existsSync(filePath)) {
         console.warn("File not found!", filePath);
         return res.status(200).json({ success: true, msg: "File deleted!" });
     }
-        
+
     fs.unlinkSync(filePath);
     console.log("File deleted!", filePath);
     return res.status(200).json({ success: true, msg: "File deleted successfully!" });
@@ -119,17 +121,22 @@ router.delete("/delete", (req, res) => {
 router.post("/process", async (req, res) => {
     const { filePath } = req.body;
 
-    if(!filePath){
+    if(lockProcess){
+        console.warn("Processing already in progress!");
+        return res.status(503).json({ success: false, msg: "Processing already in progress!" });
+    }
+
+    if (!filePath) {
         console.warn("filePath not provided!");
         return res.status(400).json({ success: false, msg: "File path not provided!" });
     }
 
-    if(!ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR && !filePath.includes(path.join(FILE_UPLOAD_DIR, path.basename(filePath)))){
+    if (!ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR && !filePath.includes(path.join(FILE_UPLOAD_DIR, path.basename(filePath)))) {
         console.warn("File path not allowed!", filePath);
         return res.status(403).json({ success: false, msg: "File path not allowed!" });
     }
 
-    if (!fs.existsSync(filePath)){
+    if (!fs.existsSync(filePath)) {
         console.warn("File not found!", filePath);
         return res.status(404).json({ success: false, msg: "File not found!" });
     }
@@ -143,16 +150,19 @@ router.post("/process", async (req, res) => {
     }
 
     try {
+        lockProcess = true;
         const { stdout, stderr } = await asyncExec(`python ${__dirname}/processor.py ${filePath}`);
-        if (stderr){
+        lockProcess = false;
+        if (stderr) {
             console.error("Processing failed for file", filePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
         console.log("Processed file", filePath);
         return res.status(200).json({ success: true, msg: "Processing completed", payload: { stdout } });
-    } 
+    }
     catch (error) {
+        lockProcess = false;
         console.error("Processing failed for file", filePath, error);
         return res.status(500).json({ success: false, msg: "Processing failed" });
     }
@@ -162,14 +172,14 @@ router.post("/test", async (req, res) => {
     const filePath = "";
     try {
         const { stdout, stderr } = await asyncExec(`python ${__dirname}/test.py`);
-        if (stderr){
+        if (stderr) {
             console.error("Processing failed for file", filePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
         console.log("Processed file", filePath);
         return res.status(200).json({ success: true, msg: "Processing completed", payload: { stdout } });
-    } 
+    }
     catch (error) {
         console.error("Processing failed for file", filePath, error);
         return res.status(500).json({ success: false, msg: "Processing failed" });

@@ -4,6 +4,7 @@ const expressRateLimiter = require('express-rate-limit');
 const swaggerUIExpress = require('swagger-ui-express');
 const path = require("path");
 const fs = require("fs");
+const ollama = require('ollama').default;
 const schedule = require("node-schedule");
 
 const { initWinston, initMorgan } = require("./loggers"); // for logging
@@ -17,6 +18,8 @@ const HTTP_RATE_LIMIT_MAX_REQUESTS = parseInt(process.env.HTTP_RATE_LIMIT_MAX_RE
 const BEARER_TOKEN = process.env.BEARER_TOKEN || undefined; // for authentication
 const FILE_UPLOAD_DIR = process.env.FILE_UPLOAD_DIR || "uploads";
 const FILE_RETENTION_DAYS = parseInt(process.env.FILE_RETENTION_DAYS || 2);
+const OLLAMA_AI_API_URL = process.env.OLLAMA_AI_API_URL || "http://host.docker.internal:11434";
+const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
 
 const app = express();
 
@@ -24,6 +27,66 @@ const app = express();
 initWinston();         // Global Overriding console logging functions with Winston Logger
 app.use(initMorgan()); // Network Logging with Morgan Logger
 app.use(express.json({ limit: HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT }));
+
+// Ollama Initialization
+(async function(){
+  ollama.config.host = OLLAMA_AI_API_URL;
+
+  let ollamaModelsList = undefined;
+  try {
+    ollamaModelsList = (await ollama?.list())?.models;
+  }
+  catch(error){
+    ollamaModelsList = undefined
+    console.warn(`Provided 'OLLAMA_AI_API_URL:${OLLAMA_AI_API_URL}' from environment variables could not be reached!, using localhost 'http://127.0.0.1:11434' url`, error.message);
+  }
+
+  if(!ollamaModelsList) {
+    ollama.config.host = "http://127.0.0.1:11434";
+
+    try {
+      ollamaModelsList = (await ollama?.list())?.models;
+    }
+    catch(error){
+      console.error(`OLLAMA Localhost 'http://127.0.0.1:11434' AI API URL not reachable!`, error.message);
+      process.exit(1);
+    }
+  }
+
+  if(ollamaModelsList){
+    console.log(`Ollama AI API is reachable at ${ollama.config.host}`);
+  }
+
+  let isModelAvailable = false;
+  for(const ollamaModel of ollamaModelsList) {
+    if(ollamaModel.model.includes(OLLAMA_AI_MODEL)){
+      isModelAvailable = true;
+      break;
+    }
+  }
+
+  if(!isModelAvailable) {
+    await ollama.pull(OLLAMA_AI_MODEL);
+
+    ollamaModelsList = (await ollama?.list())?.models;
+
+    for(const ollamaModel of ollamaModelsList) {
+      if(ollamaModel.model.includes(OLLAMA_AI_MODEL)){
+        isModelAvailable = true;
+        break;
+      }
+    }
+
+    if(!isModelAvailable) {
+      console.error(`Ollama model ${OLLAMA_AI_MODEL} not available, exiting...`);
+      process.exit(1);
+    }
+  }
+
+  if(isModelAvailable){
+    console.log(`Ollama model ${OLLAMA_AI_MODEL} is available!`);
+  }
+})()
 
 if (NODE_ENV === 'production') {
   if (!BEARER_TOKEN) {
@@ -71,5 +134,5 @@ schedule.scheduleJob("0 * * * *", () => {
 
 // Start server
 app.listen(HTTP_PORT, () => {
-  console.log(`OLLAMA OPTIVUS Server running on port ${HTTP_PORT}`);
+  console.log(`Ollama Optivus Server running on port ${HTTP_PORT}`);
 });

@@ -1,4 +1,29 @@
 const IS_AUDIO_SPEECH_GUARANTEED = process.env.IS_AUDIO_SPEECH_GUARANTEED == "true";
+const PROCESSING_LANGUAGE = process.env.PROCESSING_LANGUAGE || "en";
+
+const languages = {
+    en: {
+        videoExplanation: "The following info is the output of an analysis of a video call conversation between an agent and customer:",
+        betweenSecond: "Between second",
+        andSecond: "and second",
+        audioTranscription: "Audio transcription",
+        onScreenText: "On screen text",
+        objectsDetected: "Objects detected",
+        atSecond: "At second",
+        detectedObjects: "Detected objects in the video",
+    },
+    tr: {
+        videoExplanation: "Aşağıdaki bilgiler, bir temsilci ile müşteri arasındaki bir görüntülü görüşme görüşmesinin analizinin çıktısıdır:",
+        betweenSecond: "Arasında saniye",
+        andSecond: "ve saniye",
+        audioTranscription: "Ses transkripsiyonu",
+        onScreenText: "Ekrandaki metin",
+        objectsDetected: "Algılanan nesneler",
+        atSecond: "Saniye",
+        detectedObjects: "Videoda algılanan nesneler",
+    }
+}
+const language = languages[PROCESSING_LANGUAGE] || languages.en;
 
 function refactorMethod1(jsonData) {
     let refactoredData = [];
@@ -277,10 +302,10 @@ function clearBackgroundOnScreenTextsData(refactoredData){
 function generatePrompt1(refactoredData) {
     refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
 
-    let prompt = `The following info is the output of an analysis of a video call conversation between an agent and customer:`;
+    let prompt = `${language.videoExplanation}`;
     for (let data of refactoredData) {
         prompt = `${prompt}
-Between second ${data.startTimestamp} and second ${data.endTimestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", Audio transcription:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". On screen text: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". Objects detected: " + data.detections.join(", ") + "." : ""}`;
+${language.betweenSecond} ${data.startTimestamp} ${language.andSecond} ${data.endTimestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", ${language.audioTranscription}:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". ${language.onScreenText}: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". ${language.objectsDetected}: " + data.detections.join(", ") + "." : ""}`;
     }
 
     return prompt
@@ -289,10 +314,10 @@ Between second ${data.startTimestamp} and second ${data.endTimestamp}${data.audi
 function generatePrompt2(refactoredData) {
     refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
 
-    let prompt = `The following info is the output of an analysis of a video call conversation between an agent and customer:`;
+    let prompt = `${language.videoExplanation}`;
     for (let data of refactoredData) {
         prompt = `${prompt}
-At second ${data.timestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", Audio transcription:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". On screen text: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". Objects detected: " + data.detections.join(", ") + "." : ""}`;
+${language.atSecond} ${data.timestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", ${language.audioTranscription}:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". ${language.onScreenText}: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". ${language.objectsDetected}: " + data.detections.join(", ") + "." : ""}`;
     }
 
     return prompt
@@ -301,21 +326,21 @@ At second ${data.timestamp}${data.audioTranscription != "" && data.audioTranscri
 function generatePrompt3(reworkedData) {
     reworkedData.refactoredData = clearBackgroundOnScreenTextsData(reworkedData.refactoredData);
 
-    let prompt = `The following info is the output of an analysis of a video call conversation between an agent and customer:`;
+    let prompt = `${language.videoExplanation}`;
     
     for (let data of reworkedData.refactoredData) {
         if(data.audioTranscription != "" && data.audioTranscription != " "){
             prompt = `${prompt}
-At second ${data.timestamp}, Audio transcription: ${data.audioTranscription}`;
+${language.atSecond} ${data.timestamp}, ${language.audioTranscription}: ${data.audioTranscription}`;
         }
         if(data.onScreenTexts.length > 0){
             prompt = `${prompt}
-At second ${data.timestamp}, On screen text: ${data.onScreenTexts.join(", ")}.`;
+${language.atSecond} ${data.timestamp}, ${language.onScreenText}: ${data.onScreenTexts.join(", ")}.`;
         }
     }
 
     prompt = `${prompt}
-Detected objects in the video: ${reworkedData.detections.join(", ")}.`;
+${language.detectedObjects}: ${reworkedData.detections.join(", ")}.`;
     return prompt
 }
 
@@ -328,21 +353,4 @@ function getPrompt(jsonData) {
     }
 }
 
-module.exports = getPrompt;
-
-/*
-const fs = require('fs');
-
-// Read the JSON file
-fs.readFile('../onDev/data2.json', 'utf8', (err, data) => {
-    if (err) {
-        console.error("Error reading file:", err);
-        return;
-    }
-
-    const jsonData = JSON.parse(data);
-
-    console.log(generatePrompt3(refactorMethod3(jsonData)));
-
-});
-*/
+module.exports = { getPrompt };

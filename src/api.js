@@ -20,12 +20,16 @@ const PROCESSING_ONLY = process.env.PROCESSING_ONLY == "true";
 const ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR = process.env.ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR == "true";
 const ENABLE_PROCESS_LOCK_MECHANISM = process.env.ENABLE_PROCESS_LOCK_MECHANISM == "true";
 const PYTHON_BINARY_PATH = process.env.PYTHON_BINARY_PATH || "python3";
-const OLLAMA_AI_API_URL = process.env.OLLAMA_AI_API_URL || "http://host.docker.internal:11434";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
 const OLLAMA_AI_TEMPERATURE = process.env.OLLAMA_AI_TEMPERATURE || 0;
+const PROCESSING_LANGUAGE = process.env.PROCESSING_LANGUAGE || "en";
 
-ollama.config.host = OLLAMA_AI_API_URL;
 var lockProcess = false;
+const languages = {
+    en: "Answer in english language only.",
+    tr: "Sadece Türkçe dilinde cevap ver."
+}
+const language = languages[PROCESSING_LANGUAGE] ?? languages.en;
 
 // Ensure necessary directories exist
 if (!fs.existsSync(FILE_UPLOAD_DIR)) fs.mkdirSync(FILE_UPLOAD_DIR);
@@ -160,32 +164,6 @@ router.post("/process", async (req, res) => {
         return res.status(400).json({ success: false, msg: "Invalid file type!" });
     }
 
-    // Checking if OLLAMA AI API is reachable // two URLs are checked // localhost and docker internal
-    let ollamaAiApiUrl = undefined;
-    try {
-        const response = await axios.get(OLLAMA_AI_API_URL);
-        if (response.status == 200) {
-            ollamaAiApiUrl = OLLAMA_AI_API_URL;
-        }
-    }
-    catch(error){
-        ollamaAiApiUrl = undefined;
-    }
-    if(!ollamaAiApiUrl){
-        const ollamaLocalhostAiApiUrl = "http://localhost:11434";
-        try {
-            const response = await axios.get(ollamaLocalhostAiApiUrl);
-            if (response.status == 200) {
-                ollamaAiApiUrl = ollamaLocalhostAiApiUrl;
-            }
-        }
-        catch(error){
-            ollamaAiApiUrl = undefined;
-            console.error("OLLAMA AI API URL not reachable!");
-            return res.status(502).json({ success: false, msg: "OLLAMA AI API URL not reachable!" });
-        }
-    }
-
     try {
         lockProcess = ENABLE_PROCESS_LOCK_MECHANISM;
         const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/processor.py ${filePath}`);
@@ -201,7 +179,7 @@ router.post("/process", async (req, res) => {
 
         const response = await axios.post(ollamaAiApiUrl + "/api/generate", {
             model: OLLAMA_AI_MODEL,
-            system: "Answer in english language only.",
+            system: language,
             prompt,
             stream: false,
             options: {
@@ -273,35 +251,8 @@ router.post("/process", async (req, res) => {
 router.post("/test", async (req, res) => {
     const filePath = "";
 
-    // Checking if OLLAMA AI API is reachable // two URLs are checked // localhost and docker internal
-    let ollamaAiApiUrl = undefined;
     try {
-        const response = await axios.get(OLLAMA_AI_API_URL);
-        if (response.status == 200) {
-            ollamaAiApiUrl = OLLAMA_AI_API_URL;
-        }
-    }
-    catch(error){
-        ollamaAiApiUrl = undefined;
-        console.warn("Provided 'OLLAMA_AI_API_URL' from environment variables could not be reached!, using localhost url", error.message);
-    }
-    if(!ollamaAiApiUrl){
-        const ollamaLocalhostAiApiUrl = "http://127.0.0.1:11434";
-        try {
-            const response = await axios.get(ollamaLocalhostAiApiUrl);
-            if (response.status == 200) {
-                ollamaAiApiUrl = ollamaLocalhostAiApiUrl;
-            }
-        }
-        catch(error){
-            ollamaAiApiUrl = undefined;
-            console.warn("OLLAMA Localhost AI API URL not reachable!", error.message);
-            return res.status(502).json({ success: false, msg: "OLLAMA AI API URL not reachable!" });
-        }
-    }
-
-    try {
-        const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/test.py`);
+        const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/test/test.py`);
         if (stderr) {
             console.error("Processing failed for file", filePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });
@@ -311,7 +262,7 @@ router.post("/test", async (req, res) => {
         const prompt = dataRefactory.getPrompt(jsonData);
 
         console.log("Processed file", filePath);
-        return res.status(200).json({ success: true, msg: "Processing completed", prompt });
+        return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt } });
     }
     catch (error) {
         console.error("Processing failed for file", filePath, error);

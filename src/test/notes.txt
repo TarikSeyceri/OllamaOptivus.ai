@@ -1,0 +1,60 @@
+{
+  "model": "deepseek-r1",
+  "system": "Answer in english language only.",
+  "prompt": "The following info is the output of an analysis of a video call conversation between an agent and customer:\nAt second 0, Audio transcription:  Good afternoon. Thank you for calling Trust Bank. My name is Tariq and I'll be\nAt second 0, On screen text: OR, ISTANBUL, DUBAI.\nAt second 3, On screen text: OR, ISTANBUL, DUBAI.\nAt second 4, On screen text: CR, ISTANBUL, DUBAI.\nAt second 5, Audio transcription:  assisting you today. How may I help you?\nAt second 7, Audio transcription:  I have a lot of good stuff in my balance. Thank you, please.\nAt second 12, Audio transcription:  Of course, I'd be happy to help you for security purposes. I will need to\nAt second 12, On screen text: OR, ISTANBUL, DUBAI.\nAt second 16, Audio transcription:  verify your identity. Let's start with your fill name as it appears on the\nAt second 20, Audio transcription:  account.\nAt second 21, Audio transcription:  Thank you, Mr. Erzolo. Could you also confirm your date of birth?\nAt second 28, Audio transcription:  Sure. March 15, 18, sorry, 1985.\nAt second 33, Audio transcription:  Perfect. Now, for added security, I'll be sending a one-time verification\nAt second 38, Audio transcription:  code to your registered mobile number, ending in 1562. Please let me know when\nAt second 43, Audio transcription:  you receive it.\nAt second 44, Audio transcription:  Sure.\nAt second 48, Audio transcription:  Got it. It's 568905.\nAt second 53, Audio transcription:  Thank you for confirming the code. As additional step, could you provide the last\nAt second 54, On screen text: CR, ISTANBUL, DUBAI.\nAt second 57, Audio transcription:  four digits of your credit card linked to your account?\nAt second 61, Audio transcription:  Sure.\nAt second 62, Audio transcription:  8, 7, 8, 7.\nAt second 64, Audio transcription:  Okay, thank you very much. One final step could you hold up a valid photo ID\nAt second 70, Audio transcription:  to the camera so I can visually confirm your identity?\nAt second 70, On screen text: CR, ISTANBUL, DUBAI.\nAt second 75, Audio transcription:  Sure, here it is.\nAt second 77, Audio transcription:  Okay, thank you very much. Mr. Erzolo, your identity has been successfully verified.\nAt second 77, On screen text: istan bulkar t, @R, ISTANBUL , DUBAI , 0 )f, Voi, 1a, } 16e.\nAt second 78, On screen text: istan bulkart, OR, ISTANBUL, DUBAI , 617 #Jol, 41?, 3 152.\nAt second 79, On screen text: istan bulkar t, GR, ISTANBUL, DUBAI , 6 1 VJOl, 412,, 3 162.\nAt second 83, Audio transcription:  Let me pull up your account details one moment please.\nAt second 89, Audio transcription:  All right, your savings account balance as of now is $8,275 and 32 cents.\nAt second 99, Audio transcription:  Great, thanks. Why do we order any fees for transferring money to an international\nAt second 103, Audio transcription:  account?\nAt second 104, Audio transcription:  Yes, for international transfers, there is a flat fee of $15 per transaction.\nAt second 104, On screen text: OR, ISTANBUL , DUBAI .\nAt second 110, Audio transcription:  However, if you use our mobile banking app, the fee is reduced to $10.\nAt second 115, Audio transcription:  Are you planning an international transfer soon?\nAt second 115, On screen text: OR, ISTANBUL, DUBAI.\nAt second 119, Audio transcription:  Yes, probably next week. Do I need to set anything up beforehand?\nAt second 119, On screen text: CR, ISTANBUL, DUBAI.\nAt second 120, On screen text: OR, ISTANBUL, DUBAI.\nAt second 121, On screen text: CR, ISTANBUL, DUBAI.\nAt second 124, Audio transcription:  If it's your first time, you will need to add recipient details in your online banking\nAt second 129, Audio transcription:  profile. It only takes a few minutes. If you'd like, I can send you a step by step\nAt second 134, Audio transcription:  guide by email or SMS.\nAt second 137, Audio transcription:  Thank you.\nAt second 139, Audio transcription:  No, I will send you to your registered email address within five minutes.\nAt second 144, Audio transcription:  Is there anything else I can help you with today?\nAt second 147, Audio transcription:  No, that's all. Thank you very much.\nAt second 150, Audio transcription:  It was my pleasure, Mr. Erzolo. Thank you for banking with Trust Bank. Have a wonderful day.\nAt second 152, On screen text: @R, ISTANBUL, DUBAI .\nAt second 156, Audio transcription:  You too. Goodbye.\nAt second 157, Audio transcription:  Goodbye.\nDetected objects in the video: person, couch, chair, cake, cup.",
+  "stream": false,
+   "options": {
+    "temperature": 0
+  },
+  "format": {
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "string"
+      },
+      "isUnrespectfulConversation": {
+        "type": "boolean"
+      },
+      "customerFraud": {
+        "type": "object",
+        "properties": {
+            "percentage": {
+                "type": "number"
+            },
+            "reason": {
+                "type": "string"
+            }
+        },
+        "required": ["percentage", "reason"]
+      },
+      "customerSatisfactionPercentage": {
+        "type": "number"
+      },
+      "events": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": ["timestamp", "description"]
+        }
+      }
+    },
+    "required": [
+      "summary",
+      "isUnrespectfulConversation",
+      "customerFraud",
+      "customerSatisfactionPercentage",
+      "events"
+    ]
+  }
+}
+
+
+http://localhost:11434/api/generate

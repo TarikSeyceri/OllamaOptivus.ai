@@ -38,7 +38,10 @@ app.use(express.json({ limit: HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT }));
   }
   catch(error){
     ollamaModelsList = undefined
-    console.warn(`Provided 'OLLAMA_AI_API_URL:${OLLAMA_AI_API_URL}' from environment variables could not be reached!, using localhost 'http://127.0.0.1:11434' url`, error.message);
+
+    if(!OLLAMA_AI_API_URL.includes("127.0.0.1:11434")){
+      console.warn(`Provided 'OLLAMA_AI_API_URL:${OLLAMA_AI_API_URL}' from environment variables could not be reached!, using localhost 'http://127.0.0.1:11434' url`, error.message);
+    }
   }
 
   if(!ollamaModelsList) {

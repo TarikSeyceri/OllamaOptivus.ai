@@ -7,8 +7,6 @@ const mimeTypes = require('mime-types');
 const { exec } = require("child_process");
 const util = require("util");
 const ollama = require('ollama').default;
-const { z } = require('zod');
-const { zodToJsonSchema } = require('zod-to-json-schema');
 
 const dataRefactory = require("./data-refactory");
 
@@ -21,7 +19,7 @@ const ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR = process.env.ALLOW_PROCESS_FILES_O
 const ENABLE_PROCESS_LOCK_MECHANISM = process.env.ENABLE_PROCESS_LOCK_MECHANISM == "true";
 const PYTHON_BINARY_PATH = process.env.PYTHON_BINARY_PATH || "python3";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
-const OLLAMA_AI_TEMPERATURE = process.env.OLLAMA_AI_TEMPERATURE || 0;
+const OLLAMA_AI_TEMPERATURE = parseFloat(process.env.OLLAMA_AI_TEMPERATURE || 0);
 const PROCESSING_LANGUAGE = process.env.PROCESSING_LANGUAGE || "en";
 
 var lockProcess = false;
@@ -174,10 +172,15 @@ router.post("/process", async (req, res) => {
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
+        console.log("Processing completed for file", filePath);
+
         const jsonData = JSON.parse(stdout);
         const prompt = dataRefactory.getPrompt(jsonData);
 
-        const response = await axios.post(ollamaAiApiUrl + "/api/generate", {
+        console.log("Prompt prepared for file", filePath);
+        console.log(prompt);
+
+        const response = await ollama.generate({
             model: OLLAMA_AI_MODEL,
             system: language,
             prompt,
@@ -194,20 +197,35 @@ router.post("/process", async (req, res) => {
                   "isUnrespectfulConversation": {
                     "type": "boolean"
                   },
-                  "customerFraud": {
+                  "customer": {
                     "type": "object",
                     "properties": {
-                        "percentage": {
-                            "type": "number"
+                        "fraud": {
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "number"
+                                },
+                                "reason": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["percentage", "reason"]
                         },
-                        "reason": {
-                            "type": "string"
+                        "satisfaction": {
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "number"
+                                },
+                                "reason": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["percentage", "reason"]
                         }
                     },
-                    "required": ["percentage", "reason"]
-                  },
-                  "customerSatisfactionPercentage": {
-                    "type": "number"
+                    "required": ["fraud", "satisfaction"]
                   },
                   "events": {
                     "type": "array",
@@ -228,8 +246,7 @@ router.post("/process", async (req, res) => {
                 "required": [
                   "summary",
                   "isUnrespectfulConversation",
-                  "customerFraud",
-                  "customerSatisfactionPercentage",
+                  "customer",
                   "events"
                 ]
             }
@@ -237,8 +254,8 @@ router.post("/process", async (req, res) => {
 
         if (response.status == 200) {
             lockProcess = false;
-            console.log("Processed file", filePath);
-            return res.status(200).json({ success: true, msg: "Processing completed", response: response?.data?.response });
+            console.log("Processing completed for file", filePath);
+            return res.status(200).json({ success: true, msg: "Processing completed", payload: { response: response?.data?.response } });
         }
     }
     catch (error) {

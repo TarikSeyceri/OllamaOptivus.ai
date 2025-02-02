@@ -31,7 +31,8 @@
     "yolo",
     "opencv",
     "ocr",
-    "whisper"
+    "whisper",
+    "deepseek"
   ],
   "author": "Tarik Seyceri",
   "dependencies": {
@@ -47,8 +48,6 @@
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1",
     "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0",
-    "zod": "^3.24.1",
-    "zod-to-json-schema": "^3.24.1"
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

@@ -8,7 +8,7 @@ const LOG_LEVEL = process.env.LOG_LEVEL || "warn";
 const LOG_FILE_MAX_SIZE = process.env.LOG_FILE_MAX_SIZE || "10m";
 const LOG_RETENTION_DAYS = parseInt(process.env.LOG_RETENTION_DAYS || 30);
 
-if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR);
+if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR, { recursive: true });
 
 const winstonLogger = winston.createLogger({
     level: LOG_LEVEL,

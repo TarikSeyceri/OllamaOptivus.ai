@@ -12,10 +12,10 @@ const dataRefactory = require("./data-refactory");
 
 const asyncExec = util.promisify(exec);
 
-const FILE_UPLOAD_DIR = process.env.FILE_UPLOAD_DIR || "uploads";
-const FILE_MAX_UPLOAD_SIZE = parseInt(process.env.FILE_MAX_UPLOAD_SIZE || 500 * 1024 * 1024); // Default 500MB
+const VIDEOS_DIR = process.env.VIDEOS_DIR || "data/videos";
+const VIDEO_FILE_MAX_UPLOAD_SIZE = parseInt(process.env.VIDEO_FILE_MAX_UPLOAD_SIZE || 500 * 1024 * 1024); // Default 500MB
 const PROCESSING_ONLY = process.env.PROCESSING_ONLY == "true";
-const ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR = process.env.ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR == "true";
+const ALLOW_PROCESS_VIDEOS_OUTSIDE_UPLOAD_DIR = process.env.ALLOW_PROCESS_VIDEOS_OUTSIDE_UPLOAD_DIR == "true";
 const ENABLE_PROCESS_LOCK_MECHANISM = process.env.ENABLE_PROCESS_LOCK_MECHANISM == "true";
 const PYTHON_BINARY_PATH = process.env.PYTHON_BINARY_PATH || "python3";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
@@ -30,31 +30,31 @@ const languages = {
 const language = languages[PROCESSING_LANGUAGE] ?? languages.en;
 
 // Ensure necessary directories exist
-if (!fs.existsSync(FILE_UPLOAD_DIR)) fs.mkdirSync(FILE_UPLOAD_DIR);
+if (!fs.existsSync(VIDEOS_DIR)) fs.mkdirSync(VIDEOS_DIR, { recursive: true });
 
-// Setup multer for file uploads
+// Setup multer for video file uploads
 const upload = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, FILE_UPLOAD_DIR);
+            cb(null, VIDEOS_DIR);
         },
         filename: (req, file, cb) => {
             cb(null, file.originalname);
         },
     }),
-    limits: { fileSize: FILE_MAX_UPLOAD_SIZE },
+    limits: { fileSize: VIDEO_FILE_MAX_UPLOAD_SIZE },
     fileFilter: (req, file, cb) => {
-        const filePath = path.join(FILE_UPLOAD_DIR, file.originalname);
+        const videoFilePath = path.join(VIDEOS_DIR, file.originalname);
 
         // Check MIME type and extension
         if (path.extname(file.originalname).toLowerCase() !== ".mp4" || !["video/mp4"].includes(file.mimetype)) {
-            return cb(new Error("Only .mp4 files are allowed"));
+            return cb(new Error("Only .mp4 video files are allowed"));
         }
 
         // Check if the file already exists
-        if (fs.existsSync(filePath)) {
-            req.existingFilePath = filePath; // Attach the existing file path to the request object
-            return cb(null, false); // Reject the file upload but proceed
+        if (fs.existsSync(videoFilePath)) {
+            req.existingVideoFilePath = videoFilePath;
+            return cb(null, false);
         }
 
         cb(null, true);
@@ -62,123 +62,122 @@ const upload = multer({
 });
 
 // Endpoint: Upload video file
-router.post("/upload", upload.single("file"), (req, res) => {
-    const file = req.file;
+router.post("/upload", upload.single("video"), (req, res) => {
+    const video = req.video;
 
     if (PROCESSING_ONLY) {
-        console.warn("File upload disabled in this environment!");
-        return res.status(403).json({ success: false, msg: "File upload disabled in this environment!" });
+        console.warn("Video file upload disabled in this environment!");
+        return res.status(403).json({ success: false, msg: "Video file upload disabled in this environment!" });
     }
 
-    if (req.existingFilePath) {
-        console.warn(`File already exists: ${req.existingFilePath}`);
-        return res.status(200).json({ success: true, msg: "File uploaded!", payload: { filePath: req.existingFilePath } });
+    if (req.existingVideoFilePath) {
+        console.warn(`Video file already exists: ${req.existingVideoFilePath}`);
+        return res.status(200).json({ success: true, msg: "Video file uploaded!", payload: { videoFilePath: req.existingVideoFilePath } });
     }
 
-    if (!file) {
-        console.error("File not uploaded!");
-        return res.status(400).json({ success: false, msg: "File not uploaded!" });
+    if (!video) {
+        console.error("Video file not uploaded!");
+        return res.status(400).json({ success: false, msg: "Video file not uploaded!" });
     }
 
-    console.log("File uploaded!", file.originalname);
-    return res.status(200).json({ success: true, msg: "File uploaded!", payload: { filePath: path.join(FILE_UPLOAD_DIR, file.originalname) } });
+    console.log("Video file uploaded!", video.originalname);
+    return res.status(200).json({ success: true, msg: "Video file uploaded!", payload: { videoFilePath: path.join(VIDEOS_DIR, video.originalname) } });
 });
 
-// Endpoint: List files
-router.get("/files", (req, res) => {
+// Endpoint: List video files
+router.get("/videos", (req, res) => {
     if (PROCESSING_ONLY) {
-        console.warn("File listing disabled in this environment!");
-        return res.status(403).json({ success: false, msg: "File listing disabled in this environment!" });
+        console.warn("Video files listing disabled in this environment!");
+        return res.status(403).json({ success: false, msg: "Video files listing disabled in this environment!" });
     }
 
-    const files = fs.readdirSync(FILE_UPLOAD_DIR);
-    if (files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-            files[i] = path.join(FILE_UPLOAD_DIR, files[i]);
+    const videos = fs.readdirSync(VIDEOS_DIR);
+    if (videos.length > 0) {
+        for (let i = 0; i < videos.length; i++) {
+            videos[i] = path.join(VIDEOS_DIR, videos[i]);
         }
     }
-    console.log("Files listed!", files);
-    return res.status(200).json({ success: true, msg: "Files listed!", payload: { files } });
+    console.log("Video files listed!", videos);
+    return res.status(200).json({ success: true, msg: "Video files listed!", payload: { videos } });
 });
 
-// Endpoint: Delete file by path
+// Endpoint: Delete video file by path
 router.delete("/delete", (req, res) => {
-    const { filePath } = req.query;
+    const { videoFilePath } = req.query;
 
     if (PROCESSING_ONLY) {
-        console.warn("File deletion disabled in this environment!");
-        return res.status(403).json({ success: false, msg: "File deletion disabled in this environment!" });
+        console.warn("Video file deletion disabled in this environment!");
+        return res.status(403).json({ success: false, msg: "Video file deletion disabled in this environment!" });
     }
 
-    if (!filePath) {
-        console.warn("filePath not provided!");
-        return res.status(400).json({ success: false, msg: "filePath not provided!" });
+    if (!videoFilePath) {
+        console.warn("videoFilePath not provided!");
+        return res.status(400).json({ success: false, msg: "videoFilePath not provided!" });
     }
 
-    if (!filePath.includes(path.join(FILE_UPLOAD_DIR, path.basename(filePath)))) {
-        console.warn("File path not allowed!", filePath);
-        return res.status(403).json({ success: false, msg: "File path not allowed!" });
+    if (!videoFilePath.includes(path.join(VIDEOS_DIR, path.basename(videoFilePath)))) {
+        console.warn("videoFilePath not allowed!", videoFilePath);
+        return res.status(403).json({ success: false, msg: "videoFilePath not allowed!" });
     }
 
-    if (!fs.existsSync(filePath)) {
-        console.warn("File not found!", filePath);
-        return res.status(200).json({ success: true, msg: "File deleted!" });
+    if (!fs.existsSync(videoFilePath)) {
+        console.warn("Video file not found!", videoFilePath);
+        return res.status(200).json({ success: true, msg: "Video file deleted!" });
     }
 
-    fs.unlinkSync(filePath);
-    console.log("File deleted!", filePath);
-    return res.status(200).json({ success: true, msg: "File deleted successfully!" });
+    fs.unlinkSync(videoFilePath);
+    console.log("Video file deleted!", videoFilePath);
+    return res.status(200).json({ success: true, msg: "Video file deleted!" });
 });
 
 // Endpoint: Process file
 router.post("/process", async (req, res) => {
-    const { filePath } = req.body;
+    const { videoFilePath } = req.body;
 
     if(lockProcess){
         console.warn("Processing already in progress!");
         return res.status(503).json({ success: false, msg: "Another processing request already in progress!, please try again later." });
     }
 
-    if (!filePath) {
-        console.warn("filePath not provided!");
-        return res.status(400).json({ success: false, msg: "File path not provided!" });
+    if (!videoFilePath) {
+        console.warn("videoFilePath not provided!");
+        return res.status(400).json({ success: false, msg: "Video file path not provided!" });
     }
 
-    if (!ALLOW_PROCESS_FILES_OUTSIDE_UPLOAD_DIR && !filePath.includes(path.join(FILE_UPLOAD_DIR, path.basename(filePath)))) {
-        console.warn("File path not allowed!", filePath);
-        return res.status(403).json({ success: false, msg: "File path not allowed!" });
+    if (!ALLOW_PROCESS_VIDEOS_OUTSIDE_UPLOAD_DIR && !videoFilePath.includes(path.join(VIDEOS_DIR, path.basename(videoFilePath)))) {
+        console.warn("Video file path not allowed!", videoFilePath);
+        return res.status(403).json({ success: false, msg: "Video file path not allowed!" });
     }
 
-    if (!fs.existsSync(filePath)) {
-        console.warn("File not found!", filePath);
-        return res.status(404).json({ success: false, msg: "File not found!" });
+    if (!fs.existsSync(videoFilePath)) {
+        console.warn("Video file not found!", videoFilePath);
+        return res.status(404).json({ success: false, msg: "Video file not found!" });
     }
 
-    const fileExtension = path.extname(filePath).toLowerCase(); // e.g. ".mp4"
-    const fileMimeType = mimeTypes.lookup(filePath); // e.g. "video/mp4" if extension is .mp4
+    const fileExtension = path.extname(videoFilePath).toLowerCase(); // e.g. ".mp4"
+    const fileMimeType = mimeTypes.lookup(videoFilePath); // e.g. "video/mp4" if extension is .mp4
 
     if (fileExtension != '.mp4' || fileMimeType != 'video/mp4') {
-        console.warn("Invalid file type!", filePath);
+        console.warn("Invalid file type!", videoFilePath);
         return res.status(400).json({ success: false, msg: "Invalid file type!" });
     }
 
     try {
         lockProcess = ENABLE_PROCESS_LOCK_MECHANISM;
-        const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/processor.py ${filePath}`);
+        const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/processor.py ${videoFilePath}`);
         
         if (stderr) {
             lockProcess = false;
-            console.error("Processing failed for file", filePath, stderr);
+            console.error("Processing failed for video file", videoFilePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
-        console.log("Processing completed for file", filePath);
+        console.log("Processing completed for video file", videoFilePath);
 
         const jsonData = JSON.parse(stdout);
         const prompt = dataRefactory.getPrompt(jsonData);
 
-        console.log("Prompt prepared for file", filePath);
-        console.log(prompt);
+        console.log("Prompt prepared for video file", videoFilePath);
 
         const response = await ollama.generate({
             model: OLLAMA_AI_MODEL,
@@ -254,35 +253,35 @@ router.post("/process", async (req, res) => {
 
         if (response.status == 200) {
             lockProcess = false;
-            console.log("Processing completed for file", filePath);
-            return res.status(200).json({ success: true, msg: "Processing completed", payload: { response: response?.data?.response } });
+            console.log("Processing completed for video file", videoFilePath);
+            return res.status(200).json({ success: true, msg: "Processing completed", payload: { response } });
         }
     }
     catch (error) {
         lockProcess = false;
-        console.error("Processing failed for file", filePath, error);
+        console.error("Processing failed for video file", videoFilePath, error);
         return res.status(500).json({ success: false, msg: "Processing failed" });
     }
 });
 
 router.post("/test", async (req, res) => {
-    const filePath = "";
+    const videoFilePath = "/dummy/location/video.mp4";
 
     try {
         const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/test/test.py`);
         if (stderr) {
-            console.error("Processing failed for file", filePath, stderr);
+            console.error("Processing failed for video file", videoFilePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
         const jsonData = JSON.parse(stdout);
         const prompt = dataRefactory.getPrompt(jsonData);
 
-        console.log("Processed file", filePath);
+        console.log("Processed video file", videoFilePath);
         return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt } });
     }
     catch (error) {
-        console.error("Processing failed for file", filePath, error);
+        console.error("Processing failed for video file", videoFilePath, error);
         return res.status(500).json({ success: false, msg: "Processing failed" });
     }
 });

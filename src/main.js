@@ -16,7 +16,7 @@ const HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT = process.env.HTTP_REQUEST_MAX_JS
 const HTTP_RATE_LIMIT_WINDOW_MS = parseInt(process.env.HTTP_RATE_LIMIT_WINDOW_MS || 1 * 60 * 1000); // 1 minute
 const HTTP_RATE_LIMIT_MAX_REQUESTS = parseInt(process.env.HTTP_RATE_LIMIT_MAX_REQUESTS || 10); // 10 requests per minute
 const BEARER_TOKEN = process.env.BEARER_TOKEN || undefined; // for authentication
-const FILE_UPLOAD_DIR = process.env.FILE_UPLOAD_DIR || "uploads";
+const VIDEOS_DIR = process.env.VIDEOS_DIR || "data/videos";
 const FILE_RETENTION_DAYS = parseInt(process.env.FILE_RETENTION_DAYS || 2);
 const OLLAMA_AI_API_URL = process.env.OLLAMA_AI_API_URL || "http://host.docker.internal:11434";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
@@ -89,7 +89,7 @@ app.use(express.json({ limit: HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT }));
   if(isModelAvailable){
     console.log(`Ollama model ${OLLAMA_AI_MODEL} is available!`);
   }
-})()
+})();
 
 if (NODE_ENV === 'production') {
   if (!BEARER_TOKEN) {
@@ -125,8 +125,8 @@ app.use(require("./api"));
 // Schedule: Auto-delete old files
 schedule.scheduleJob("0 * * * *", () => {
   const now = Date.now();
-  fs.readdirSync(FILE_UPLOAD_DIR).forEach((file) => {
-    const filePath = path.join(FILE_UPLOAD_DIR, file);
+  fs.readdirSync(VIDEOS_DIR).forEach((file) => {
+    const filePath = path.join(VIDEOS_DIR, file);
     const stats = fs.statSync(filePath);
     if (now - stats.birthtimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
       fs.unlinkSync(filePath);

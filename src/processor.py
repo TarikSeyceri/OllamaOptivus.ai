@@ -25,7 +25,6 @@ LOG_RETENTION_DAYS = int(os.getenv("LOG_RETENTION_DAYS", 30))
 AUDIOS_DIR = os.getenv("AUDIOS_DIR", "data/audios")
 JSON_DATA_DIR = os.getenv("JSON_DATA_DIR", "data/json")
 PROCESSING_LOG_LEVEL = os.getenv("PROCESSING_LOG_LEVEL", "WARNING")
-PROCESSING_LANGUAGE = os.getenv("PROCESSING_LANGUAGE", "en")
 PROCESSING_WHISPER_MODEL = os.getenv("PROCESSING_WHISPER_MODEL", "base")
 PROCESSING_FPS = int(os.getenv("PROCESSING_FPS", 1))
 
@@ -34,10 +33,15 @@ PROCESSING_FPS = int(os.getenv("PROCESSING_FPS", 1))
 #----------------------------------------------------
 parser = argparse.ArgumentParser(description="Process a video file.")
 parser.add_argument("videoPath", type=str, help="Path to the input video file")
+parser.add_argument("language", type=str, help="Language for processing the video")
 args = parser.parse_args()
 
 if not args.videoPath:
     print("Error: Video path is null or empty.")
+    sys.exit(1)  # Exit with error code
+
+if not args.language:
+    print("Error: Language is null or empty.")
     sys.exit(1)  # Exit with error code
 
 if not os.path.exists(args.videoPath):
@@ -116,21 +120,33 @@ logFilesRetention()
 #----------------------------------------------------
 logger.warning("Processing started")
 
+# Check if the JSON data file already exists # Then no need to process the video again
+jsonDataPath = JSON_DATA_DIR + '/'+os.path.splitext(os.path.basename(args.videoPath))[0]+'_'+args.language+'.json'
+if os.path.exists(jsonDataPath):
+    try:
+        with open(jsonDataPath, 'r') as file:
+            content = file.read()
+            print(content)
+            logger.warning("Processing successfully completed")
+            sys.exit(0)
+    except Exception:
+        pass
+
 # Load the YOLOv8 model
 yoloModel = YOLO(os.path.dirname(os.path.abspath(__file__)) + "/yolov8n.pt") 
 
 # Load the EasyOCR model
-ocrReader = easyocr.Reader([PROCESSING_LANGUAGE]) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
+ocrReader = easyocr.Reader([args.language]) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
 
 # Load Whisper model
 whisperModel = whisper.load_model(PROCESSING_WHISPER_MODEL)  # Choose model size: tiny, base, small, medium, large
 
 # Create audios folder
-if not os.path.exists("audios"):
-    os.makedirs("audios")
+if not os.path.exists(AUDIOS_DIR):
+    os.makedirs(AUDIOS_DIR)
 
 # Extract audio from the video
-audioPath = "audios/"+ os.path.splitext(os.path.basename(args.videoPath))[0] + ".wav"
+audioPath = AUDIOS_DIR+"/"+ os.path.splitext(os.path.basename(args.videoPath))[0] + ".wav"
 if not os.path.exists(audioPath):
     ffmpeg.input(args.videoPath).output(audioPath, q='0', map='a', y=None, loglevel='quiet').run()
 
@@ -139,7 +155,7 @@ if not os.path.exists(audioPath):
     sys.exit(1)
 
 # Transcribe audio using Whisper
-audioTranscription = whisperModel.transcribe(audioPath, language=PROCESSING_LANGUAGE)
+audioTranscription = whisperModel.transcribe(audioPath, language=args.language)
 filteredAudioTranscription = [
     {"start": int(item["start"]), "end": int(item["end"]), "text": item["text"]} for item in audioTranscription['segments']
 ]
@@ -214,12 +230,11 @@ jsonResults = json.dumps(detectionResults)
 logger.debug(jsonResults)
 print(jsonResults)
 
+with open(jsonDataPath, 'w') as jsonDataFile:
+    jsonDataFile.write(jsonResults)
+
 # Log the end of the processing
 logger.warning("Processing successfully completed")
-
-# Remove the audio file after transcription
-if os.path.exists(audioPath):
-    os.remove(audioPath)
 
 # Success exit code
 sys.exit(0)

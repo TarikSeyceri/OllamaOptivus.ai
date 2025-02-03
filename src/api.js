@@ -21,14 +21,12 @@ const ENABLE_PROCESS_LOCK_MECHANISM = process.env.ENABLE_PROCESS_LOCK_MECHANISM 
 const PYTHON_BINARY_PATH = process.env.PYTHON_BINARY_PATH || "python3";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
 const OLLAMA_AI_TEMPERATURE = parseFloat(process.env.OLLAMA_AI_TEMPERATURE || 0);
-const PROCESSING_LANGUAGE = process.env.PROCESSING_LANGUAGE || "en";
 
 var lockProcess = false;
 const languages = {
     en: "Answer in english language only.",
     tr: "Sadece Türkçe dilinde cevap ver."
 }
-const language = languages[PROCESSING_LANGUAGE] ?? languages.en;
 
 // Setup multer for video file uploads
 const upload = multer({
@@ -130,7 +128,13 @@ router.delete("/delete", (req, res) => {
 
 // Endpoint: Process file
 router.post("/process", async (req, res) => {
-    const { videoFilePath } = req.body;
+    let { videoFilePath, language } = req.body;
+
+    if(!language || !languages[language]){
+        language = "en";
+    }
+
+    const systemLanguage = languages[language];
 
     if(lockProcess){
         console.warn("Processing already in progress!");
@@ -160,26 +164,39 @@ router.post("/process", async (req, res) => {
         return res.status(400).json({ success: false, msg: "Invalid file type!" });
     }
 
+    let prompt = undefined;
+    const promptFilePath = PROMPTS_DIR + '/' + path.basename(videoFilePath, path.extname(videoFilePath)) + ".txt";
+    try {
+        await fs.access(promptFilePath);
+        prompt = fs.readFileSync(promptFilePath, 'utf8');
+    }
+    catch(error){
+        prompt = undefined;
+    }
+
     try {
         lockProcess = ENABLE_PROCESS_LOCK_MECHANISM;
-        const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/processor.py ${videoFilePath}`);
-        
+
+        console.log("Processing video file", videoFilePath);
+
+        const { stdout, stderr } = await asyncExec(`${PYTHON_BINARY_PATH} ${__dirname}/processor.py ${videoFilePath} ${language}`);
         if (stderr) {
             lockProcess = false;
             console.error("Processing failed for video file", videoFilePath, stderr);
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
-        console.log("Processing completed for video file", videoFilePath);
+        if(!prompt){
+            const jsonData = JSON.parse(stdout);
+            prompt = dataRefactory.getPrompt(jsonData, language);
+            await fs.promises.writeFile(promptFilePath, prompt, 'utf8');
+        }
 
-        const jsonData = JSON.parse(stdout);
-        const prompt = dataRefactory.getPrompt(jsonData);
-
-        console.log("Prompt prepared for video file", videoFilePath);
-
+        console.log("Prompting video file", videoFilePath);
+        
         const response = await ollama.generate({
             model: OLLAMA_AI_MODEL,
-            system: language,
+            system: systemLanguage,
             prompt,
             stream: false,
             options: {
@@ -249,11 +266,14 @@ router.post("/process", async (req, res) => {
             }
         });
 
-        if (response.status == 200) {
-            lockProcess = false;
+        lockProcess = false;
+        if (response) {
             console.log("Processing completed for video file", videoFilePath);
-            return res.status(200).json({ success: true, msg: "Processing completed", payload: { response } });
+            return res.status(200).json({ success: true, msg: "Processing completed", payload: { response: response?.response } });
         }
+        
+        console.log("Processing completed for video file", videoFilePath);
+        return res.status(500).json({ success: false, msg: "Processing failed" });
     }
     catch (error) {
         lockProcess = false;
@@ -273,7 +293,7 @@ router.post("/test", async (req, res) => {
         }
 
         const jsonData = JSON.parse(stdout);
-        const prompt = dataRefactory.getPrompt(jsonData);
+        const prompt = dataRefactory.getPrompt(jsonData, "en");
 
         console.log("Processed video file", videoFilePath);
         return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt } });

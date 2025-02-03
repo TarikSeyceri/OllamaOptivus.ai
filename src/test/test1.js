@@ -10,7 +10,7 @@ fs.readFile('./data2.json', 'utf8', (err, data) => {
 
     const jsonData = JSON.parse(data);
 
-    console.log(dataRefactory.getPrompt(jsonData));
+    console.log(dataRefactory.getPrompt(jsonData, "en"));
 
 });
 

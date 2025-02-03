@@ -318,3 +318,6 @@ pyrightconfig.json
 *.exe
 *.wav
 *.mp3
+
+data/*
+data

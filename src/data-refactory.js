@@ -23,7 +23,6 @@ const languages = {
         detectedObjects: "Videoda algılanan nesneler",
     }
 }
-const language = languages[PROCESSING_LANGUAGE] || languages.en;
 
 function refactorMethod1(jsonData) {
     let refactoredData = [];
@@ -297,31 +296,31 @@ function clearBackgroundOnScreenTextsData(refactoredData){
     return refactoredData;
 }
 
-function generatePrompt1(refactoredData) {
+function generatePrompt1(refactoredData, language) {
     refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
 
     let prompt = `${language.videoExplanation}`;
     for (let data of refactoredData) {
         prompt = `${prompt}
-${language.betweenSecond} ${data.startTimestamp} ${language.andSecond} ${data.endTimestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", ${language.audioTranscription}:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". ${language.onScreenText}: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". ${language.objectsDetected}: " + data.detections.join(", ") + "." : ""}`;
+${language.betweenSecond} ${data.startTimestamp} ${language.andSecond} ${data.endTimestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? `, ${language.audioTranscription}:` + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? `. ${language.onScreenText}: ` + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? `. ${language.objectsDetected}: ` + data.detections.join(", ") + "." : ""}`;
     }
 
     return prompt
 }
 
-function generatePrompt2(refactoredData) {
+function generatePrompt2(refactoredData, language) {
     refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
 
     let prompt = `${language.videoExplanation}`;
     for (let data of refactoredData) {
         prompt = `${prompt}
-${language.atSecond} ${data.timestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? ", ${language.audioTranscription}:" + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? ". ${language.onScreenText}: " + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? ". ${language.objectsDetected}: " + data.detections.join(", ") + "." : ""}`;
+${language.atSecond} ${data.timestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? `, ${language.audioTranscription}:` + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? `. ${language.onScreenText}: ` + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? `. ${language.objectsDetected}: ` + data.detections.join(", ") + "." : ""}`;
     }
 
     return prompt
 }
 
-function generatePrompt3(reworkedData) {
+function generatePrompt3(reworkedData, language) {
     reworkedData.refactoredData = clearBackgroundOnScreenTextsData(reworkedData.refactoredData);
 
     let prompt = `${language.videoExplanation}`;
@@ -329,7 +328,7 @@ function generatePrompt3(reworkedData) {
     for (let data of reworkedData.refactoredData) {
         if(data.audioTranscription != "" && data.audioTranscription != " "){
             prompt = `${prompt}
-${language.atSecond} ${data.timestamp}, ${language.audioTranscription}: ${data.audioTranscription}`;
+${language.atSecond} ${data.timestamp}, ${language.audioTranscription}:${data.audioTranscription}`;
         }
         if(data.onScreenTexts.length > 0){
             prompt = `${prompt}
@@ -342,12 +341,14 @@ ${language.detectedObjects}: ${reworkedData.detections.join(", ")}.`;
     return prompt
 }
 
-function getPrompt(jsonData) {
+function getPrompt(jsonData, lang) {
+    if(!lang || !languages[lang]) lang = "en";
+
     if (IS_AUDIO_SPEECH_GUARANTEED) {
-        return generatePrompt3(refactorMethod3(jsonData));
+        return generatePrompt3(refactorMethod3(jsonData), languages[lang]);
     }
     else {
-        return generatePrompt2(refactorMethod2(jsonData));
+        return generatePrompt2(refactorMethod2(jsonData), languages[lang]);
     }
 }
 

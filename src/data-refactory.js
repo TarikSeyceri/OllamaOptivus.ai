@@ -30,7 +30,7 @@ function refactorMethod1(jsonData) {
 
     const firstAudio = jsonData?.audioTranscription?.[0];
     if (firstAudio && firstAudio?.start != 0) {
-        let content = {
+        let frameContent = {
             startTimestamp: 0,
             endTimestamp: firstStartAudio.start,
             audioTranscription: "",
@@ -38,22 +38,22 @@ function refactorMethod1(jsonData) {
             detections: new Set(),
         };
 
-        let frameDetails = jsonData.frames.filter(frame => frame.timestamp >= 0 && frame.timestamp < firstAudio.start);
+        let frames = jsonData.frames.filter(frame => frame.timestamp >= 0 && frame.timestamp < firstAudio.start);
 
-        frameDetails.forEach(frame => {
+        frames.forEach(frame => {
             frame.texts.forEach(text => {
-                content.onScreenTexts.add(text);
+                frameContent.onScreenTexts.add(text);
             });
             frame.detections.forEach(detection => {
-                content.detections.add(detection);
+                frameContent.detections.add(detection);
             });
         });
 
-        content.onScreenTexts = [...content.onScreenTexts];
-        content.detections = [...content.detections];
+        frameContent.onScreenTexts = [...frameContent.onScreenTexts];
+        frameContent.detections = [...frameContent.detections];
 
         // Push the merged result for this audio segment
-        refactoredData.push(content);
+        refactoredData.push(frameContent);
     }
 
     // Iterate over the audio transcriptions and match frames based on the time intervals
@@ -68,10 +68,10 @@ function refactorMethod1(jsonData) {
         };
 
         // Find frames that overlap with the current audio transcription
-        let frameDetails = jsonData.frames.filter(frame => frame.timestamp >= audio.start && frame.timestamp < audio.end);
+        let frames = jsonData.frames.filter(frame => frame.timestamp >= audio.start && frame.timestamp < audio.end);
 
         // Combine all the detections in the frame for this period
-        frameDetails.forEach(frame => {
+        frames.forEach(frame => {
             frame.texts.forEach(text => {
                 audioContent.onScreenTexts.add(text);
             });
@@ -90,7 +90,7 @@ function refactorMethod1(jsonData) {
     const lastAudio = jsonData?.audioTranscription?.[jsonData?.audioTranscription?.length - 1];
     const lastFrame = jsonData?.frames?.[jsonData?.frames?.length - 1];
     if (lastAudio && lastFrame && lastAudio?.end < lastFrame.timestamp) {
-        let content = {
+        let frameContent = {
             startTimestamp: lastAudio?.end,
             endTimestamp: lastFrame.timestamp,
             audioTranscription: "",
@@ -98,22 +98,22 @@ function refactorMethod1(jsonData) {
             detections: new Set(),
         };
 
-        let frameDetails = jsonData.frames.filter(frame => frame.timestamp > lastAudio?.end && frame.timestamp <= lastFrame.timestamp);
+        let frames = jsonData.frames.filter(frame => frame.timestamp > lastAudio?.end && frame.timestamp <= lastFrame.timestamp);
 
-        frameDetails.forEach(frame => {
+        frames.forEach(frame => {
             frame.texts.forEach(text => {
-                content.onScreenTexts.add(text);
+                frameContent.onScreenTexts.add(text);
             });
             frame.detections.forEach(detection => {
-                content.detections.add(detection);
+                frameContent.detections.add(detection);
             });
         });
 
-        content.onScreenTexts = [...content.onScreenTexts];
-        content.detections = [...content.detections];
+        frameContent.onScreenTexts = [...frameContent.onScreenTexts];
+        frameContent.detections = [...frameContent.detections];
 
         // Push the merged result for this audio segment
-        refactoredData.push(content);
+        refactoredData.push(frameContent);
     }
 
     // Return the merged data
@@ -125,8 +125,7 @@ function refactorMethod2(jsonData) {
     let usedAudioTranscriptions = {};
 
     // Merging frames and audio transcriptions
-    for (let i = 0; i < jsonData.frames.length; i++) {
-        let frame = jsonData.frames[i];
+    for (const frame of jsonData?.frames) {
         let audioText = jsonData.audioTranscription.find(item => item.start <= frame.timestamp && item.end > frame.timestamp);
 
         // Prevent duplicate audio transcriptions
@@ -199,8 +198,7 @@ function refactorMethod3(jsonData) {
     let detections = [];
 
     // Merging frames and audio transcriptions
-    for (let i = 0; i < jsonData.frames.length; i++) {
-        let frame = jsonData.frames[i];
+    for (const frame of jsonData?.frames) {
         let audioText = jsonData.audioTranscription.find(item => item.start <= frame.timestamp && item.end > frame.timestamp);
 
         // Prevent duplicate audio transcriptions

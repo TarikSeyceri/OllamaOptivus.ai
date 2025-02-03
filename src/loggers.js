@@ -3,7 +3,7 @@ const winstonDailyRotateFile = require("winston-daily-rotate-file");
 const morgan = require("morgan");
 const fs = require("fs");
 
-const LOG_DIR = process.env.LOG_DIR || "logs";
+const LOG_DIR = process.env.LOG_DIR || "data/logs";
 const LOG_LEVEL = process.env.LOG_LEVEL || "warn";
 const LOG_FILE_MAX_SIZE = process.env.LOG_FILE_MAX_SIZE || "10m";
 const LOG_RETENTION_DAYS = parseInt(process.env.LOG_RETENTION_DAYS || 30);

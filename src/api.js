@@ -14,6 +14,7 @@ const asyncExec = util.promisify(exec);
 
 const VIDEOS_DIR = process.env.VIDEOS_DIR || "data/videos";
 const VIDEO_FILE_MAX_UPLOAD_SIZE = parseInt(process.env.VIDEO_FILE_MAX_UPLOAD_SIZE || 500 * 1024 * 1024); // Default 500MB
+const PROMPTS_DIR = process.env.PROMPTS_DIR || "data/prompts";
 const PROCESSING_ONLY = process.env.PROCESSING_ONLY == "true";
 const ALLOW_PROCESS_VIDEOS_OUTSIDE_UPLOAD_DIR = process.env.ALLOW_PROCESS_VIDEOS_OUTSIDE_UPLOAD_DIR == "true";
 const ENABLE_PROCESS_LOCK_MECHANISM = process.env.ENABLE_PROCESS_LOCK_MECHANISM == "true";
@@ -28,9 +29,6 @@ const languages = {
     tr: "Sadece Türkçe dilinde cevap ver."
 }
 const language = languages[PROCESSING_LANGUAGE] ?? languages.en;
-
-// Ensure necessary directories exist
-if (!fs.existsSync(VIDEOS_DIR)) fs.mkdirSync(VIDEOS_DIR, { recursive: true });
 
 // Setup multer for video file uploads
 const upload = multer({

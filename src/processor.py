@@ -20,8 +20,10 @@ import time
 #----------------------------------------------------
 load_dotenv()
 
-LOG_DIR = os.getenv("LOG_DIR", "logs")
+LOG_DIR = os.getenv("LOG_DIR", "data/logs")
 LOG_RETENTION_DAYS = int(os.getenv("LOG_RETENTION_DAYS", 30))
+AUDIOS_DIR = os.getenv("AUDIOS_DIR", "data/audios")
+JSON_DATA_DIR = os.getenv("JSON_DATA_DIR", "data/json")
 PROCESSING_LOG_LEVEL = os.getenv("PROCESSING_LOG_LEVEL", "WARNING")
 PROCESSING_LANGUAGE = os.getenv("PROCESSING_LANGUAGE", "en")
 PROCESSING_WHISPER_MODEL = os.getenv("PROCESSING_WHISPER_MODEL", "base")

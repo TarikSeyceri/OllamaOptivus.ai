@@ -27,7 +27,7 @@
         }
       }
     },
-    "/files": {
+    "/videos": {
       "get": {
         "description": "",
         "responses": {
@@ -45,7 +45,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "filePath",
+            "name": "videoFilePath",
             "in": "query",
             "type": "string"
           }
@@ -73,7 +73,22 @@
             "schema": {
               "type": "object",
               "properties": {
-                "filePath": {
+                "videoFilePath": {
+                  "example": "any"
+                },
+                "language": {
+                  "example": "any"
+                },
+                "videoExplanation": {
+                  "example": "any"
+                },
+                "model": {
+                  "example": "any"
+                },
+                "temperature": {
+                  "example": "any"
+                },
+                "format": {
                   "example": "any"
                 }
               }

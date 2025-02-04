@@ -31,6 +31,10 @@ initWinston();         // Global Overriding console logging functions with Winst
 app.use(initMorgan()); // Network Logging with Morgan Logger
 app.use(express.json({ limit: HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT }));
 
+if(NODE_ENV === 'development') {
+  console.warn(`NODE_ENV is set to 'development', consider setting it to 'production' for better performance and security.`);
+}
+
 // Ollama Initialization
 (async function(){
   ollama.config.host = OLLAMA_AI_API_URL;

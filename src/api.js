@@ -23,10 +23,38 @@ const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
 const OLLAMA_AI_TEMPERATURE = parseFloat(process.env.OLLAMA_AI_TEMPERATURE || 0);
 
 var lockProcess = false;
-const languages = {
+const systemLanguages = {
     en: "Answer in english language only.",
     tr: "Sadece Türkçe dilinde cevap ver."
 }
+
+const ollamaDefaultOutputFormat = {
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "string"
+      },
+      "events": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": ["timestamp", "description"]
+        }
+      }
+    },
+    "required": [
+      "summary",
+      "events"
+    ]
+};
 
 // Setup multer for video file uploads
 const upload = multer({
@@ -128,13 +156,12 @@ router.delete("/delete", (req, res) => {
 
 // Endpoint: Process file
 router.post("/process", async (req, res) => {
-    let { videoFilePath, language } = req.body;
+    let { videoFilePath, language, videoExplanation, model, temperature, format } = req.body;
 
-    if(!language || !languages[language]){
+    if(!language || !systemLanguages[language]){
         language = "en";
     }
-
-    const systemLanguage = languages[language];
+    const systemLanguage = systemLanguages[language];
 
     if(lockProcess){
         console.warn("Processing already in progress!");
@@ -164,16 +191,6 @@ router.post("/process", async (req, res) => {
         return res.status(400).json({ success: false, msg: "Invalid file type!" });
     }
 
-    let prompt = undefined;
-    const promptFilePath = PROMPTS_DIR + '/' + path.basename(videoFilePath, path.extname(videoFilePath)) + ".txt";
-    try {
-        await fs.access(promptFilePath);
-        prompt = fs.readFileSync(promptFilePath, 'utf8');
-    }
-    catch(error){
-        prompt = undefined;
-    }
-
     try {
         lockProcess = ENABLE_PROCESS_LOCK_MECHANISM;
 
@@ -186,84 +203,21 @@ router.post("/process", async (req, res) => {
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
-        if(!prompt){
-            const jsonData = JSON.parse(stdout);
-            prompt = dataRefactory.getPrompt(jsonData, language);
-            await fs.promises.writeFile(promptFilePath, prompt, 'utf8');
-        }
+        const promptFilePath = PROMPTS_DIR + '/' + path.basename(videoFilePath, path.extname(videoFilePath)) + "_" + language + ".txt";
+        const prompt = dataRefactory.getPrompt(JSON.parse(stdout), language, videoExplanation);
+        await fs.promises.writeFile(promptFilePath, prompt, 'utf8');
 
         console.log("Prompting video file", videoFilePath);
         
         const response = await ollama.generate({
-            model: OLLAMA_AI_MODEL,
+            model: model ?? OLLAMA_AI_MODEL,
             system: systemLanguage,
             prompt,
             stream: false,
             options: {
-                temperature: OLLAMA_AI_TEMPERATURE
+                temperature: temperature ?? OLLAMA_AI_TEMPERATURE
             },
-            "format": {
-                "type": "object",
-                "properties": {
-                  "summary": {
-                    "type": "string"
-                  },
-                  "isUnrespectfulConversation": {
-                    "type": "boolean"
-                  },
-                  "customer": {
-                    "type": "object",
-                    "properties": {
-                        "fraud": {
-                            "type": "object",
-                            "properties": {
-                                "percentage": {
-                                    "type": "number"
-                                },
-                                "reason": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": ["percentage", "reason"]
-                        },
-                        "satisfaction": {
-                            "type": "object",
-                            "properties": {
-                                "percentage": {
-                                    "type": "number"
-                                },
-                                "reason": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": ["percentage", "reason"]
-                        }
-                    },
-                    "required": ["fraud", "satisfaction"]
-                  },
-                  "events": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "timestamp": {
-                                "type": "number"
-                            },
-                            "description": {
-                                "type": "string"
-                            }
-                        },
-                        "required": ["timestamp", "description"]
-                    }
-                  }
-                },
-                "required": [
-                  "summary",
-                  "isUnrespectfulConversation",
-                  "customer",
-                  "events"
-                ]
-            }
+            format: format ?? ollamaDefaultOutputFormat,
         });
 
         lockProcess = false;
@@ -272,7 +226,7 @@ router.post("/process", async (req, res) => {
             return res.status(200).json({ success: true, msg: "Processing completed", payload: { response: response?.response } });
         }
         
-        console.log("Processing completed for video file", videoFilePath);
+        console.log("Processing failed for video file", videoFilePath);
         return res.status(500).json({ success: false, msg: "Processing failed" });
     }
     catch (error) {
@@ -293,7 +247,7 @@ router.post("/test", async (req, res) => {
         }
 
         const jsonData = JSON.parse(stdout);
-        const prompt = dataRefactory.getPrompt(jsonData, "en");
+        const prompt = dataRefactory.getPrompt(jsonData);
 
         console.log("Processed video file", videoFilePath);
         return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt } });

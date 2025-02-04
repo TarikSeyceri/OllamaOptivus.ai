@@ -1,5 +1,4 @@
 const IS_AUDIO_SPEECH_GUARANTEED = process.env.IS_AUDIO_SPEECH_GUARANTEED == "true";
-const PROCESSING_LANGUAGE = process.env.PROCESSING_LANGUAGE || "en";
 
 const languages = {
     en: {
@@ -341,14 +340,16 @@ ${language.detectedObjects}: ${reworkedData.detections.join(", ")}.`;
     return prompt
 }
 
-function getPrompt(jsonData, lang) {
+function getPrompt(jsonData, lang, videoExplanation) {
     if(!lang || !languages[lang]) lang = "en";
+    let language = languages[lang];
+    if(videoExplanation) language.videoExplanation = videoExplanation;
 
     if (IS_AUDIO_SPEECH_GUARANTEED) {
-        return generatePrompt3(refactorMethod3(jsonData), languages[lang]);
+        return generatePrompt3(refactorMethod3(jsonData), language);
     }
     else {
-        return generatePrompt2(refactorMethod2(jsonData), languages[lang]);
+        return generatePrompt2(refactorMethod2(jsonData), language);
     }
 }
 

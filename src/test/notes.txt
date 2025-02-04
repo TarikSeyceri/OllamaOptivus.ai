@@ -58,3 +58,79 @@
 
 
 http://localhost:11434/api/generate
+
+
+
+
+
+const response = await ollama.generate({
+            model: ollamaModel ?? OLLAMA_AI_MODEL,
+            system: systemLanguage,
+            prompt,
+            stream: false,
+            options: {
+                temperature: temperature ?? OLLAMA_AI_TEMPERATURE
+            },
+            "format": {
+                "type": "object",
+                "properties": {
+                  "summary": {
+                    "type": "string"
+                  },
+                  "isUnrespectfulConversation": {
+                    "type": "boolean"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                        "fraud": {
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "number"
+                                },
+                                "reason": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["percentage", "reason"]
+                        },
+                        "satisfaction": {
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "number"
+                                },
+                                "reason": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["percentage", "reason"]
+                        }
+                    },
+                    "required": ["fraud", "satisfaction"]
+                  },
+                  "events": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "timestamp": {
+                                "type": "number"
+                            },
+                            "description": {
+                                "type": "string"
+                            }
+                        },
+                        "required": ["timestamp", "description"]
+                    }
+                  }
+                },
+                "required": [
+                  "summary",
+                  "isUnrespectfulConversation",
+                  "customer",
+                  "events"
+                ]
+            }
+        });

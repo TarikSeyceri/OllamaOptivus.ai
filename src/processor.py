@@ -136,7 +136,7 @@ if os.path.exists(jsonDataPath):
 yoloModel = YOLO(os.path.dirname(os.path.abspath(__file__)) + "/yolov8n.pt") 
 
 # Load the EasyOCR model
-ocrReader = easyocr.Reader([args.language]) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
+ocrReader = easyocr.Reader([args.language], verbose=False) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
 
 # Load Whisper model
 whisperModel = whisper.load_model(PROCESSING_WHISPER_MODEL)  # Choose model size: tiny, base, small, medium, large

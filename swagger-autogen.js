@@ -9,7 +9,7 @@ const swaggerConfig = {
         title: 'Ollama Optivus AI API',
         description: 'Tarik Seyceri',
     },
-    host: 'localhost:' + (process.env.HTTP_PORT || 3000),
+    host: 'localhost:' + (process.env.HTTP_PORT || 3330),
     schemes: ['http'],
 };
 

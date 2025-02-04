@@ -1,5 +1,6 @@
 opencv-python
 ultralytics
 easyocr
-whisper
+openai-whisper
 ffmpeg-python
+python-dotenv

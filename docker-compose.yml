@@ -1,11 +1,12 @@
-version: '3.8'
-
 services:
   video-processor:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     volumes:
-      - .:/usr/src/app  # Mount current directory to container's working directory
-    working_dir: /usr/src/app
-    command: ["python", "main.py"]
+      - .:/app
+    ports:
+      - "3330:3330"
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "run", "node"]
+    tty: true
+    stdin_open: true

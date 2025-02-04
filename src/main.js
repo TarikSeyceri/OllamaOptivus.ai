@@ -11,7 +11,7 @@ const { initWinston, initMorgan } = require("./loggers"); // for logging
 const swaggerConfig = require('./swagger.json');
 
 const NODE_ENV = process.env.NODE_ENV || "development";
-const HTTP_PORT = process.env.HTTP_PORT || 3000;
+const HTTP_PORT = process.env.HTTP_PORT || 3330;
 const HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT = process.env.HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT || "100kb";
 const HTTP_RATE_LIMIT_WINDOW_MS = parseInt(process.env.HTTP_RATE_LIMIT_WINDOW_MS || 1 * 60 * 1000); // 1 minute
 const HTTP_RATE_LIMIT_MAX_REQUESTS = parseInt(process.env.HTTP_RATE_LIMIT_MAX_REQUESTS || 10); // 10 requests per minute

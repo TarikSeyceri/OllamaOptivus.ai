@@ -1,21 +1,24 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.11.9-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install Node.js 18.x
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs=18.20.5-1nodesource1
+
+# Install system dependencies for Python packages
+RUN apt-get install -y \
+    ffmpeg \
     libgl1-mesa-glx \
-    && rm -rf /var/lib/apt/lists/*
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev
 
-# Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy the requirements file and install Python dependencies
-COPY requirements.txt ./
+COPY . .
+
+RUN npm install
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files
-COPY main.py ./
-COPY 8047000029a4000c61f808dd2fd54bb4.mp4 ./
-
-# Default command
-CMD ["python", "main.py"]
+CMD ["npm", "run", "node"]

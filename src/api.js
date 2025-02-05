@@ -226,7 +226,7 @@ router.post("/process", async (req, res) => {
         lockProcess = false;
         if (response) {
             console.log("Processing completed for video file", videoFilePath);
-            return res.status(200).json({ success: true, msg: "Processing completed", payload: { response: response?.response } });
+            return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt, response: response?.response } });
         }
         
         console.log("Processing failed for video file", videoFilePath);

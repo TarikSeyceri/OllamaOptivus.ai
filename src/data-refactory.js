@@ -1,8 +1,6 @@
-const IS_AUDIO_SPEECH_GUARANTEED = process.env.IS_AUDIO_SPEECH_GUARANTEED == "true";
-
 const languages = {
     en: {
-        videoExplanation: "The following info is the output of an analysis of a video call conversation between an agent and customer:",
+        videoExplanation: "The following info is the output of an analysis of a video:",
         betweenSecond: "Between second",
         andSecond: "and second",
         audioTranscription: "Audio transcription",
@@ -12,7 +10,7 @@ const languages = {
         detectedObjects: "Detected objects in the video",
     },
     tr: {
-        videoExplanation: "Aşağıdaki bilgiler, bir temsilci ile müşteri arasındaki bir görüntülü görüşme görüşmesinin analizinin çıktısıdır:",
+        videoExplanation: "Aşağıdaki bilgiler, bir video analizinin çıktısıdır:",
         betweenSecond: "Arasında saniye",
         andSecond: "ve saniye",
         audioTranscription: "Ses transkripsiyonu",
@@ -66,7 +64,7 @@ function refactorMethod1(jsonData) {
         };
 
         // Find frames that overlap with the current audio transcription
-        let frames = jsonData.frames.filter(frame => frame.timestamp >= audio.start && frame.timestamp < audio.end);
+        let frames = jsonData.frames.filter(frame => frame.timestamp >= audio.start && frame.timestamp <= audio.end);
 
         // Combine all the detections in the frame for this period
         frames.forEach(frame => {
@@ -140,8 +138,8 @@ function refactorMethod2(jsonData) {
         let frameContent = {
             timestamp: frame.timestamp,
             audioTranscription: audioText ? audioText.text : "",
-            detections: Array.from(new Set(frame.detections)),
             onScreenTexts: Array.from(new Set(frame.texts)),
+            detections: Array.from(new Set(frame.detections)),
         };
 
         let prevFrameContent = refactoredData[refactoredData.length - 1];
@@ -149,19 +147,19 @@ function refactorMethod2(jsonData) {
         if (
             (
                 (frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") &&
-                frameContent.detections.length == 0 &&
-                frameContent.onScreenTexts.length == 0
+                frameContent.onScreenTexts.length == 0 &&
+                frameContent.detections.length == 0
             ) ||
             (
                 prevFrameContent &&
                 (frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") &&
                 (
-                    (frameContent.detections.length == 0 && prevFrameContent.detections.length == 0) ||
-                    frameContent.detections.every(item => prevFrameContent.detections.includes(item))
-                ) &&
-                (
                     (frameContent.onScreenTexts.length == 0 && prevFrameContent.onScreenTexts.length == 0) ||
                     frameContent.onScreenTexts.every(item => prevFrameContent.onScreenTexts.includes(item))
+                ) &&
+                (
+                    (frameContent.detections.length == 0 && prevFrameContent.detections.length == 0) ||
+                    frameContent.detections.every(item => prevFrameContent.detections.includes(item))
                 )
             )
         ) {
@@ -171,12 +169,12 @@ function refactorMethod2(jsonData) {
             prevFrameContent &&
             (prevFrameContent.audioTranscription == "" || prevFrameContent?.audioTranscription == " ") &&
             (
-                (prevFrameContent.detections.length == 0 && frameContent.detections.length == 0) ||
-                prevFrameContent.detections.every(item => frameContent.detections.includes(item))
-            ) &&
-            (
                 (prevFrameContent.onScreenTexts.length == 0 && frameContent.onScreenTexts.length == 0) ||
                 prevFrameContent.onScreenTexts.every(item => frameContent.onScreenTexts.includes(item))
+            ) && 
+            (
+                (prevFrameContent.detections.length == 0 && frameContent.detections.length == 0) ||
+                prevFrameContent.detections.every(item => frameContent.detections.includes(item))
             )
         ) {
             refactoredData[refactoredData.length - 1] = frameContent;
@@ -345,12 +343,7 @@ function getPrompt(jsonData, lang, videoExplanation) {
     let language = languages[lang];
     if(videoExplanation) language.videoExplanation = videoExplanation;
 
-    if (IS_AUDIO_SPEECH_GUARANTEED) {
-        return generatePrompt3(refactorMethod3(jsonData), language);
-    }
-    else {
-        return generatePrompt2(refactorMethod2(jsonData), language);
-    }
+    return generatePrompt1(refactorMethod1(jsonData), language);
 }
 
 module.exports = { getPrompt };

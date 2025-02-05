@@ -88,7 +88,7 @@ const upload = multer({
 
 // Endpoint: Upload video file
 router.post("/upload", upload.single("video"), (req, res) => {
-    const video = req.video;
+    const video = req.file;
 
     if (PROCESSING_ONLY) {
         console.warn("Video file upload disabled in this environment!");
@@ -128,7 +128,7 @@ router.get("/videos", (req, res) => {
 
 // Endpoint: Delete video file by path
 router.delete("/delete", (req, res) => {
-    const { videoFilePath } = req.query;
+    const { videoFilePath } = req.body;
 
     if (PROCESSING_ONLY) {
         console.warn("Video file deletion disabled in this environment!");

@@ -1,12 +1,14 @@
 services:
   video-processor:
-    build: .
-    volumes:
-      - .:/app
-    ports:
-      - "3330:3330"
     environment:
       - NODE_ENV=development
-    command: ["npm", "run", "node"]
+    ports:
+      - "3330:3330"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/app
+    command: ["sh", "-c", "npm install && npm run node"]
     tty: true
     stdin_open: true

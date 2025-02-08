@@ -11,11 +11,11 @@ const { initWinston, initMorgan } = require("./loggers"); // for logging
 const swaggerConfig = require('./swagger.json');
 
 const NODE_ENV = process.env.NODE_ENV || "development";
+const HTTP_BEARER_TOKEN = process.env.HTTP_BEARER_TOKEN || undefined; // for authentication
 const HTTP_PORT = process.env.HTTP_PORT || 3330;
 const HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT = process.env.HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT || "100kb";
 const HTTP_RATE_LIMIT_WINDOW_MS = parseInt(process.env.HTTP_RATE_LIMIT_WINDOW_MS || 1 * 60 * 1000); // 1 minute
 const HTTP_RATE_LIMIT_MAX_REQUESTS = parseInt(process.env.HTTP_RATE_LIMIT_MAX_REQUESTS || 10); // 10 requests per minute
-const BEARER_TOKEN = process.env.BEARER_TOKEN || undefined; // for authentication
 const VIDEOS_DIR = process.env.VIDEOS_DIR || "data/videos";
 const AUDIOS_DIR = process.env.AUDIOS_DIR || "data/audios";
 const JSON_DATA_DIR = process.env.JSON_DATA_DIR || "data/json";
@@ -99,8 +99,8 @@ if(NODE_ENV === 'development') {
 })();
 
 if (NODE_ENV === 'production') {
-  if (!BEARER_TOKEN) {
-    console.error("BEARER_TOKEN is not defined in production environment.");
+  if (!HTTP_BEARER_TOKEN) {
+    console.error("HTTP_BEARER_TOKEN is not defined in production environment.");
     process.exit(1);
   }
 
@@ -116,7 +116,7 @@ if (NODE_ENV === 'production') {
   // Static token middleware
   app.use((req, res, next) => {
     const authHeader = req.headers["authorization"];
-    if (!authHeader || authHeader !== `Bearer ${BEARER_TOKEN}`) {
+    if (!authHeader || authHeader !== `Bearer ${HTTP_BEARER_TOKEN}`) {
       return res.status(401).json({ success: false, msg: "Unauthorized" });
     }
     next();

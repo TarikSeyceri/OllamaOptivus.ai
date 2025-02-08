@@ -13,8 +13,10 @@ const dataRefactory = require("./data-refactory");
 const execFilePromise = util.promisify(execFile);
 
 const VIDEOS_DIR = process.env.VIDEOS_DIR || "data/videos";
-const VIDEO_FILE_MAX_UPLOAD_SIZE = parseInt(process.env.VIDEO_FILE_MAX_UPLOAD_SIZE || 500 * 1024 * 1024); // Default 500MB
+const AUDIOS_DIR = process.env.AUDIOS_DIR || "data/audios";
+const JSON_DATA_DIR = process.env.JSON_DATA_DIR || "data/json";
 const PROMPTS_DIR = process.env.PROMPTS_DIR || "data/prompts";
+const VIDEO_FILE_MAX_UPLOAD_SIZE = parseInt(process.env.VIDEO_FILE_MAX_UPLOAD_SIZE || 500 * 1024 * 1024); // Default 500MB
 const PROCESSING_ONLY = process.env.PROCESSING_ONLY == "true";
 const ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR = process.env.ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR == "true";
 const ENABLE_PROCESS_LOCK_MECHANISM = process.env.ENABLE_PROCESS_LOCK_MECHANISM == "true";
@@ -152,6 +154,18 @@ router.delete("/delete", (req, res) => {
     }
 
     fs.unlinkSync(resolvedPath);
+
+    const audioFilePath = path.join(AUDIOS_DIR, path.basename(videoFilePath, path.extname(videoFilePath))+".wav");
+    if (fs.existsSync(audioFilePath))fs.unlinkSync(audioFilePath);
+
+    const jsonDataFilePath = path.join(JSON_DATA_DIR, path.basename(videoFilePath, path.extname(videoFilePath))+".json");
+    if (fs.existsSync(jsonDataFilePath))fs.unlinkSync(jsonDataFilePath);
+    
+    for(const language in systemLanguages){
+        const promptFilePath = path.join(PROMPTS_DIR, path.basename(videoFilePath, path.extname(videoFilePath)) + "_" + language + ".txt");
+        if (fs.existsSync(promptFilePath))fs.unlinkSync(promptFilePath);
+    }
+    
     console.log("Video file deleted!", videoFilePath);
     return res.status(200).json({ success: true, msg: "Video file deleted!" });
 });
@@ -226,7 +240,7 @@ router.post("/process", async (req, res) => {
         lockProcess = false;
         if (response) {
             console.log("Processing completed for video file", videoFilePath);
-            return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt, response: response?.response } });
+            return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt: NODE_ENV === 'development' ? prompt : undefined, response: response?.response } });
         }
         
         console.log("Processing failed for video file", videoFilePath);

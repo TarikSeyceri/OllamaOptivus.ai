@@ -47,7 +47,7 @@ if(NODE_ENV === 'development') {
     ollamaModelsList = undefined
 
     if(!OLLAMA_AI_API_URL.includes("127.0.0.1:11434")){
-      console.warn(`Provided 'OLLAMA_AI_API_URL:${OLLAMA_AI_API_URL}' from environment variables could not be reached!, using localhost 'http://127.0.0.1:11434' url`, error.message);
+      console.warn(`Provided 'OLLAMA_AI_API_URL:${OLLAMA_AI_API_URL}' from environment variables could not be reached!, reason: ${error.message}, trying localhost 'http://127.0.0.1:11434' url instead.`);
     }
   }
 
@@ -58,7 +58,7 @@ if(NODE_ENV === 'development') {
       ollamaModelsList = (await ollama?.list())?.models;
     }
     catch(error){
-      console.error(`OLLAMA Localhost 'http://127.0.0.1:11434' AI API URL not reachable!`, error.message);
+      console.error(`OLLAMA Localhost 'http://127.0.0.1:11434' AI API URL not reachable!, reason:`, error.message);
       process.exit(1);
     }
   }

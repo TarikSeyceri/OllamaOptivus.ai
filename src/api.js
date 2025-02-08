@@ -130,43 +130,38 @@ router.get("/videos", (req, res) => {
 
 // Endpoint: Delete video file by path
 router.delete("/delete", (req, res) => {
-    const { videoFilePath } = req.body;
+    const { videoFileName } = req.body;
 
     if (PROCESSING_ONLY) {
         console.warn("Video file deletion disabled in this environment!");
         return res.status(403).json({ success: false, msg: "Video file deletion disabled in this environment!" });
     }
 
-    if (!videoFilePath) {
-        console.warn("videoFilePath not provided!");
-        return res.status(400).json({ success: false, msg: "videoFilePath not provided!" });
+    if (!videoFileName) {
+        console.warn("videoFileName not provided!");
+        return res.status(400).json({ success: false, msg: "videoFileName not provided!" });
     }
 
-    const resolvedPath = path.resolve(videoFilePath);
-    if (!videoFilePath.includes(path.join(VIDEOS_DIR, path.basename(videoFilePath))) || videoFilePath.includes("..") || !resolvedPath.startsWith(path.resolve(VIDEOS_DIR))) {
-        console.warn("videoFilePath not allowed!", videoFilePath);
-        return res.status(403).json({ success: false, msg: "videoFilePath not allowed!" });
-    }
-
-    if (!fs.existsSync(resolvedPath)) {
+    const videoFilePath = path.join(VIDEOS_DIR, path.basename(videoFileName));
+    if (!fs.existsSync(videoFilePath)) {
         console.warn("Video file not found!", videoFilePath);
-        return res.status(200).json({ success: true, msg: "Video file deleted!" });
+        return res.status(404).json({ success: true, msg: "Video file not found!" });
     }
 
-    fs.unlinkSync(resolvedPath);
+    fs.unlinkSync(videoFilePath);
 
-    const audioFilePath = path.join(AUDIOS_DIR, path.basename(videoFilePath, path.extname(videoFilePath))+".wav");
+    const audioFilePath = path.join(AUDIOS_DIR, path.basename(videoFileName, path.extname(videoFileName))+".wav");
     if (fs.existsSync(audioFilePath))fs.unlinkSync(audioFilePath);
-
-    const jsonDataFilePath = path.join(JSON_DATA_DIR, path.basename(videoFilePath, path.extname(videoFilePath))+".json");
-    if (fs.existsSync(jsonDataFilePath))fs.unlinkSync(jsonDataFilePath);
     
     for(const language in systemLanguages){
-        const promptFilePath = path.join(PROMPTS_DIR, path.basename(videoFilePath, path.extname(videoFilePath)) + "_" + language + ".txt");
+        const jsonDataFilePath = path.join(JSON_DATA_DIR, path.basename(videoFileName, path.extname(videoFileName)) + "_" + language +".json");
+        if (fs.existsSync(jsonDataFilePath))fs.unlinkSync(jsonDataFilePath);
+
+        const promptFilePath = path.join(PROMPTS_DIR, path.basename(videoFileName, path.extname(videoFileName)) + "_" + language + ".txt");
         if (fs.existsSync(promptFilePath))fs.unlinkSync(promptFilePath);
     }
     
-    console.log("Video file deleted!", videoFilePath);
+    console.log("Video file deleted!", videoFileName);
     return res.status(200).json({ success: true, msg: "Video file deleted!" });
 });
 

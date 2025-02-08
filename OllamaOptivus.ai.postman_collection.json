@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "5865987e-f036-4f5e-8694-8a5006497020",
+		"name": "OllamaOptivus.ai",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28881851"
+	},
+	"item": [
+		{
+			"name": "List Videos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "mysecrettoken",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3330/videos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3330",
+					"path": [
+						"videos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Video",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "mysecrettoken",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "video",
+							"type": "file",
+							"src": "/C:/Users/Tarik/Desktop/8047000029a4000c36b908dd2fd94b6e.mp4"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3330/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3330",
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Video",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "mysecrettoken",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"videoFileName\": \"8047000029a4000c61f808dd2fd54bb4.mp4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3330/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3330",
+					"path": [
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process Video",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "mysecrettoken",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"videoFilePath\": \"data\\\\videos\\\\8047000029a4000c61f808dd2fd54bb4.mp4\", // required\r\n    \"language\": \"en\", // (en or tr) for now // optional, default: \"en\"\r\n    \"videoExplanation\": \"The following info is the output of an analysis of a video call conversation between an agent and customer:\", // optional, default: a proper general sentence\r\n    \"temperature\": 0//, // optional, default: 0,\r\n    //\"format\": // optional, default: ollama json response schema of { summary, events }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3330/process",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3330",
+					"path": [
+						"process"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Request (DevEnv)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "mysecrettoken",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3330/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3330",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

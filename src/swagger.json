@@ -45,9 +45,16 @@
         "description": "",
         "parameters": [
           {
-            "name": "videoFilePath",
-            "in": "query",
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoFileName": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -59,6 +66,9 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }

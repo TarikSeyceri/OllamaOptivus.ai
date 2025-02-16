@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y curl=7.88.1-10+deb12u8 && \
 # Install system dependencies for Python packages
 RUN apt-get install -y \
     ffmpeg=7:5.1.6-0+deb12u1 \
-    libgl1-mesa-glx=2.3.6-1+deb12u1 \
+    libgl1-mesa-glx=22.3.6-1+deb12u1 \
     libglib2.0-0=2.74.6-2+deb12u5 
 
 # Clean up

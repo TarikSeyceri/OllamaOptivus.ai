@@ -215,6 +215,11 @@ router.post("/process", async (req, res) => {
             return res.status(500).json({ success: false, msg: "Processing failed" });
         }
 
+        if(NODE_ENV === 'development'){
+            console.log("stdout", stdout);
+            console.log("stderr", stderr);
+        }
+
         const promptFilePath = PROMPTS_DIR + '/' + path.basename(resolvedPath, path.extname(resolvedPath)) + "_" + language + ".txt";
         const prompt = dataRefactory.getPrompt(JSON.parse(stdout), language, videoExplanation);
         await fs.promises.writeFile(promptFilePath, prompt, 'utf8');

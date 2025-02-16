@@ -1,3 +1,6 @@
+import os
+os.environ["ULTRALYTICS_SETTINGS"] = "1"
+os.environ['YOLO_VERBOSE'] = 'False'
 import argparse
 from dotenv import load_dotenv
 import cv2
@@ -5,7 +8,6 @@ from ultralytics import YOLO
 import easyocr
 import whisper
 import ffmpeg
-import os
 import sys
 import json
 import logging
@@ -114,6 +116,12 @@ def logFilesRetention(directory=LOG_DIR, days_old=LOG_RETENTION_DAYS):
                 logger.warning(f"Deleting old log file: {filename}")
                 os.remove(file_path)
 logFilesRetention()
+
+# Disabling stdout and stderr
+original_stdout = sys.stdout
+original_stderr = sys.stderr
+sys.stdout = open(os.devnull, 'w')
+sys.stderr = open(os.devnull, 'w')
 
 #----------------------------------------------------
 # Main processing logic
@@ -224,6 +232,10 @@ while True:
 
 # Release video capture
 video.release()
+
+# Re-enable stdout and stderr
+sys.stdout = original_stdout
+sys.stderr = original_stderr
 
 # Print detection results
 jsonResults = json.dumps(detectionResults)

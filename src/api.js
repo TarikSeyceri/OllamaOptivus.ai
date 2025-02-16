@@ -225,7 +225,7 @@ router.post("/process", async (req, res) => {
         await fs.promises.writeFile(promptFilePath, prompt, 'utf8');
 
         console.log("Prompting video file", videoFilePath);
-        
+        /*
         const response = await ollama.generate({
             model: model ?? OLLAMA_AI_MODEL,
             system: systemLanguage,
@@ -235,12 +235,12 @@ router.post("/process", async (req, res) => {
                 temperature: temperature ?? OLLAMA_AI_TEMPERATURE
             },
             format: format ?? ollamaDefaultOutputFormat,
-        });
+        });*/const response = {response: "This is a test response."};
 
         lockProcess = false;
         if (response) {
             console.log("Processing completed for video file", videoFilePath);
-            return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt: NODE_ENV === 'development' ? prompt : undefined, response: response?.response } });
+            return res.status(200).json({ success: true, msg: "Processing completed", payload: { response: response?.response } });
         }
         
         console.log("Processing failed for video file", videoFilePath);

@@ -117,12 +117,6 @@ def logFilesRetention(directory=LOG_DIR, days_old=LOG_RETENTION_DAYS):
                 os.remove(file_path)
 logFilesRetention()
 
-# Disabling stdout and stderr
-original_stdout = sys.stdout
-original_stderr = sys.stderr
-sys.stdout = open(os.devnull, 'w')
-sys.stderr = open(os.devnull, 'w')
-
 #----------------------------------------------------
 # Main processing logic
 #----------------------------------------------------
@@ -146,8 +140,18 @@ yoloModel = YOLO(os.path.dirname(os.path.abspath(__file__)) + "/yolov8n.pt")
 # Load the EasyOCR model
 ocrReader = easyocr.Reader([args.language], verbose=False) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
 
+# Disabling stdout and stderr
+original_stdout = sys.stdout
+original_stderr = sys.stderr
+sys.stdout = open(os.devnull, 'w')
+sys.stderr = open(os.devnull, 'w')
+
 # Load Whisper model
 whisperModel = whisper.load_model(PROCESSING_WHISPER_MODEL)  # Choose model size: tiny, base, small, medium, large
+
+# Re-enable stdout and stderr
+sys.stdout = original_stdout
+sys.stderr = original_stderr
 
 # Create audios folder
 if not os.path.exists(AUDIOS_DIR):
@@ -232,10 +236,6 @@ while True:
 
 # Release video capture
 video.release()
-
-# Re-enable stdout and stderr
-sys.stdout = original_stdout
-sys.stderr = original_stderr
 
 # Print detection results
 jsonResults = json.dumps(detectionResults)

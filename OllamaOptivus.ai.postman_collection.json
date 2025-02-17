@@ -56,7 +56,7 @@
 						{
 							"key": "video",
 							"type": "file",
-							"src": "/C:/Users/Tarik/Desktop/8047000029a4000c36b908dd2fd94b6e.mp4"
+							"src": "/C:/Users/Tarik/Desktop/8047000029a4000c61f808dd2fd54bb4.mp4"
 						}
 					]
 				},
@@ -129,7 +129,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"videoFilePath\": \"data\\\\videos\\\\8047000029a4000c61f808dd2fd54bb4.mp4\", // required\r\n    \"language\": \"en\", // (en or tr) for now // optional, default: \"en\"\r\n    \"videoExplanation\": \"The following info is the output of an analysis of a video call conversation between an agent and customer:\", // optional, default: a proper general sentence\r\n    \"temperature\": 0//, // optional, default: 0,\r\n    //\"format\": // optional, default: ollama json response schema of { summary, events }\r\n}",
+					"raw": "{\r\n    \"videoFilePath\": \"data/videos/8047000029a4000c61f808dd2fd54bb4.mp4\", // required\r\n    \"language\": \"en\", // (en or tr) for now // optional, default: \"en\"\r\n    \"videoExplanation\": \"The following info is the output of an analysis of a video call conversation between an agent and customer.\", // optional, default: a proper general sentence\r\n    \"temperature\": 0//, // optional, default: 0, // 0 means no creativity\r\n    //\"format\": // optional, default: an ollama json response schema: { summary, events }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

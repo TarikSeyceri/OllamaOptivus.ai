@@ -184,15 +184,25 @@ if not video.isOpened():
     print("Error: Could not open video file.")
     sys.exit(1)
 
+# Initialize the detection results
+detectionResults = {
+    "frames": [],
+    "audioTranscription": filteredAudioTranscription
+}
+
 # Get video properties
 fps = int(video.get(cv2.CAP_PROP_FPS))  # Original FPS of the video
 frameSkip = int(fps / PROCESSING_FPS)  # Skip frames based on desired processing FPS
 frameCount = 0
 
-detectionResults = {
-    "frames": [],
-    "audioTranscription": filteredAudioTranscription
-}
+# Scene change detection
+# Function to compute histogram similarity
+def calc_histogram_similarity(frame1, frame2):
+    hist1 = cv2.calcHist([frame1], [0], None, [256], [0, 256])
+    hist2 = cv2.calcHist([frame2], [0], None, [256], [0, 256])
+    return cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
+
+_, prev_frame = video.read()
 
 # Process each frame of the video
 while True:
@@ -211,6 +221,7 @@ while True:
         "detections": [],
         "texts": [],
         "emotions": [],
+        "isSceneChanged": False
     }
 
     for result in yoloModelResults:
@@ -238,9 +249,22 @@ while True:
 
     emotion, score = emotionDetector.top_emotion(frame)
     frameData["emotions"].append(emotion)
+
+    # Scene change detection
+    # Convert frames to grayscale for easier processing
+    prev_gray = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
+    curr_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Calculate similarity
+    similarity = calc_histogram_similarity(prev_gray, curr_gray)
+
+    # If the similarity is low, it indicates a scene change
+    if similarity < 0.7:
+        frameData["isSceneChanged"] = True
     
     detectionResults["frames"].append(frameData)
     frameCount += 1
+    prev_frame = frame
 
 # Release video capture
 video.release()

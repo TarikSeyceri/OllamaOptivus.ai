@@ -1,5 +1,6 @@
 import os
 os.environ['YOLO_VERBOSE'] = 'False'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import argparse
 from dotenv import load_dotenv
 import cv2
@@ -15,6 +16,7 @@ from datetime import datetime
 import sys
 import types
 import time
+from fer import FER
 
 #----------------------------------------------------
 # Load environment variables
@@ -152,6 +154,9 @@ whisperModel = whisper.load_model(PROCESSING_WHISPER_MODEL)  # Choose model size
 sys.stdout = original_stdout
 sys.stderr = original_stderr
 
+# Initialize emotion detector
+emotionDetector = FER()
+
 # Create audios folder
 if not os.path.exists(AUDIOS_DIR):
     os.makedirs(AUDIOS_DIR)
@@ -205,6 +210,7 @@ while True:
         "timestamp": frameCount * (1 / PROCESSING_FPS),
         "detections": [],
         "texts": [],
+        "emotions": [],
     }
 
     for result in yoloModelResults:
@@ -229,6 +235,9 @@ while True:
         })
         '''
         frameData["texts"].append(text)
+
+    emotion, score = emotionDetector.top_emotion(frame)
+    frameData["emotions"].append(emotion)
     
     detectionResults["frames"].append(frameData)
     frameCount += 1

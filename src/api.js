@@ -216,8 +216,8 @@ router.post("/process", async (req, res) => {
         }
 
         if(NODE_ENV === 'development'){
-            console.log("stdout", stdout);
-            console.log("stderr", stderr);
+            if(stdout) console.log("stdout", stdout);
+            if(stderr) console.log("stderr", stderr);
         }
 
         const promptFilePath = PROMPTS_DIR + '/' + path.basename(resolvedPath, path.extname(resolvedPath)) + "_" + language + ".txt";

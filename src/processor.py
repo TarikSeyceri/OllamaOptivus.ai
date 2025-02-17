@@ -1,5 +1,4 @@
 import os
-os.environ["ULTRALYTICS_SETTINGS"] = "1"
 os.environ['YOLO_VERBOSE'] = 'False'
 import argparse
 from dotenv import load_dotenv

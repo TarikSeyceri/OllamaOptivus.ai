@@ -8,3 +8,5 @@ python-dotenv==1.0.1
 fer==22.5.1
 moviepy==1.0.3
 tensorflow==2.18.0
+
+transformers==4.49.0

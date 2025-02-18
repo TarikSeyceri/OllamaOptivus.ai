@@ -17,6 +17,7 @@ import sys
 import types
 import time
 from fer import FER
+from transformers import BlipProcessor, BlipForConditionalGeneration
 
 #----------------------------------------------------
 # Load environment variables
@@ -157,6 +158,10 @@ sys.stderr = original_stderr
 # Initialize emotion detector
 emotionDetector = FER()
 
+# Initialize Blip model (Scene Description)
+blipProcessor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+blipModel = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+
 # Create audios folder
 if not os.path.exists(AUDIOS_DIR):
     os.makedirs(AUDIOS_DIR)
@@ -221,6 +226,7 @@ while True:
         "detections": [],
         "texts": [],
         "emotions": [],
+        "sceneDescription": "",
         "isSceneChanged": False
     }
 
@@ -249,6 +255,9 @@ while True:
 
     emotion, score = emotionDetector.top_emotion(frame)
     frameData["emotions"].append(emotion)
+
+    sceneDescription = blipProcessor.decode(blipModel.generate(**blipProcessor(images=frame, return_tensors="pt"))[0], skip_special_tokens=True)
+    frameData["sceneDescription"] = sceneDescription
 
     # Scene change detection
     # Convert frames to grayscale for easier processing

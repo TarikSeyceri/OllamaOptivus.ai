@@ -225,7 +225,7 @@ router.post("/process", async (req, res) => {
         await fs.promises.writeFile(promptFilePath, prompt, 'utf8');
 
         console.log("Prompting video file", videoFilePath);
-
+        /*
         const response = await ollama.generate({
             model: model ?? OLLAMA_AI_MODEL,
             system: systemLanguage,
@@ -235,7 +235,7 @@ router.post("/process", async (req, res) => {
                 temperature: temperature ?? OLLAMA_AI_TEMPERATURE
             },
             format: format ?? ollamaDefaultOutputFormat,
-        });
+        });*/const response = {response: "This is a test response."};
 
         lockProcess = false;
         if (response) {

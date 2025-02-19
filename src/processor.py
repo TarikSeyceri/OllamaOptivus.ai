@@ -1,8 +1,11 @@
-import os
-os.environ['YOLO_VERBOSE'] = 'False'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import argparse
 from dotenv import load_dotenv
+import os
+load_dotenv()
+PROCESSING_VERBOSE = os.getenv("PROCESSING_VERBOSE", 'False') == 'true'
+if PROCESSING_VERBOSE == False:
+    os.environ['YOLO_VERBOSE'] = 'False'
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import argparse
 import cv2
 from ultralytics import YOLO
 import easyocr
@@ -22,7 +25,6 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 #----------------------------------------------------
 # Load environment variables
 #----------------------------------------------------
-load_dotenv()
 
 LOG_DIR = os.getenv("LOG_DIR", "data/logs")
 LOG_RETENTION_DAYS = int(os.getenv("LOG_RETENTION_DAYS", 30))
@@ -32,9 +34,9 @@ PROCESSING_LOG_LEVEL = os.getenv("PROCESSING_LOG_LEVEL", "WARNING")
 PROCESSING_WHISPER_MODEL = os.getenv("PROCESSING_WHISPER_MODEL", "base")
 PROCESSING_FPS = int(os.getenv("PROCESSING_FPS", 1))
 
-#----------------------------------------------------
-# Set up argparse to accept videoPath as a parameter
-#----------------------------------------------------
+#------------------------------------------------------------------
+# Set up argparse to accept videoPath and language as a parameter
+#------------------------------------------------------------------
 parser = argparse.ArgumentParser(description="Process a video file.")
 parser.add_argument("videoPath", type=str, help="Path to the input video file")
 parser.add_argument("language", type=str, help="Language for processing the video")
@@ -140,20 +142,22 @@ if os.path.exists(jsonDataPath):
 yoloModel = YOLO(os.path.dirname(os.path.abspath(__file__)) + "/yolov8n.pt") 
 
 # Load the EasyOCR model
-ocrReader = easyocr.Reader([args.language], verbose=False) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
+ocrReader = easyocr.Reader([args.language], verbose=PROCESSING_VERBOSE) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
 
 # Disabling stdout and stderr
-original_stdout = sys.stdout
-original_stderr = sys.stderr
-sys.stdout = open(os.devnull, 'w')
-sys.stderr = open(os.devnull, 'w')
+if PROCESSING_VERBOSE == False:
+    original_stdout = sys.stdout
+    original_stderr = sys.stderr
+    sys.stdout = open(os.devnull, 'w')
+    sys.stderr = open(os.devnull, 'w')
 
 # Load Whisper model
 whisperModel = whisper.load_model(PROCESSING_WHISPER_MODEL)  # Choose model size: tiny, base, small, medium, large
 
 # Re-enable stdout and stderr
-sys.stdout = original_stdout
-sys.stderr = original_stderr
+if PROCESSING_VERBOSE == False:
+    sys.stdout = original_stdout
+    sys.stderr = original_stderr
 
 # Initialize emotion detector
 emotionDetector = FER()
@@ -169,7 +173,8 @@ if not os.path.exists(AUDIOS_DIR):
 # Extract audio from the video
 audioPath = AUDIOS_DIR+"/"+ os.path.splitext(os.path.basename(args.videoPath))[0] + ".wav"
 if not os.path.exists(audioPath):
-    ffmpeg.input(args.videoPath).output(audioPath, q='0', map='a', y=None, loglevel='quiet').run()
+    ffmpegLogLevel = 'quiet' if PROCESSING_VERBOSE == False else 'info'
+    ffmpeg.input(args.videoPath).output(audioPath, q='0', map='a', y=None, loglevel=ffmpegLogLevel).run()
 
 if not os.path.exists(audioPath):
     print("Error: Could not extract audio from the video.")

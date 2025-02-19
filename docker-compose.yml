@@ -1,7 +1,8 @@
 services:
   video-processor:
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=development # production or development
+      - HTTP_BEARER_TOKEN=mysecrettoken
     ports:
       - "3330:3330"
     build:

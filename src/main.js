@@ -33,6 +33,7 @@ app.use(express.json({ limit: HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT }));
 
 if(NODE_ENV === 'development') {
   console.warn(`NODE_ENV is set to 'development', consider setting it to 'production' for better performance and security.`);
+  console.info(JSON.stringify({ env: process.env }, null, 2));
 }
 
 // Ollama Initialization
@@ -142,7 +143,7 @@ schedule.scheduleJob("0 * * * *", () => {
   fs.readdirSync(VIDEOS_DIR).forEach((file) => {
     const filePath = path.join(VIDEOS_DIR, file);
     const stats = fs.statSync(filePath);
-    if (now - stats.birthtimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
+    if (now - stats.ctimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
       fs.unlinkSync(filePath);
       console.log("Deleted old file", filePath);
     }
@@ -151,7 +152,7 @@ schedule.scheduleJob("0 * * * *", () => {
   fs.readdirSync(AUDIOS_DIR).forEach((file) => {
     const filePath = path.join(AUDIOS_DIR, file);
     const stats = fs.statSync(filePath);
-    if (now - stats.birthtimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
+    if (now - stats.ctimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
       fs.unlinkSync(filePath);
       console.log("Deleted old file", filePath);
     }
@@ -160,7 +161,7 @@ schedule.scheduleJob("0 * * * *", () => {
   fs.readdirSync(JSON_DATA_DIR).forEach((file) => {
     const filePath = path.join(JSON_DATA_DIR, file);
     const stats = fs.statSync(filePath);
-    if (now - stats.birthtimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
+    if (now - stats.ctimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
       fs.unlinkSync(filePath);
       console.log("Deleted old file", filePath);
     }
@@ -169,7 +170,7 @@ schedule.scheduleJob("0 * * * *", () => {
   fs.readdirSync(PROMPTS_DIR).forEach((file) => {
     const filePath = path.join(PROMPTS_DIR, file);
     const stats = fs.statSync(filePath);
-    if (now - stats.birthtimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
+    if (now - stats.ctimeMs > FILE_RETENTION_DAYS * 24 * 60 * 60 * 1000) {
       fs.unlinkSync(filePath);
       console.log("Deleted old file", filePath);
     }
@@ -180,3 +181,4 @@ schedule.scheduleJob("0 * * * *", () => {
 app.listen(HTTP_PORT, () => {
   console.log(`Ollama Optivus Server running on port ${HTTP_PORT}`);
 });
+

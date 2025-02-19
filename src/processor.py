@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 load_dotenv()
-PROCESSING_VERBOSE = os.getenv("PROCESSING_VERBOSE", 'False') == 'true'
+PROCESSING_VERBOSE = os.getenv("PROCESSING_VERBOSE", 'False').lower() == 'true'
 if PROCESSING_VERBOSE == False:
     os.environ['YOLO_VERBOSE'] = 'False'
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -19,8 +19,6 @@ from datetime import datetime
 import sys
 import types
 import time
-from fer import FER
-from transformers import BlipProcessor, BlipForConditionalGeneration
 
 #----------------------------------------------------
 # Load environment variables
@@ -159,13 +157,6 @@ if PROCESSING_VERBOSE == False:
     sys.stdout = original_stdout
     sys.stderr = original_stderr
 
-# Initialize emotion detector
-emotionDetector = FER()
-
-# Initialize Blip model (Scene Description)
-blipProcessor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-blipModel = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
-
 # Create audios folder
 if not os.path.exists(AUDIOS_DIR):
     os.makedirs(AUDIOS_DIR)
@@ -205,15 +196,6 @@ fps = int(video.get(cv2.CAP_PROP_FPS))  # Original FPS of the video
 frameSkip = int(fps / PROCESSING_FPS)  # Skip frames based on desired processing FPS
 frameCount = 0
 
-# Scene change detection
-# Function to compute histogram similarity
-def calc_histogram_similarity(frame1, frame2):
-    hist1 = cv2.calcHist([frame1], [0], None, [256], [0, 256])
-    hist2 = cv2.calcHist([frame2], [0], None, [256], [0, 256])
-    return cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
-
-_, prev_frame = video.read()
-
 # Process each frame of the video
 while True:
     # Skip frames to achieve 1 FPS
@@ -230,9 +212,6 @@ while True:
         "timestamp": frameCount * (1 / PROCESSING_FPS),
         "detections": [],
         "texts": [],
-        "emotions": [],
-        "sceneDescription": "",
-        "isSceneChanged": False
     }
 
     for result in yoloModelResults:
@@ -258,27 +237,8 @@ while True:
         '''
         frameData["texts"].append(text)
 
-    emotion, score = emotionDetector.top_emotion(frame)
-    frameData["emotions"].append(emotion)
-
-    sceneDescription = blipProcessor.decode(blipModel.generate(**blipProcessor(images=frame, return_tensors="pt"))[0], skip_special_tokens=True)
-    frameData["sceneDescription"] = sceneDescription
-
-    # Scene change detection
-    # Convert frames to grayscale for easier processing
-    prev_gray = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
-    curr_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    # Calculate similarity
-    similarity = calc_histogram_similarity(prev_gray, curr_gray)
-
-    # If the similarity is low, it indicates a scene change
-    if similarity < 0.7:
-        frameData["isSceneChanged"] = True
-    
     detectionResults["frames"].append(frameData)
     frameCount += 1
-    prev_frame = frame
 
 # Release video capture
 video.release()

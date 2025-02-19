@@ -17,9 +17,9 @@ const AUDIOS_DIR = process.env.AUDIOS_DIR || "data/audios";
 const JSON_DATA_DIR = process.env.JSON_DATA_DIR || "data/json";
 const PROMPTS_DIR = process.env.PROMPTS_DIR || "data/prompts";
 const VIDEO_FILE_MAX_UPLOAD_SIZE = parseInt(process.env.VIDEO_FILE_MAX_UPLOAD_SIZE || 500 * 1024 * 1024); // Default 500MB
-const PROCESSING_ONLY = process.env.PROCESSING_ONLY == "true";
-const ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR = process.env.ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR == "true";
-const ENABLE_PROCESS_LOCK_MECHANISM = process.env.ENABLE_PROCESS_LOCK_MECHANISM == "true";
+const PROCESSING_ONLY = process?.env?.PROCESSING_ONLY?.toLowerCase() == "true";
+const ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR = process?.env?.ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR?.toLowerCase() == "true";
+const ENABLE_PROCESS_LOCK_MECHANISM = process?.env?.ENABLE_PROCESS_LOCK_MECHANISM?.toLowerCase() == "true";
 const PYTHON_BINARY_PATH = process.env.PYTHON_BINARY_PATH || "python3";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
 const OLLAMA_AI_TEMPERATURE = parseFloat(process.env.OLLAMA_AI_TEMPERATURE || 0);
@@ -167,7 +167,7 @@ router.delete("/delete", (req, res) => {
 
 // Endpoint: Process file
 router.post("/process", async (req, res) => {
-    let { videoFilePath, language, videoExplanation, model, temperature, format } = req.body;
+    let { videoFilePath, language, videoExplanation, model, temperature, format, noPrompting } = req.body;
 
     if(!language || !systemLanguages[language]){
         language = "en";
@@ -185,7 +185,11 @@ router.post("/process", async (req, res) => {
     }
 
     const resolvedPath = path.resolve(videoFilePath);
-    if (!ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR && (!videoFilePath.includes(path.join(VIDEOS_DIR, path.basename(videoFilePath))) || videoFilePath.includes("..")) || !resolvedPath.startsWith(path.resolve(VIDEOS_DIR))) {
+    if (!ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR && (
+        !videoFilePath.includes(path.join(VIDEOS_DIR, path.basename(videoFilePath))) || 
+        videoFilePath.includes("..") || 
+        !resolvedPath.startsWith(path.resolve(VIDEOS_DIR))
+    )) {
         console.warn("Video file path not allowed!", videoFilePath);
         return res.status(403).json({ success: false, msg: "Video file path not allowed!" });
     }
@@ -224,8 +228,14 @@ router.post("/process", async (req, res) => {
         const prompt = dataRefactory.getPrompt(JSON.parse(stdout), language, videoExplanation);
         await fs.promises.writeFile(promptFilePath, prompt, 'utf8');
 
+        if(noPrompting){
+            console.warn("Skipped prompting for video file", videoFilePath);
+            lockProcess = false;
+            return res.status(200).json({ success: true, msg: "Processing completed", payload: { stdout, prompt } });
+        }
+
         console.log("Prompting video file", videoFilePath);
-        /*
+
         const response = await ollama.generate({
             model: model ?? OLLAMA_AI_MODEL,
             system: systemLanguage,
@@ -235,7 +245,7 @@ router.post("/process", async (req, res) => {
                 temperature: temperature ?? OLLAMA_AI_TEMPERATURE
             },
             format: format ?? ollamaDefaultOutputFormat,
-        });*/const response = {response: "This is a test response."};
+        });
 
         lockProcess = false;
         if (response) {

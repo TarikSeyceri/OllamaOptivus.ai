@@ -23,6 +23,7 @@ const PROMPTS_DIR = process.env.PROMPTS_DIR || "data/prompts";
 const FILE_RETENTION_DAYS = parseInt(process.env.FILE_RETENTION_DAYS || 2);
 const OLLAMA_AI_API_URL = process.env.OLLAMA_AI_API_URL || "http://host.docker.internal:11434";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
+const OLLAMA_AI_DISABLED = process?.env?.OLLAMA_AI_DISABLED?.toLowerCase() == "true";
 
 const app = express();
 
@@ -38,6 +39,10 @@ if(NODE_ENV === 'development') {
 
 // Ollama Initialization
 (async function(){
+  if(OLLAMA_AI_DISABLED) {
+    return;
+  }
+
   ollama.config.host = OLLAMA_AI_API_URL;
 
   let ollamaModelsList = undefined;

@@ -203,7 +203,7 @@ However, there are some important environment variables that i will be highlight
 
   - `model`: The Ollama AI model to be used for prompting. *(Optional, default: env.OLLAMA_AI_MODEL)*
 
-  - `noPrompting`: If `true`, it will return the processed data and skips the AI model prompting part, this means, format parameter will not be used, useful for debugging a video analysis *(Optional, default: false)*.
+  - `noPrompting`: If `true`, it will return the processed data and skips the AI model prompting part, this means, format parameter will not be used, useful for debugging a video analysis or to send a prompt request to an Ollama LLM manually *(Optional, default: false)*.
 
 ### Basic
 - Request Body: Basic request body example:

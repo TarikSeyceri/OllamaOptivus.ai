@@ -12,6 +12,7 @@ const dataRefactory = require("./data-refactory");
 
 const execFilePromise = util.promisify(execFile);
 
+const NODE_ENV = process.env.NODE_ENV || "development";
 const VIDEOS_DIR = process.env.VIDEOS_DIR || "data/videos";
 const AUDIOS_DIR = process.env.AUDIOS_DIR || "data/audios";
 const JSON_DATA_DIR = process.env.JSON_DATA_DIR || "data/json";
@@ -23,7 +24,7 @@ const ENABLE_PROCESS_LOCK_MECHANISM = process?.env?.ENABLE_PROCESS_LOCK_MECHANIS
 const PYTHON_BINARY_PATH = process.env.PYTHON_BINARY_PATH || "python3";
 const OLLAMA_AI_MODEL = process.env.OLLAMA_AI_MODEL || "deepseek-r1";
 const OLLAMA_AI_TEMPERATURE = parseFloat(process.env.OLLAMA_AI_TEMPERATURE || 0);
-const NODE_ENV = process.env.NODE_ENV || "development";
+const OLLAMA_AI_DISABLED = process?.env?.OLLAMA_AI_DISABLED?.toLowerCase() == "true";
 
 var lockProcess = false;
 const systemLanguages = {
@@ -228,8 +229,7 @@ router.post("/process", async (req, res) => {
         const prompt = dataRefactory.getPrompt(JSON.parse(stdout), language, videoExplanation);
         await fs.promises.writeFile(promptFilePath, prompt, 'utf8');
 
-        if(noPrompting){
-            console.warn("Skipped prompting for video file", videoFilePath);
+        if(OLLAMA_AI_DISABLED || noPrompting){
             lockProcess = false;
             return res.status(200).json({ success: true, msg: "Processing completed", payload: { stdout, prompt } });
         }

@@ -33,12 +33,12 @@ It processes videos by extracting audio and analyzing the content frame-by-frame
 
 ## Prerequisites
 
-- [Ollama](https://ollama.com/download) (Required)
-- [Docker](https://www.docker.com) OR ([Node.js](https://nodejs.org/en/download) v18.20.5 AND [Python](https://www.python.org/downloads/release/python-3119/) v3.11.9)
+- Required: [Ollama](https://ollama.com/download)
+- Required: [Docker](https://www.docker.com) or ([Node.js](https://nodejs.org/en/download) v18.20.5 and [Python](https://www.python.org/downloads/release/python-3119/) v3.11.9)
 
 ## Min. Hardware Requirements
 
-- CPU: Octa-core (e.g., Intel Core i7, AMD Ryzen 7)
+- CPU: Octa-core (e.g., Intel Core i7, AMD Ryzen 7 or Apple 8-core M)
 - GPU: 4 GB VRAM
 - RAM: 16 GB
 - SSD: 20 GB
@@ -107,7 +107,7 @@ However, there are some important environment variables that I will be highlight
 
 - `NODE_ENV`: Set to `development` or `production`.
    - If set to `development`:
-      - /swagger and /test endpoints will be enabled.
+      - `/swagger` and `/test` endpoints will be enabled.
       - `HTTP_BEARER_TOKEN` authentication and rate limiting will not be active.
 
 - `HTTP_BEARER_TOKEN`: Prestored token for authenticating API requests in production.

@@ -13,7 +13,7 @@ It processes videos by extracting audio and analyzing the content frame-by-frame
 
 - **Video Processing**: Process video files by extracting audio, transcribing speech, detecting objects and texts in frames, and generating prompts to be used in an AI LLM.
 
-- **AI LLM**: Integrated with Ollama for advanced AI-based processing, and supports all Ollama based models such as `deepseek-r1` or `llama3.2`.
+- **AI LLM**: Integrated with Ollama for advanced AI-based processing. Supports all Ollama based models such as `deepseek-r1` or `llama3.2`.
 
 ## Video Processing Flow
 1. **Video Upload**: Upload the video to the server.

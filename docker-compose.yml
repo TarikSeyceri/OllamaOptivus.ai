@@ -3,6 +3,7 @@ services:
     environment:
       - NODE_ENV=development # production or development
       - HTTP_BEARER_TOKEN=mysecrettoken
+      - OLLAMA_AI_MODEL=deepseek-r1
     ports:
       - "3330:3330"
     build:

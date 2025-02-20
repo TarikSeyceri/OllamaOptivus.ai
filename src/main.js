@@ -33,7 +33,7 @@ app.use(express.json({ limit: HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT }));
 
 if(NODE_ENV === 'development') {
   console.warn(`NODE_ENV is set to 'development', consider setting it to 'production' for better performance and security.`);
-  console.info(JSON.stringify({ env: process.env }, null, 2));
+  //console.info(JSON.stringify({ env: process.env }, null, 2));
 }
 
 // Ollama Initialization

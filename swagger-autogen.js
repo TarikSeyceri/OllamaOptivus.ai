@@ -7,7 +7,7 @@ const endpointsFiles = ['./src/api.js'];
 const swaggerConfig = {
     info: {
         title: 'Ollama Optivus AI API',
-        description: 'Tarik Seyceri',
+        description: 'By Tarik Seyceri',
     },
     host: 'localhost:' + (process.env.HTTP_PORT || 3330),
     schemes: ['http'],

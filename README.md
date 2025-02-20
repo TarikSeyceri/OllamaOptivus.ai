@@ -26,24 +26,24 @@ It processes videos by extracting audio and analyzing the content frame-by-frame
 
 - Clone the repository:
 
-```bash
-git clone https://github.com/TarikSeyceri/OllamaOptivus.ai.git
-```
+  ```bash
+  git clone https://github.com/TarikSeyceri/OllamaOptivus.ai.git
+  ```
 
-```bash
-cd OllamaOptivus.ai
-```
+  ```bash
+  cd OllamaOptivus.ai
+  ```
 
 - There are two methods to install this project.
 ### A) Automatically Using Docker
 
-- Before building and running the docker container, you may need to view [docker-compose.yml](blob/main/docker-compose.yml) and add/change environment variables accordingly. You can view the default environment variables in [.env](blob/main/.env), but don't change the variables inside `.env` file, just change/add them in `docker-compose.yml`
+- Before building and running the docker container, you may need to view [docker-compose.yml](docker-compose.yml) and add/change environment variables accordingly. You can view the default environment variables in [.env](.env), but don't change the variables inside `.env` file, just change/add them in `docker-compose.yml`
 
 - Then:
 
-```bash
-docker-compose up -d
-```
+  ```bash
+  docker-compose up -d
+  ```
 
 ### B) Manually On Local Machine
 
@@ -53,30 +53,30 @@ docker-compose up -d
 
 3. Install Backend dependencies:
 
-```bash
-npm install
-```
+  ```bash
+  npm install
+  ```
 
 4. Install Python dependencies:
 
-```bash
-pip install -r requirements.txt
-```
+  ```bash
+  pip install -r requirements.txt
+  ```
 
-5. Modify environment variables in [.env](blob/main/.env) file as needed, or leave them be.
+5. Modify environment variables in [.env](.env) file as needed, or leave them be.
 
 6. Start the project:
 
-```bash
-npm run start
-```
+  ```bash
+  npm run start
+  ```
 
 > After running the project with either Docker or Locally. It will be accessable through: `http://localhost:3330`.
 
 
 ## Configuration
 
-The [.env](blob/main/.env) is straight forward self explanatory. You can access it and read it.
+The [.env](.env) is straight forward self explanatory. You can access it and read it.
 
 However, there are some important environment variables that i will be highlighting here:
 
@@ -84,10 +84,148 @@ However, there are some important environment variables that i will be highlight
    - if set to `development`:
       - /swagger and /test endpoints will be enabled.
       - `HTTP_BEARER_TOKEN` authentication and rate limiting will not be active.
+
 - `HTTP_BEARER_TOKEN`: Prestored token for authenticating API requests in production.
+
 - `PROCESSING_ONLY`: If set to `true`, It will only allow video processing, it won't allow video listing, uploading or deleting. Should be enabled with `ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR`
-- `ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR`: When set to `true`, It will allow `/process` endpoint to process videos from outside the project's `VIDEOS_DIR` folder, which means it can access other storages such as usb or network storages, etc..
+
+- `ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR`: When set to `true`, It will allow `/process` endpoint to process videos from outside the project's `VIDEOS_DIR` folder, which means it can access other storage units such as usb, network or cloud storages, etc..
+
 - `OLLAMA_AI_MODEL`: Set the Ollama AI Model to be used, default: `deepseek-r1`
+
+
+## API Endpoints
+
+- All endpoints are prepared in a [Postman Collection](OllamaOptivus.ai.postman_collection.json) which can be imported.
+
+- In development environment `/swagger` endpoint is enabled which shows all available endpoints (Without authentication)
+
+### 1. Upload Video
+
+**POST** `/upload`
+
+- Uploads a video file to the server.
+
+- Video file must be `.mp4` file.
+
+- Request Body: Form-data with key `video` and value as the video file.
+
+### 2. List Videos
+
+**GET** `/videos`
+
+- Lists all uploaded video files.
+
+### 3. Delete Video
+
+**DELETE** `/delete`
+
+- Deletes a video file from the server.
+
+- Request Body: JSON with key `videoFileName` (e.g., `"video.mp4"`).
+
+### 4. Process Video
+
+**POST** `/process`
+
+- Processes a video by analyzing its frames, extracting audio and transcribing it.
+
+- Request Body: JSON with keys:
+  - `videoFilePath`: Path to the video file. *(Required)*
+
+  - `language`: Language for transcription. *('en' or 'tr' for now, Optional, default: "en")*
+
+  - `videoExplanation`: Text explaining the context of the video. *(Optional, default: a proper general sentence)*
+
+  - `temperature`: The creativity level for the AI model. *(optional, default: 0, means no creativity)*
+
+  - `format`: The response format which is an ollama json response schema. *(Optional, default: { summary, events })*
+
+  - `model`: The Ollama AI model to be used for prompting. *(Optional, default: env.OLLAMA_AI_MODEL)*
+
+  - `noPrompting`: If `true`, it will return the processed data and skips the AI model prompting part, useful for debugging a video *(Optional, default: false)*.
+
+- Basic usage request example body:
+  ```bash
+  {
+    "videoFilePath": "data/videos/8047000029a4000c61f808dd2fd54bb4.mp4"
+  }
+  ```
+
+- Standard usage request example body:
+  ```bash
+  {
+    "videoFilePath": "data/videos/8047000029a4000c61f808dd2fd54bb4.mp4",
+    "language": "en",
+    "videoExplanation": "The following info is the output of an analysis of a video call conversation between an agent and customer:",
+  }
+  ```
+
+- Advanced usage request example body: *(format schema is same as ollama's format schema)*
+  ```bash
+  {
+    "videoFilePath": "data/videos/8047000029a4000c61f808dd2fd54bb4.mp4",
+    "language": "en",
+    "videoExplanation": "The following info is the output of an analysis of a video call conversation between an agent and customer:",
+    "temperature": 0,
+    "model": "deepseek-r1",
+    "format": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "isUnrespectfulConversation": {
+          "type": "boolean"
+        },
+        "customerFraud": {
+          "type": "object",
+          "properties": {
+              "percentage": {
+                  "type": "number"
+              },
+              "reason": {
+                  "type": "string"
+              }
+          },
+          "required": ["percentage", "reason"]
+        },
+        "customerSatisfactionPercentage": {
+          "type": "number"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+              "type": "object",
+              "properties": {
+                  "timestamp": {
+                      "type": "number"
+                  },
+                  "description": {
+                      "type": "string"
+                  }
+              },
+              "required": ["timestamp", "description"]
+          }
+        }
+      },
+      "required": [
+        "summary",
+        "isUnrespectfulConversation",
+        "customerFraud",
+        "customerSatisfactionPercentage",
+        "events"
+      ]
+    }
+  }
+  ```
+
+### 5. Test Request (DevEnv)
+
+**POST** `/test`
+
+- Performs a test request for development environment.
+- Can be used to check the processing functionality without any specific video file.
 
 
 
@@ -116,55 +254,7 @@ However, there are some important environment variables that i will be highlight
 
 
 
-## API Endpoints
 
-### 1. Upload Video
-
-**POST** `/upload`
-
-- Uploads a video file to the server.
-- Request Body: Form-data with key `video` and value as the video file.
-
-### 2. List Videos
-
-**GET** `/videos`
-
-- Lists all uploaded video files.
-
-### 3. Delete Video
-
-**DELETE** `/delete`
-
-- Deletes a video file from the server.
-- Request Body: JSON with key `videoFileName` (e.g., `"video.mp4"`).
-
-### 4. Process Video
-
-**POST** `/process`
-
-- Processes a video by extracting audio, transcribing it, and analyzing the frames.
-- Request Body: JSON with keys:
-  - `videoFilePath`: Path to the video file.
-  - `language`: Language for transcription (default: `en`).
-  - `videoExplanation`: Optional text explaining the context of the video.
-  - `model`: The AI model to use for processing.
-  - `temperature`: The creativity level for the AI model.
-  - `format`: The response format.
-  - `noPrompting`: If `true`, skips the AI model prompting.
-
-### 5. Test Request (DevEnv)
-
-**POST** `/test`
-
-- Performs a test request for development environment.
-- Can be used to check the processing functionality without any specific video file.
-
-### Swagger Documentation
-
-The Swagger UI for this API is available at:  
-`http://localhost:3330/swagger`
-
-It allows you to explore and test all the available API endpoints.
 
 ## Video Processing Flow
 

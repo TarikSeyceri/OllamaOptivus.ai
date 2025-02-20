@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Ollama Optivus AI API",
-    "description": "Tarik Seyceri",
+    "description": "By Tarik Seyceri",
     "version": "1.0.0"
   },
   "host": "localhost:3330",

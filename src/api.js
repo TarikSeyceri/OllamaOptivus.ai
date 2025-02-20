@@ -145,7 +145,7 @@ router.delete("/delete", (req, res) => {
     const videoFilePath = path.join(VIDEOS_DIR, path.basename(videoFileName));
     if (!fs.existsSync(videoFilePath)) {
         console.warn("Video file not found!", videoFilePath);
-        return res.status(404).json({ success: true, msg: "Video file not found!" });
+        return res.status(404).json({ success: false, msg: "Video file not found!" });
     }
 
     fs.unlinkSync(videoFilePath);

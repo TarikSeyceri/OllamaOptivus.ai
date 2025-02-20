@@ -4,16 +4,16 @@
 
 ## Overview
 
-Ollama Optivus is a video processing AI based solution designed to analyze and extract meaningful information from video files. It uses a combination of technologies including computer vision (YOLO), optical character recognition (OCR), and speech-to-text transcription (Whisper).
+Ollama Optivus is a video processing AI based solution designed to analyze and extract meaningful information from video files. It uses a combination of technologies, including computer vision (YOLO), optical character recognition (OCR), and speech-to-text transcription (Whisper).
 
-It processes videos by extracting audio and analyzing the content frame-by-frame to identify text and objects. Then generates detailed information based on the analysis then forwards it to an Ollama Large Language Model.
+It processes videos by extracting audio and analyzing the content frame-by-frame to identify text and objects. It then generates detailed information based on the analysis and forwards it to an Ollama Large Language Model.
 
 ## Features
 - **Video Upload and Management**: Upload, List, and Delete video files from the server.
 
 - **Video Processing**: Process video files by extracting audio, transcribing speech, detecting objects and texts in frames, and generating prompts to be used in an AI LLM.
 
-- **AI LLM**: Integrated with Ollama for advanced AI-based processing, supports all ollama based models such as `deepseek-r1` or `llama3.2`.
+- **AI LLM**: Integrated with Ollama for advanced AI-based processing, and supports all Ollama based models such as `deepseek-r1` or `llama3.2`.
 
 ## Video Processing Flow
 1. **Video Upload**: Upload the video to the server.
@@ -22,13 +22,13 @@ It processes videos by extracting audio and analyzing the content frame-by-frame
 
 3. **Audio Transcription**: Whisper transcribes the extracted audio to text.
 
-4. **Frame Extraction**: OpenCV Extracts frames from video to be analyzed one by one.
+4. **Frame Extraction**: OpenCV extracts frames from the video to be analyzed one by one.
 
 5. **Object Detection**: YOLOv8 detects objects in each frame of the video.
 
 6. **Text Detection**: EasyOCR detects any text in each frame.
 
-7. **AI Prompting**: Based on the extracted data, an AI model (Ollama) generates a detailed information, summarizing the video.
+7. **AI Prompting**: Based on the extracted data, an AI model (Ollama) generates detailed information, summarizing the video.
 
 
 ## Prerequisites
@@ -39,13 +39,15 @@ It processes videos by extracting audio and analyzing the content frame-by-frame
 ## Min. Hardware Requirements
 
 - CPU: Octa-core (e.g., Intel Core i7, AMD Ryzen 7)
-- GPU: Dedicated Nvidia 4 GB VRAM
+- GPU: 4 GB VRAM
 - RAM: 16 GB
 - SSD: 20 GB
 
 ## Installation
 
-- Make sure [Ollama](https://ollama.com/download) is installed
+- Make sure [Ollama](https://ollama.com/download) is installed. 
+
+  **Note**: No need to pull a model manually. The specified `OLLAMA_AI_MODEL` in `.env` or `docker-compose.yml` will be pulled and installed automatically, when started.
 
 - Clone the repository:
 
@@ -94,17 +96,17 @@ It processes videos by extracting audio and analyzing the content frame-by-frame
   npm run start
   ```
 
-> After running the project with either Docker or Locally. It will be accessable through: `http://localhost:3330`.
+> After running the project with either Docker or Locally. It will be accessible through: `http://localhost:3330`.
 
 
 ## Configuration
 
 The [.env](.env) is straight forward self explanatory. You can access it and read it.
 
-However, there are some important environment variables that i will be highlighting here:
+However, there are some important environment variables that I will be highlighting here:
 
 - `NODE_ENV`: Set to `development` or `production`.
-   - if set to `development`:
+   - If set to `development`:
       - /swagger and /test endpoints will be enabled.
       - `HTTP_BEARER_TOKEN` authentication and rate limiting will not be active.
 
@@ -123,6 +125,20 @@ However, there are some important environment variables that i will be highlight
 
 - In development environment `/swagger` endpoint is enabled which shows all available endpoints (Without authentication)
 
+### 0. Root (Hello World)
+
+**GET** `/`
+
+- Checks if the server is online.
+
+- Response Body: 
+  ```bash
+  {
+    "success": true,
+    "msg": "Ollama Optivus Server is running!"
+  }
+  ```
+
 ### 1. Upload Video
 
 **POST** `/upload`
@@ -130,6 +146,8 @@ However, there are some important environment variables that i will be highlight
 - Uploads a video file to the server.
 
 - Video file must be `.mp4` file.
+
+- Note: Once a video has finished processing, you must manually send a delete request to the appropriate endpoint to remove the video. If you don't, the video will be deleted automatically after the specified `FILE_RETENTION_DAYS` in the `.env` file. Be mindful not to overload the storage by leaving videos uncleaned before the retention period ends.
 
 - Request Body: 
   > form-data with key `video` and value as the video file.
@@ -344,7 +362,7 @@ Every hour, the server checks the videos, audios, json, and prompts directories,
 ## Tech Stack
 - **Node.js**: Server-side JavaScript.
 - **Express.js**: Web framework to handle HTTP requests.
-- **Python**: To run complicated mathmatical libraries.
+- **Python**: To run complicated mathematical libraries.
 - **Swagger**: API documentation and testing tool.
 - **Morgan**: Network Logging library.
 - **Winston**: Logging library for managing logs.
@@ -413,7 +431,7 @@ You can open an issue here: [Issues](https://github.com/TarikSeyceri/OllamaOptiv
 ### Style Guide
 
 - **JavaScript/Node.js**: I use [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript). Please adhere to these conventions.
-- **Python**: For python, i don't use a specific style, as long as it is easily readable.
+- **Python**: For python, I don't use a specific style, as long as it is easily readable.
 
 ### Documentation
 

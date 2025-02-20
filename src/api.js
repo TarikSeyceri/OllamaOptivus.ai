@@ -89,6 +89,11 @@ const upload = multer({
     },
 });
 
+// Endpoint: Root
+router.get("/", (req, res) => {
+    res.status(200).json({ success: true, msg: "Ollama Optivus Server is running!" });
+});
+
 // Endpoint: Upload video file
 router.post("/upload", upload.single("video"), (req, res) => {
     const video = req.file;

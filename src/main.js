@@ -121,6 +121,10 @@ if (NODE_ENV === 'production') {
 
   // Static token middleware
   app.use((req, res, next) => {
+    if (req.path === '/') {
+      return next();
+    }
+    
     const authHeader = req.headers["authorization"];
     if (!authHeader || authHeader !== `Bearer ${HTTP_BEARER_TOKEN}`) {
       return res.status(401).json({ success: false, msg: "Unauthorized" });

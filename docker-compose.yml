@@ -1,7 +1,7 @@
 services:
   video-processor:
     environment:
-      - NODE_ENV=development # production or development
+      - NODE_ENV=production # production or development
       - HTTP_BEARER_TOKEN=mysecrettoken
       - OLLAMA_AI_MODEL=deepseek-r1
     ports:

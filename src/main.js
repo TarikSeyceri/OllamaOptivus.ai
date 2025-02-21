@@ -64,7 +64,7 @@ if(NODE_ENV === 'development') {
       ollamaModelsList = (await ollama?.list())?.models;
     }
     catch(error){
-      console.error(`OLLAMA Localhost 'http://127.0.0.1:11434' AI API URL not reachable!, reason:`, error.message);
+      console.error(`Ollama Localhost 'http://127.0.0.1:11434' AI API URL not reachable!, reason:`, error.message);
       process.exit(1);
     }
   }
@@ -82,7 +82,8 @@ if(NODE_ENV === 'development') {
   }
 
   if(!isModelAvailable) {
-    await ollama.pull(OLLAMA_AI_MODEL);
+    console.info(`Pulling Ollama model: ${OLLAMA_AI_MODEL}..`);
+    await ollama.pull({ model: OLLAMA_AI_MODEL });
 
     ollamaModelsList = (await ollama?.list())?.models;
 

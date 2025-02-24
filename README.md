@@ -88,9 +88,17 @@ It processes videos by extracting audio and analyzing the content frame-by-frame
   pip install -r requirements.txt
   ```
 
-5. Modify environment variables in [.env](.env) file as needed, or leave them be.
+5. Install [ffmpeg](https://ffmpeg.org/download.html) and make sure you add it to your system's PATH, then run the following command to test it out:
 
-6. Start the project:
+  ```bash
+  ffmpeg -version
+  ```
+
+> If the above command worked and showed ffmpeg's version, then ffmpeg has been installed successfully.
+
+6. Modify environment variables in [.env](.env) file as needed, or leave them be.
+
+7. Start the project:
 
   ```bash
   npm run start

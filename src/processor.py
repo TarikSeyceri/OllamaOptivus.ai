@@ -131,16 +131,19 @@ if os.path.exists(jsonDataPath):
         with open(jsonDataPath, 'r') as file:
             content = file.read()
             print(content)
+            logger.warning("The video already precoessed before. No need to process it again.");
             logger.warning("Processing successfully completed")
             sys.exit(0)
     except Exception:
         pass
 
 # Load the YOLOv8 model
-yoloModel = YOLO(os.path.dirname(os.path.abspath(__file__)) + "/yolov8n.pt") 
+yoloModel = YOLO(os.path.dirname(os.path.abspath(__file__)) + "/yolov8n.pt")
+logger.debug("YOLO model loaded successfully")
 
 # Load the EasyOCR model
 ocrReader = easyocr.Reader([args.language], verbose=PROCESSING_VERBOSE) # , 'de', 'ar' #ValueError: Arabic is only compatible with English, try lang_list=["ar","fa","ur","ug","en"]
+logger.debug("EasyOCR model loaded successfully")
 
 # Disabling stdout and stderr
 if PROCESSING_VERBOSE == False:
@@ -151,6 +154,7 @@ if PROCESSING_VERBOSE == False:
 
 # Load Whisper model
 whisperModel = whisper.load_model(PROCESSING_WHISPER_MODEL)  # Choose model size: tiny, base, small, medium, large
+logger.debug("Whisper model loaded successfully")
 
 # Re-enable stdout and stderr
 if PROCESSING_VERBOSE == False:
@@ -166,6 +170,7 @@ audioPath = AUDIOS_DIR+"/"+ os.path.splitext(os.path.basename(args.videoPath))[0
 if not os.path.exists(audioPath):
     ffmpegLogLevel = 'quiet' if PROCESSING_VERBOSE == False else 'info'
     ffmpeg.input(args.videoPath).output(audioPath, q='0', map='a', y=None, loglevel=ffmpegLogLevel).run()
+    logger.debug("Audio extracted successfully")
 
 if not os.path.exists(audioPath):
     print("Error: Could not extract audio from the video.")
@@ -176,9 +181,11 @@ audioTranscription = whisperModel.transcribe(audioPath, language=args.language)
 filteredAudioTranscription = [
     {"start": int(item["start"]), "end": int(item["end"]), "text": item["text"]} for item in audioTranscription['segments']
 ]
+logger.debug("Audio transcribed successfully")
 
 # Open the video file
 video = cv2.VideoCapture(args.videoPath)
+logger.debug("Video file opened successfully")
 
 # Check if the video file is opened
 if not video.isOpened():
@@ -242,6 +249,7 @@ while True:
 
 # Release video capture
 video.release()
+logger.debug("Video file closed successfully")
 
 # Print detection results
 jsonResults = json.dumps(detectionResults)

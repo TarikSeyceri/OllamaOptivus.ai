@@ -6,10 +6,10 @@
   "private": true,
   "scripts": {
     "node": "node src/main.js",
-    "dev": "npm run node",
     "start": "npm run node",
     "serve": "npm run node",
-    "nodemon": "nodemon src/main.js",
+    "dev": "cross-env NODE_ENV=development node src/main.js",
+    "nodemon": "cross-env NODE_ENV=development nodemon src/main.js",
     "swagger-autogen": "node swagger-autogen.js"
   },
   "type": "commonjs",
@@ -49,5 +49,8 @@
     "swagger-ui-express": "^5.0.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

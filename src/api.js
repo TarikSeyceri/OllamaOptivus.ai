@@ -236,7 +236,7 @@ router.post("/process", async (req, res) => {
 
         if(OLLAMA_AI_DISABLED || noPrompting){
             lockProcess = false;
-            return res.status(200).json({ success: true, msg: "Processing completed", payload: { stdout, prompt } });
+            return res.status(200).json({ success: true, msg: "Processing completed, without prompting.", payload: { stdout, prompt } });
         }
 
         console.log("Prompting video file", videoFilePath);

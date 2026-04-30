@@ -8,6 +8,8 @@ Ollama Optivus is a video processing AI based solution designed to analyze and e
 
 It processes videos by extracting audio and analyzing the content frame-by-frame to identify text and objects. It then generates detailed information based on the analysis and forwards it to an Ollama Large Language Model.
 
+![alt OllamaOptivusAIFlow](flow.jpg)
+
 ## Features
 - **Video Upload and Management**: Upload, List, and Delete video files from the server.
 

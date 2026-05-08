@@ -14,3 +14,37 @@ services:
     command: ["sh", "-c", "npm install && npm run node"]
     tty: true
     stdin_open: true
+NODE_ENV="production" # development or production
+
+HTTP_BEARER_TOKEN="mysecrettoken" # for authentication
+HTTP_PORT=3330
+HTTP_REQUEST_MAX_JSON_BODY_PAYLOAD_LIMIT="100kb"
+HTTP_RATE_LIMIT_WINDOW_MS=60000 # 1 minute
+HTTP_RATE_LIMIT_MAX_REQUESTS=10 # 10 requests per minute
+
+VIDEO_FILE_MAX_UPLOAD_SIZE=524288000 # Default 500MB
+VIDEOS_DIR="data/videos"
+AUDIOS_DIR="data/audios"
+JSON_DATA_DIR="data/json"
+PROMPTS_DIR="data/prompts"
+FILE_RETENTION_DAYS=2
+
+LOG_DIR="data/logs"
+LOG_LEVEL="debug" # error, warn, info, debug
+LOG_FILE_MAX_SIZE="10m"
+LOG_RETENTION_DAYS=30 # Days
+
+PROCESSING_ONLY="false" # If true, will not allow upload files or listing them. Only processing will be allowed.
+ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR="false" # Allow providing video path outside this project's upload directory. If false, will only allow videos inside the project's upload directory.
+ENABLE_PROCESS_LOCK_MECHANISM="true" # If true, will not allow sending multiple processing requests at the same time. # Set it to false only if you have a super computer
+PYTHON_BINARY_PATH="python" # python or python3
+
+PROCESSING_VERBOSE="false" # If true, will show all std hidden messages # note: if true, python processor won't output just json data, thus the node app will not be able to parse it. # only use it for debugging
+PROCESSING_LOG_LEVEL="WARNING" # CRITICAL, ERROR, WARNING, INFO, DEBUG
+PROCESSING_WHISPER_MODEL="base" # tiny, base, small, medium, large
+PROCESSING_FPS=1
+
+OLLAMA_AI_API_URL="http://host.docker.internal:11434" # Connectivity from docker container to host
+OLLAMA_AI_MODEL="deepseek-r1" # or llama3.2 etc..
+OLLAMA_AI_TEMPERATURE=0 # 0 to have real output # creativity is disabled when 0
+OLLAMA_AI_DISABLED="false" # If true, will not use OLLAMA LLM and `/process` endpoint will only return the analyzed video data without prompting it.

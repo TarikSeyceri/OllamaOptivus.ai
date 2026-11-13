@@ -1,0 +1,41 @@
+# Automated dependency updates. The 14-day cooldown matches the project's pinning policy: new
+# releases are only adopted after two weeks (a common window for supply-chain attacks to surface).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    cooldown: { default-days: 14 }
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: uv
+    directory: /worker
+    schedule: { interval: weekly }
+    cooldown: { default-days: 14 }
+    ignore:
+      # faster-whisper (CTranslate2) supports CUDA 12 only; newer torch wheels are CUDA 13.
+      # Move these together with CTranslate2 (see docs/performance.md, "CUDA versions").
+      - dependency-name: torch
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: torchvision
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+    groups:
+      python-minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: docker
+    directories: [/, /worker]
+    schedule: { interval: weekly }
+    cooldown: { default-days: 14 }
+
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule: { interval: weekly }
+    cooldown: { default-days: 14 }
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+    cooldown: { default-days: 14 }

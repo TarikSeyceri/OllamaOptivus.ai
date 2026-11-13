@@ -1,5 +1,6 @@
 {
   "singleQuote": true,
   "printWidth": 140,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "overrides": [{ "files": ["*.yml", "*.yaml"], "options": { "singleQuote": false } }]
 }

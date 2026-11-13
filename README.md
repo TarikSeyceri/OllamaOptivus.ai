@@ -1,449 +1,175 @@
 # Ollama Optivus AI
 
-![alt OllamaOptivusAI](cover.webp)
+![Ollama Optivus AI](cover.webp)
 
-## Overview
+[![CI](https://github.com/TarikSeyceri/OllamaOptivus.ai/actions/workflows/ci.yml/badge.svg)](https://github.com/TarikSeyceri/OllamaOptivus.ai/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
-Ollama Optivus is a video processing AI based solution designed to analyze and extract meaningful information from video files. It uses a combination of technologies, including computer vision (YOLO), optical character recognition (OCR), and speech-to-text transcription (Whisper).
+**Self-hosted video understanding.** Optivus watches a video the way a person would: it transcribes the
+speech, reads the on-screen text, notices objects, scene changes and facial expressions, and hands that
+timeline to a local [Ollama](https://ollama.com) language model. The model answers in **the JSON structure
+you ask for**: summaries, events with timestamps, call-quality scores, compliance flags. Everything runs on
+your own hardware, on an NVIDIA GPU or a CPU.
 
-It processes videos by extracting audio and analyzing the content frame-by-frame to identify text and objects. It then generates detailed information based on the analysis and forwards it to an Ollama Large Language Model.
+## Highlights
 
-![alt OllamaOptivusAIFlow](flow.jpg)
+- **Fast on one 8 GB GPU.** Models stay loaded, speech and frames are analyzed in parallel, OCR skips
+  unchanged frames, and the worker and the language model hand the GPU to each other.
+- **Speech:** faster-whisper `large-v3-turbo` with voice-activity detection, 99 languages, automatic
+  language detection.
+- **Vision:** YOLO26 objects, EasyOCR on-screen text, scene-cut detection, optional scene descriptions by a
+  vision model, optional facial expressions.
+- **Structured answers:** any JSON schema (Ollama structured outputs), streamed and stopped as soon as the
+  JSON is complete; long videos are summarized in parts automatically.
+- **Production-ready API:**
+  - asynchronous jobs with long-polling;
+  - content-addressed storage with deduplication;
+  - an analysis cache, so re-asking the same video with another prompt is instant;
+  - crash-safe job queue, retention, health checks, OpenAPI docs.
+- **Secure by default:**
+  - mandatory strong API keys, strict input validation, path containment;
+  - non-root read-only containers, and a worker with no internet access;
+  - hash-pinned dependencies (see [security](docs/security.md)).
+- **Backward compatible:** the v1 endpoints (`/upload`, `/videos`, `/delete`, `/process`) still work.
 
-## Features
-- **Video Upload and Management**: Upload, List, and Delete video files from the server.
+## How it works
 
-- **Video Processing**: Process video files by extracting audio, transcribing speech, detecting objects and texts in frames, and generating prompts to be used in an AI LLM.
+```mermaid
+flowchart LR
+  C[Client] -->|upload, jobs| API[API<br/>Node.js]
+  API -->|analyze| W[Worker · GPU<br/>speech · objects · text<br/>scenes · faces]
+  API -->|timeline prompt| O[Ollama · GPU<br/>qwen3.5:4b]
+  O -->|JSON answer| API
+```
 
-- **AI LLM**: Integrated with Ollama for advanced AI-based processing. Supports all Ollama based models such as `deepseek-r1` or `llama3.2`.
+1. A video is uploaded (or referenced on a NAS) and a job is created.
+2. The **worker** decodes frames by timestamp and transcribes the audio in parallel with object, text,
+   scene and face analysis.
+3. The **API** turns the result into a compact timeline (speech, new on-screen text, objects, scene cuts,
+   captions) and asks **Ollama** for an answer that follows your JSON schema.
+4. The client polls the job and gets the parsed result.
 
-## Video Processing Flow
-1. **Video Upload**: Upload the video to the server.
+Details: [docs/architecture.md](docs/architecture.md).
 
-2. **Audio Extraction**: FFmpeg is used to extract audio from the video file.
+## Quick start (Docker, NVIDIA GPU)
 
-3. **Audio Transcription**: Whisper transcribes the extracted audio to text.
+You need Docker with GPU support (NVIDIA driver 560+; on Linux the NVIDIA Container Toolkit; on Windows,
+Docker Desktop with WSL 2).
 
-4. **Frame Extraction**: OpenCV extracts frames from the video to be analyzed one by one.
+```bash
+git clone https://github.com/TarikSeyceri/OllamaOptivus.ai.git && cd OllamaOptivus.ai
+./scripts/init.sh                 # Windows: .\scripts\init.ps1  -> creates .env and prints your API key
+docker compose up -d --build      # first start builds the images and pulls the model (about 10 GB)
+node scripts/smoke.mjs            # waits until ready, then analyzes a test video end to end
+```
 
-5. **Object Detection**: YOLOv8 detects objects in each frame of the video.
+Without an NVIDIA GPU: `docker compose -f compose.yaml -f compose.cpu.yaml up -d --build`.
+With Ollama already installed on the host: `docker compose -f compose.yaml -f compose.host-ollama.yaml up -d --build`.
+More in [docs/deployment.md](docs/deployment.md): TLS, NAS folders, several GPUs, running without Docker.
 
-6. **Text Detection**: EasyOCR detects any text in each frame.
+## Usage
 
-7. **AI Prompting**: Based on the extracted data, an AI model (Ollama) generates detailed information, summarizing the video.
+```bash
+TOKEN=<your key>; API=http://127.0.0.1:3330
 
+# 1. Upload
+curl -s -H "Authorization: Bearer $TOKEN" -F "video=@call.mp4" $API/v1/videos
+#    -> {"payload":{"video":{"id":"3f0c...e9", ...}}}
 
-## Prerequisites
+# 2. Analyze (waits up to 60 s, then keeps running in the background)
+curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" "$API/v1/jobs?wait=60" \
+  -d '{"videoId":"3f0c...e9","language":"en","videoExplanation":"A support call between an agent and a customer."}'
 
-- Required: [Ollama](https://ollama.com/download)
-- Required: [Docker](https://www.docker.com) or ([Node.js](https://nodejs.org/en/download) v18.20.5 and [Python](https://www.python.org/downloads/release/python-3119/) v3.11.9)
+# 3. Poll until "completed"
+curl -s -H "Authorization: Bearer $TOKEN" "$API/v1/jobs/<job-id>?wait=30"
+```
 
-## Min. Hardware Requirements
+`node scripts/smoke.mjs` runs these steps on the bundled 14-second test clip
+([test/fixtures/speech.mp4](test/fixtures/speech.mp4)). On an RTX 4060 laptop GPU the job completes in about
+10 s, and `payload.job.result` is:
 
-- CPU: Octa-core (e.g., Intel Core i7, AMD Ryzen 7 or Apple 8-core M)
-- GPU: 4 GB VRAM
-- RAM: 16 GB
-- SSD: 20 GB
+```json
+{
+  "summary": "A customer service interaction where a user named Anna contacts Optiva Support to inquire about the status of invoice 4821.",
+  "events": [
+    { "timestamp": 0, "description": "On-screen text displays 'OPTIVUS DEMO'." },
+    { "timestamp": 1.3, "description": "Anna introduces herself as Optiva Support and asks how she can help." },
+    { "timestamp": 6.5, "description": "The user requests to check the status of invoice 4821." }
+  ]
+}
+```
 
-## Installation
+This is real, unedited output of `qwen3.5:4b`. Speech recognition heard "Optivus" as "Optiva", and because
+one synthetic voice speaks both parts, the model mixed up the agent and the caller.
 
-- Make sure [Ollama](https://ollama.com/download) is installed. 
+Pass your own JSON schema in `format`, for example sentiment, satisfaction scores or checklist items
+([example](docs/examples/call-center-format.json)). Choose `language` (`en`, `tr`, `de`, … or `auto`) and
+`features` (`objects`, `ocr`, `scenes`, `faces`, `captions`). The full reference is in
+[docs/api.md](docs/api.md); the interactive one is `/docs` (`API_DOCS_ENABLED=true`). A
+[Postman collection](OllamaOptivus.ai.postman_collection.json) is included.
 
-  **Note**: No need to pull a model manually. The specified `OLLAMA_AI_MODEL` in `.env` or `docker-compose.yml` will be pulled and installed automatically, when started.
+## Recommended models
 
-- Clone the repository:
+| GPU memory | Language model (`OLLAMA_AI_MODEL`) | Speech |
+|---|---|---|
+| 8 GB (default) | `qwen3.5:4b`, vision-capable, fully on the GPU | `large-v3-turbo` int8 |
+| 12–16 GB | `qwen3.5:9b` or `gemma4:12b` | `large-v3-turbo` fp16 |
+| 24 GB | `gemma4:26b` (mixture-of-experts, fast) or `qwen3.5:27b` | `large-v3-turbo` fp16 |
+| CPU / Apple Silicon | `qwen3.5:2b` | `small` int8 |
 
-  ```bash
-  git clone https://github.com/TarikSeyceri/OllamaOptivus.ai.git
-  ```
-
-  ```bash
-  cd OllamaOptivus.ai
-  ```
-
-- There are two methods to install this project.
-### A) Install Automatically Using Docker
-
-- Before building and running the docker container, you may need to view [docker-compose.yml](docker-compose.yml) and add/change environment variables accordingly. You can view the default environment variables in [.env](.env), but don't change the variables inside `.env` file, just change/add them in `docker-compose.yml`
-
-- Then:
-
-  ```bash
-  docker-compose up -d
-  ```
-
-### B) Install Manually On Local Machine
-
-1. Download and Install [Node.js](https://nodejs.org/en/download) v18.20.5
-
-2. Download and Install [Python](https://www.python.org/downloads/release/python-3119/) v3.11.9
-
-3. Install Backend dependencies:
-
-  ```bash
-  npm install
-  ```
-
-4. Install Python dependencies:
-
-  ```bash
-  pip install -r requirements.txt
-  ```
-
-5. Install [ffmpeg](https://ffmpeg.org/download.html) and make sure you add it to your system's PATH, then run the following command to test it out:
-
-  ```bash
-  ffmpeg -version
-  ```
-
-> If the above command worked and showed ffmpeg's version, then ffmpeg has been installed successfully.
-
-6. Modify environment variables in [.env](.env) file as needed, or leave them be.
-
-7. Start the project:
-
-  ```bash
-  npm run start
-  ```
-
-> After running the project with either Docker or Locally. It will be accessible through: `http://localhost:3330`.
-
+The reasoning, measured numbers and a benchmark script for your own videos are in
+[docs/models.md](docs/models.md). Tuning is covered in [docs/performance.md](docs/performance.md).
 
 ## Configuration
 
-The [.env](.env) is straight forward self explanatory. You can access it and read it.
+Everything is configured with environment variables in `.env`; the init script creates the file with
+random secrets. The most important settings:
 
-However, there are some important environment variables that I will be highlighting here:
+| Variable | Default | |
+|---|---|---|
+| `HTTP_BEARER_TOKEN` | generated | API keys (comma-separated for rotation) |
+| `OLLAMA_AI_MODEL` | `qwen3.5:4b` | Language model |
+| `PROCESSING_FEATURES` | `objects,ocr,scenes` | Add `faces` for facial expressions |
+| `OLLAMA_AI_VISION_ENABLED` | `false` | Scene descriptions by the vision model |
+| `PROCESSING_FPS` | `1` | Frames analyzed per second of video |
+| `FILE_RETENTION_DAYS` | `2` | When videos and results are deleted |
+| `OPTIVUS_BIND` | `127.0.0.1` | Interface the API is published on |
 
-- `NODE_ENV`: Set to `development` or `production`.
-   - If set to `development`:
-      - `/swagger` and `/test` endpoints will be enabled.
-      - `HTTP_BEARER_TOKEN` authentication and rate limiting will not be active.
+All variables: [docs/configuration.md](docs/configuration.md).
 
-- `HTTP_BEARER_TOKEN`: Prestored token for authenticating API requests in production.
+## Security
 
-- `PROCESSING_ONLY`: If set to `true`, It will only allow video processing, it won't allow video listing, uploading or deleting. Should be enabled with `ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR`
+API keys are required (the server refuses to start without strong ones). Inputs, uploads and paths are
+validated strictly; the containers run unprivileged; the worker cannot reach the internet. Recordings and
+transcripts never leave your machines. Read [docs/security.md](docs/security.md) before going to
+production, especially the responsible-use note on facial expressions. Report vulnerabilities privately
+([SECURITY.md](SECURITY.md)).
 
-- `ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR`: When set to `true`, It will allow `/process` endpoint to process videos from outside the project's `VIDEOS_DIR` folder, which means it can access other storage units such as usb, network or cloud storages, etc..
-
-- `OLLAMA_AI_MODEL`: Set the Ollama AI Model to be used, default: `deepseek-r1`
-
-
-## API Endpoints
-
-- All endpoints are prepared in a [Postman Collection](OllamaOptivus.ai.postman_collection.json) which can be imported.
-
-- In development environment `/swagger` endpoint is enabled which shows all available endpoints (Without authentication)
-
-### 0. Root (Hello World)
-
-**GET** `/`
-
-- Checks if the server is online.
-
-- Response Body: 
-  ```bash
-  {
-    "success": true,
-    "msg": "Ollama Optivus Server is running!"
-  }
-  ```
-
-### 1. Upload Video
-
-**POST** `/upload`
-
-- Uploads a video file to the server.
-
-- Video file must be `.mp4` file.
-
-- Note: Once a video has finished processing, you must manually send a delete request to the appropriate endpoint to remove the video. If you don't, the video will be deleted automatically after the specified `FILE_RETENTION_DAYS` in the `.env` file. Be mindful not to overload the storage by leaving videos uncleaned before the retention period ends.
-
-- Request Body: 
-  > form-data with key `video` and value as the video file.
-
-- Response Body: 
-  ```bash
-  {
-    "success": true,
-    "msg": "Video file uploaded!",
-    "payload": {
-      "videoFilePath": "data/videos/8047000029a4000c36b908dd2fd94b6e.mp4"
-    }
-  }
-  ```
-
-### 2. List Videos
-
-**GET** `/videos`
-
-- Lists all uploaded video files.
-- Response Body: 
-  ```bash
-  {
-    "success": true,
-    "msg": "Video files listed!",
-    "payload": {
-        "videos": [
-          "data/videos/8047000029a4000c36b908dd2fd94b6e.mp4"
-        ]
-    }
-  }
-  ```
-
-### 3. Delete Video
-
-**DELETE** `/delete`
-
-- Deletes a video file from the server.
-
-- Request Body:
-  ```bash
-  {
-    "videoFileName": "8047000029a4000c36b908dd2fd94b6e.mp4"
-  }
-  ```
-
-- Response Body: 
-  ```bash
-  {
-    "success": true,
-    "msg": "Video file deleted!"
-  }
-  ```
-
-### 4. Process Video
-
-**POST** `/process`
-
-- Processes a video by analyzing its frames, extracting audio and transcribing it.
-
-- Request Body: JSON with keys:
-  - `videoFilePath`: Path to the video file. *(Required)*
-
-  - `language`: Language for transcription. *('en' or 'tr' for now, Optional, default: "en")*
-
-  - `videoExplanation`: Text explaining the context of the video. *(Optional, default: a proper general sentence)*
-
-  - `temperature`: The creativity level for the AI model. *(optional, default: 0, means no creativity)*
-
-  - `format`: The response format which is an ollama json response schema. *(Optional, default: { summary, events })*
-
-  - `model`: The Ollama AI model to be used for prompting. *(Optional, default: env.OLLAMA_AI_MODEL)*
-
-  - `noPrompting`: If `true`, it will return the processed data and skips the AI model prompting part, this means, format parameter will not be used, useful for debugging a video analysis or to send a prompt request to an Ollama LLM manually *(Optional, default: false)*.
-
-### Basic
-- Request Body: Basic request body example:
-  ```bash
-  {
-    "videoFilePath": "data/videos/8047000029a4000c61f808dd2fd54bb4.mp4"
-  }
-  ```
-- Response Body:
-  ```bash
-  {
-    "success": true,
-    "msg": "Processing completed",
-    "payload": {
-      "response": "{ \"summary\": \"The conversation starts with verifying account details and setting up international transfers. The user is guided through the process, including adding recipient details and understanding fees. The assistant explains that there's a $15 fee for international transfers but a reduced $10 fee if using the mobile banking app. The conversation ends with thanking the user and providing final instructions.\", \"events\": [ { \"timestamp\": 2, \"description\": \"Verification of account balance\" }, { \"timestamp\": 4, \"description\": \"Setting up international transfer\" }, { \"timestamp\": 6, \"description\": \"Understanding fees for international transfers\" }, { \"timestamp\": 8, \"description\": \"Explaining the fee structure\" }, { \"timestamp\": 10, \"description\": \"Guiding through recipient setup\" }, { \"timestamp\": 12, \"description\": \"Clarifying if mobile app reduces fees\" }, { \"timestamp\": 14, \"description\": \"Confirming next steps\" } ] }\n\t\t \t\t\t\t\t\t\t\t\t\t\t\t\t\t \t "
-    }
-  }
-  ```
-
-### Standard
-- Request Body: Standard request body example:
-  ```bash
-  {
-    "videoFilePath": "data/videos/8047000029a4000c61f808dd2fd54bb4.mp4",
-    "language": "en",
-    "videoExplanation": "The following info is the output of an analysis of a video call conversation between an agent and customer:",
-  }
-  ```
-- Response Body:
-  ```bash
-  # Same as above response
-  ```
-
-### Advanced
-- Request Body: Advanced request body example: *(format schema is same as ollama's format schema)*
-  ```bash
-  {
-    "videoFilePath": "data/videos/8047000029a4000c61f808dd2fd54bb4.mp4",
-    "language": "en",
-    "videoExplanation": "The following info is the output of an analysis of a video call conversation between an agent and customer:",
-    "temperature": 0,
-    "model": "deepseek-r1",
-    "format": {
-      "type": "object",
-      "properties": {
-        "summary": {
-          "type": "string"
-        },
-        "isUnrespectfulConversation": {
-          "type": "boolean"
-        },
-        "customerFraud": {
-          "type": "object",
-          "properties": {
-              "percentage": {
-                  "type": "number"
-              },
-              "reason": {
-                  "type": "string"
-              }
-          },
-          "required": ["percentage", "reason"]
-        },
-        "customerSatisfactionPercentage": {
-          "type": "number"
-        },
-        "events": {
-          "type": "array",
-          "items": {
-              "type": "object",
-              "properties": {
-                  "timestamp": {
-                      "type": "number"
-                  },
-                  "description": {
-                      "type": "string"
-                  }
-              },
-              "required": ["timestamp", "description"]
-          }
-        }
-      },
-      "required": [
-        "summary",
-        "isUnrespectfulConversation",
-        "customerFraud",
-        "customerSatisfactionPercentage",
-        "events"
-      ]
-    }
-  }
-  ```
-
-- Response Body:
-  ```bash
-  {
-    "success": true,
-    "msg": "Processing completed",
-    "payload": {
-      "response": "{ \"summary\": \"The conversation starts with verifying account details and setting up international transfers. The user is guided through the process, including adding recipient details and understanding fees. The assistant explains that there's a $15 fee for international transfers but a reduced $10 fee if using the mobile banking app. The conversation ends with thanking the user and providing final instructions.\", \"isUnrespectfulConversation\": false, \"customerFraud\": {\"percentage\": 0, \"reason\": \"\"}, \"customerSatisfactionPercentage\": 95, \"events\": [ { \"timestamp\": 1576234800, \"description\": \"Verification of account balance completed successfully.\" }, { \"timestamp\": 1576234860, \"description\": \"Setting up international transfer requested by the customer.\" }, { \"timestamp\": 1576234920, \"description\": \"Customer informed about a $15 fee for international transfers.\" }, { \"timestamp\": 1576234980, \"description\": \"Explanation of reduced fee ($10) if using mobile banking app.\" }, { \"timestamp\": 1576235040, \"description\": \"Customer asked about setting up recipient details beforehand.\" }, { \"timestamp\": 1576235100, \"description\": \"Explanation of required steps for adding recipient details online.\" }, { \"timestamp\": 1576235160, \"description\": \"Guidance on receiving instructions via email or SMS.\" }, { \"timestamp\": 1576235220, \"description\": \"Customer thanks and requests further instructions sent to their email.\" }, { \"timestamp\": 1576235280, \"description\": \"Final instructions provided for completing the transfer setup.\" }, { \"timestamp\": 1576235340, \"description\": \"Completion of process and exit conversation.\" } ] }\n  \t \t \t \t \t \t \t \t \t\t"
-    }
-  }
-  ```
-
-### 5. Test Request (DevEnv)
-
-**POST** `/test`
-
-- Performs a test request
-
-- Can be used to check some custom functionalities.
-
-- Enabled only in `development` environment
-
-- Request Body: `empty`
-- Response Body: 
-  ```bash
-  # Anything // for testing and dev
-  ```
-
-## Logging
-
-Winston, Morgan & Custom Python Logger are used for logging all important events and errors. Logs are stored in the `LOG_DIR` and rotated daily.
-
-To check the logs:
-```bash
-tail -f data/logs/node_YYYY-MM-DD.log
-```
+## Development
 
 ```bash
-tail -f data/logs/processor_YYYY-MM-DD.log
+npm ci && npm test                          # API: 91 tests with fakes (no GPU needed)
+cd worker && uv sync && uv run pytest       # worker: 23 tests with fake models
 ```
 
-## Scheduling and File Retention
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the layout, the guidelines and running the stack locally.
 
-Every hour, the server checks the videos, audios, json, and prompts directories, deleting files older than the configured retention period, default: `2 days`.
+## Documentation
 
-## Tech Stack
-- **Node.js**: Server-side JavaScript.
-- **Express.js**: Web framework to handle HTTP requests.
-- **Python**: To run complicated mathematical libraries.
-- **Swagger**: API documentation and testing tool.
-- **Morgan**: Network Logging library.
-- **Winston**: Logging library for managing logs.
-- **OpenCV**: Computer vision library.
-- **EasyOCR**: Optical Character Recognition (OCR) for text detection in video frames.
-- **YOLOv8**: Object detection model for detecting objects in video frames.
-- **FFmpeg**: Tool to extract audio from video.
-- **Whisper**: OpenAI's model for transcribing audio to text.
-- **Ollama**: Lightweight, extensible framework for building and running language models on local machines.
-- **Docker**: Platform to containerize applications
+| | |
+|---|---|
+| [Architecture](docs/architecture.md) | Components, data flow, GPU sharing, prompt construction |
+| [API](docs/api.md) | Endpoints, examples, error codes |
+| [Configuration](docs/configuration.md) | Every environment variable |
+| [Deployment](docs/deployment.md) | Docker, TLS, NAS, several GPUs, upgrades, backups |
+| [Models](docs/models.md) | Which models to use, and benchmarking |
+| [Performance](docs/performance.md) | Measurements and tuning |
+| [Security](docs/security.md) | Threat model, hardening, personal data |
+| [Troubleshooting](docs/troubleshooting.md) | Common problems |
+| [Migration from v1](docs/migration-v1-to-v2.md) | Upgrading existing installations |
 
+## License
 
-## Contributing
-
-I welcome contributions to Ollama Optivus AI! To contribute to this project, please follow these steps:
-
-### How to Contribute
-
-1. **Fork the Repository**:  
-  Create a copy of the repository by clicking the "Fork" button in the top-right corner of the GitHub repository page.
-
-2. **Clone Your Fork**:  
-  Clone your forked repository to your local machine:
-  ```bash
-  git clone https://github.com/yourusername/OllamaOptivus.ai.git
-  cd OllamaOptivus.ai
-  ```
-
-3. **Create a Branch**:  
-  Create a new branch for your changes:
-  ```bash
-  git checkout -b feature/your-feature-name
-  ```
-
-4. **Make Changes**:  
-  Implement your feature, fix a bug, or improve documentation. Be sure to write clear, concise commit messages.
-
-5. **Run Tests**:  
-  Ensure that all tests pass (if applicable). If you're adding new features, consider writing new tests.
-
-6. **Commit Changes**:  
-  After making your changes, commit them:
-  ```bash
-  git add .
-  git commit -m "Add/Update [feature/fix]"
-  ```
-
-7. **Push to Your Fork**:  
-  Push your changes back to your forked repository:
-  ```bash
-  git push origin feature/your-feature-name
-  ```
-
-8. **Submit a Pull Request (PR)**:  
-  Open a pull request to the main repository. Provide a clear description of what changes you've made and why.
-
-### Issues and Bug Reporting
-
-If you find any issues or bugs in the project, please open an issue. Be sure to include as much detail as possible, including:
-- A description of the issue
-- Steps to reproduce the issue (if applicable)
-- Any relevant logs or error messages
-
-You can open an issue here: [Issues](https://github.com/TarikSeyceri/OllamaOptivus.ai/issues)
-
-### Style Guide
-
-- **JavaScript/Node.js**: I use [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript). Please adhere to these conventions.
-- **Python**: For python, I don't use a specific style, as long as it is easily readable.
-
-### Documentation
-
-If you add new feature or change existing functionality, please update the documentation accordingly. You can edit the `README.md` file directly or submit improvements for the project’s documentation.
-
+MIT, see [LICENSE.md](LICENSE.md). Third-party components have their own licenses; in particular, object
+detection uses Ultralytics YOLO (**AGPL-3.0**) and can be switched off. See
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

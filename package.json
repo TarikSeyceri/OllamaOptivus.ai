@@ -1,40 +1,54 @@
 {
   "name": "ollama-optivus.ai",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Self-hosted video understanding: speech-to-text, on-screen text, objects and scenes on the GPU, summarized into structured JSON by a local Ollama model.",
+  "type": "module",
   "main": "src/main.js",
   "private": true,
+  "license": "MIT",
+  "author": "Tarik Seyceri",
+  "homepage": "https://github.com/TarikSeyceri/OllamaOptivus.ai#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TarikSeyceri/OllamaOptivus.ai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TarikSeyceri/OllamaOptivus.ai/issues"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "start": "node src/main.js",
     "dev": "cross-env NODE_ENV=development AUTH_DISABLED=true node --watch src/main.js",
     "test": "node --test --test-reporter=spec \"test/**/*.test.mjs\"",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "smoke": "node scripts/smoke.mjs",
+    "bench:models": "node scripts/bench-models.mjs",
+    "openapi": "node scripts/export-openapi.mjs"
   },
-  "type": "module",
   "keywords": [
-    "node",
-    "express",
-    "swagger",
     "ollama",
-    "optivus",
-    "python",
-    "vision",
-    "optical",
-    "video",
-    "analysis",
-    "ai",
-    "artificial",
-    "intelligence",
-    "detection",
-    "yolo",
-    "opencv",
-    "ocr",
+    "llm",
+    "video-analysis",
+    "video-understanding",
+    "speech-to-text",
     "whisper",
-    "deepseek"
+    "faster-whisper",
+    "ocr",
+    "easyocr",
+    "object-detection",
+    "yolo",
+    "scene-detection",
+    "gpu",
+    "cuda",
+    "self-hosted",
+    "express",
+    "fastapi",
+    "docker"
   ],
-  "author": "Tarik Seyceri",
   "dependencies": {
     "cors": "2.8.6",
     "express": "5.3.0",

@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main, v2]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API (Node ${{ matrix.node }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 26]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
+
+  worker:
+    name: Worker (Python ${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.6"
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      # Light environment: the tests use fake models, so no torch/CUDA wheels are installed.
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pytest
+
+  vulnerabilities:
+    name: Dependency vulnerabilities (OSV)
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@b1d267aea5211fa648d9d442fa64b90dbdcbdd36 # v2.7.0
+    with:
+      scan-args: |-
+        --lockfile=package-lock.json
+        --lockfile=worker/uv.lock
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+  images:
+    name: Docker images and smoke test (CPU)
+    runs-on: ubuntu-24.04
+    needs: [api, worker]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Create .env (random secrets, small models, LLM disabled)
+        run: |
+          cp .env.example .env
+          sed -i "s/^HTTP_BEARER_TOKEN=.*/HTTP_BEARER_TOKEN=$(openssl rand -hex 32)/" .env
+          sed -i "s/^WORKER_TOKEN=.*/WORKER_TOKEN=$(openssl rand -hex 32)/" .env
+          sed -i "s/^PROCESSING_WHISPER_MODEL=.*/PROCESSING_WHISPER_MODEL=tiny/" .env
+          sed -i "s/^PROCESSING_OCR_LANGUAGES=.*/PROCESSING_OCR_LANGUAGES=en/" .env
+          echo "OLLAMA_AI_DISABLED=true" >> .env
+      # The LLM is disabled in CI, so the Ollama container is left out (host-ollama override).
+      - name: Build and start the CPU stack
+        run: docker compose -f compose.yaml -f compose.cpu.yaml -f compose.host-ollama.yaml up -d --build --wait --wait-timeout 1200
+      - name: Smoke test (upload, analysis job, prompt)
+        run: node scripts/smoke.mjs --no-prompting
+      - name: Container logs
+        if: failure()
+        run: docker compose -f compose.yaml -f compose.cpu.yaml -f compose.host-ollama.yaml logs --no-color
+      - name: Scan the API image (fails on critical vulnerabilities)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: optivus-api:2.0.0
+          scanners: vuln
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+      - name: Scan the worker image (report only; large ML dependency tree)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: optivus-worker:2.0.0-cpu
+          scanners: vuln
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "0"
+      - name: Stop the stack
+        if: always()
+        run: docker compose -f compose.yaml -f compose.cpu.yaml -f compose.host-ollama.yaml down -v

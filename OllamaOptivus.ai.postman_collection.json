@@ -1,187 +1,226 @@
 {
   "info": {
     "_postman_id": "5865987e-f036-4f5e-8694-8a5006497020",
-    "name": "OllamaOptivus.ai",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "28881851"
+    "name": "Ollama Optivus AI v2",
+    "description": "Set the collection variables `baseUrl` and `token` (printed by scripts/init). Upload a video, start a job, then poll it. `videoId` and `jobId` are filled in automatically by the Upload and Create job requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:3330" },
+    { "key": "token", "value": "" },
+    { "key": "videoId", "value": "" },
+    { "key": "jobId", "value": "" }
+  ],
   "item": [
     {
-      "name": "List Videos",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
+      "name": "v1",
+      "item": [
+        {
+          "name": "Upload video",
+          "event": [
             {
-              "key": "token",
-              "value": "mysecrettoken",
-              "type": "string"
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["const id = pm.response.json().payload?.video?.id;", "if (id) pm.collectionVariables.set('videoId', id);"]
+              }
             }
-          ]
+          ],
+          "request": {
+            "method": "POST",
+            "body": { "mode": "formdata", "formdata": [{ "key": "video", "type": "file", "src": [] }] },
+            "url": { "raw": "{{baseUrl}}/v1/videos", "host": ["{{baseUrl}}"], "path": ["v1", "videos"] }
+          }
         },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3330/videos",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3330",
-          "path": ["videos"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Upload Video",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "mysecrettoken",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "formdata",
-          "formdata": [
-            {
-              "key": "video",
-              "type": "file",
-              "src": "/C:/Users/Tarik/Desktop/8047000029a4000c36b908dd2fd94b6e.mp4"
-            }
-          ]
-        },
-        "url": {
-          "raw": "http://localhost:3330/upload",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3330",
-          "path": ["upload"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Video",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "mysecrettoken",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "DELETE",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"videoFileName\": \"8047000029a4000c36b908dd2fd94b6e.mp4\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "List videos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v1/videos?limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "videos"],
+              "query": [
+                { "key": "limit", "value": "100" },
+                { "key": "offset", "value": "0" }
+              ]
             }
           }
         },
-        "url": {
-          "raw": "http://localhost:3330/delete",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3330",
-          "path": ["delete"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Process Video",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "mysecrettoken",
-              "type": "string"
-            }
-          ]
+        {
+          "name": "Get video",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/videos/{{videoId}}", "host": ["{{baseUrl}}"], "path": ["v1", "videos", "{{videoId}}"] }
+          }
         },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"videoFilePath\": \"data/videos/8047000029a4000c61f808dd2fd54bb4.mp4\", // required\r\n    \"language\": \"en\", // (en or tr) for now // optional, default: \"en\"\r\n    \"videoExplanation\": \"The following info is the output of an analysis of a video call conversation between an agent and customer:\", // optional, default: a proper general sentence\r\n    \"temperature\": 0 //, // optional, default: 0, // 0 means no creativity\r\n    //\"format\": {} //, optional, default: an ollama json response schema: { summary, events }\r\n    //\"noPrompting\": false // optional, default: false, // true means the service will not prompt ollama.ai model about the video, instead, it will respond the processed result here // useful for debugging a video before prompting (intercepting)\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "Create job",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["const id = pm.response.json().payload?.job?.id;", "if (id) pm.collectionVariables.set('jobId', id);"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"videoId\": \"{{videoId}}\",\n  \"language\": \"en\",\n  \"videoExplanation\": \"A recorded video call between a bank agent and a customer.\",\n  \"temperature\": 0\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/jobs?wait=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "jobs"],
+              "query": [{ "key": "wait", "value": "30" }]
             }
           }
         },
-        "url": {
-          "raw": "http://localhost:3330/process",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3330",
-          "path": ["process"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Test Request (DevEnv)",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "mysecrettoken",
-              "type": "string"
-            }
-          ]
+        {
+          "name": "Create job (custom schema)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"videoId\": \"{{videoId}}\",\n  \"language\": \"en\",\n  \"videoExplanation\": \"A recorded support call between an agent and a customer.\",\n  \"format\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"summary\": { \"type\": \"string\" },\n      \"customerSatisfactionPercentage\": { \"type\": \"number\", \"minimum\": 0, \"maximum\": 100 },\n      \"events\": {\n        \"type\": \"array\",\n        \"items\": {\n          \"type\": \"object\",\n          \"properties\": { \"timestamp\": { \"type\": \"number\", \"description\": \"Seconds from the start\" }, \"description\": { \"type\": \"string\" } },\n          \"required\": [\"timestamp\", \"description\"]\n        }\n      }\n    },\n    \"required\": [\"summary\", \"customerSatisfactionPercentage\", \"events\"]\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/v1/jobs", "host": ["{{baseUrl}}"], "path": ["v1", "jobs"] }
+          }
         },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "Get job (long-poll 30 s)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v1/jobs/{{jobId}}?wait=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "jobs", "{{jobId}}"],
+              "query": [{ "key": "wait", "value": "30" }]
             }
           }
         },
-        "url": {
-          "raw": "http://localhost:3330/test",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3330",
-          "path": ["test"]
+        {
+          "name": "List jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v1/jobs?limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "jobs"],
+              "query": [{ "key": "limit", "value": "20" }]
+            }
+          }
+        },
+        {
+          "name": "Job analysis",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v1/jobs/{{jobId}}/analysis",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "jobs", "{{jobId}}", "analysis"]
+            }
+          }
+        },
+        {
+          "name": "Job prompt",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/jobs/{{jobId}}/prompt", "host": ["{{baseUrl}}"], "path": ["v1", "jobs", "{{jobId}}", "prompt"] }
+          }
+        },
+        {
+          "name": "Cancel or delete job",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/v1/jobs/{{jobId}}", "host": ["{{baseUrl}}"], "path": ["v1", "jobs", "{{jobId}}"] }
+          }
+        },
+        {
+          "name": "Delete video",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/v1/videos/{{videoId}}", "host": ["{{baseUrl}}"], "path": ["v1", "videos", "{{videoId}}"] }
+          }
+        },
+        {
+          "name": "Models",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/v1/models", "host": ["{{baseUrl}}"], "path": ["v1", "models"] } }
+        },
+        {
+          "name": "Capabilities",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/capabilities", "host": ["{{baseUrl}}"], "path": ["v1", "capabilities"] }
+          }
+        },
+        {
+          "name": "Health (ready)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/health/ready", "host": ["{{baseUrl}}"], "path": ["health", "ready"] }
+          }
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Root (Hello World)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3330/",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3330",
-          "path": [""]
+      "name": "Legacy (v1 endpoints, deprecated)",
+      "item": [
+        {
+          "name": "Root (Hello World)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+          }
+        },
+        {
+          "name": "Upload Video",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "formdata", "formdata": [{ "key": "video", "type": "file", "src": [] }] },
+            "url": { "raw": "{{baseUrl}}/upload", "host": ["{{baseUrl}}"], "path": ["upload"] }
+          }
+        },
+        {
+          "name": "List Videos",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/videos", "host": ["{{baseUrl}}"], "path": ["videos"] } }
+        },
+        {
+          "name": "Process Video",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"videoFilePath\": \"data/videos/call-001.mp4\",\n  \"language\": \"en\",\n  \"videoExplanation\": \"The following info is the output of an analysis of a video call conversation between an agent and customer:\",\n  \"temperature\": 0\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/process", "host": ["{{baseUrl}}"], "path": ["process"] }
+          }
+        },
+        {
+          "name": "Delete Video",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"videoFileName\": \"call-001.mp4\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/delete", "host": ["{{baseUrl}}"], "path": ["delete"] }
+          }
         }
-      },
-      "response": []
+      ]
     }
   ]
 }

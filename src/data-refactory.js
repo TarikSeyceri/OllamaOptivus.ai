@@ -1,3 +1,5 @@
+// Turns the processor's analysis ({ frames, audioTranscription }) into a time-ordered text prompt.
+
 const languages = {
     en: {
         videoExplanation: "The following info is the output of an analysis of a video:",
@@ -6,8 +8,6 @@ const languages = {
         audioTranscription: "Audio transcription",
         onScreenText: "On screen text",
         objectsDetected: "Objects detected",
-        atSecond: "At second",
-        detectedObjects: "Detected objects in the video",
     },
     tr: {
         videoExplanation: "Aşağıdaki bilgiler, bir video analizinin çıktısıdır:",
@@ -16,334 +16,101 @@ const languages = {
         audioTranscription: "Ses transkripsiyonu",
         onScreenText: "Ekrandaki metin",
         objectsDetected: "Algılanan nesneler",
-        atSecond: "Saniye",
-        detectedObjects: "Videoda algılanan nesneler",
+    },
+};
+
+const isBlank = (text) => !text || !String(text).trim();
+const formatSecond = (t) => String(Math.round(t * 10) / 10);
+const normalizeText = (text) => String(text).trim().toLowerCase();
+
+/**
+ * Splits the whole video into consecutive time windows: speech segments plus the gaps before,
+ * between and after them. Every frame belongs to exactly one window (half-open intervals, the
+ * last window is closed), so nothing is dropped and nothing is counted twice.
+ */
+function buildSegments(analysis) {
+    const frames = [...(analysis?.frames ?? [])]
+        .filter((frame) => Number.isFinite(frame?.timestamp))
+        .sort((a, b) => a.timestamp - b.timestamp);
+    const speech = [...(analysis?.audioTranscription ?? [])]
+        .filter((segment) => Number.isFinite(segment?.start) && Number.isFinite(segment?.end))
+        .sort((a, b) => a.start - b.start);
+
+    const windows = [];
+    let cursor = 0;
+    for (const segment of speech) {
+        const start = Math.max(segment.start, cursor);
+        const end = Math.max(segment.end, start);
+        if (start > cursor) windows.push({ start: cursor, end: start, text: "" });
+        windows.push({ start, end, text: segment.text ?? "" });
+        cursor = end;
     }
-}
+    const lastFrame = frames.length ? frames[frames.length - 1].timestamp : -Infinity;
+    if (lastFrame >= cursor) windows.push({ start: cursor, end: lastFrame, text: "" });
 
-function refactorMethod1(jsonData) {
-    let refactoredData = [];
-
-    const firstAudio = jsonData?.audioTranscription?.[0];
-    if (firstAudio && firstAudio?.start != 0) {
-        let frameContent = {
-            startTimestamp: 0,
-            endTimestamp: firstStartAudio.start,
-            audioTranscription: "",
-            onScreenTexts: new Set(),
-            detections: new Set(),
-        };
-
-        let frames = jsonData.frames.filter(frame => frame.timestamp >= 0 && frame.timestamp < firstAudio.start);
-
-        frames.forEach(frame => {
-            frame.texts.forEach(text => {
-                frameContent.onScreenTexts.add(text);
-            });
-            frame.detections.forEach(detection => {
-                frameContent.detections.add(detection);
-            });
-        });
-
-        frameContent.onScreenTexts = [...frameContent.onScreenTexts];
-        frameContent.detections = [...frameContent.detections];
-
-        // Push the merged result for this audio segment
-        refactoredData.push(frameContent);
-    }
-
-    // Iterate over the audio transcriptions and match frames based on the time intervals
-    jsonData.audioTranscription.forEach(audio => {
-        // Create a combined object with detections and audio text for that time interval
-        let audioContent = {
-            startTimestamp: audio.start,
-            endTimestamp: audio.end,
-            audioTranscription: audio.text,
-            onScreenTexts: new Set(),
-            detections: new Set(),
-        };
-
-        // Find frames that overlap with the current audio transcription
-        let frames = jsonData.frames.filter(frame => frame.timestamp >= audio.start && frame.timestamp <= audio.end);
-
-        // Combine all the detections in the frame for this period
-        frames.forEach(frame => {
-            frame.texts.forEach(text => {
-                audioContent.onScreenTexts.add(text);
-            });
-            frame.detections.forEach(detection => {
-                audioContent.detections.add(detection);
-            });
-        });
-
-        audioContent.onScreenTexts = [...audioContent.onScreenTexts];
-        audioContent.detections = [...audioContent.detections];
-
-        // Push the merged result for this audio segment
-        refactoredData.push(audioContent);
-    });
-
-    const lastAudio = jsonData?.audioTranscription?.[jsonData?.audioTranscription?.length - 1];
-    const lastFrame = jsonData?.frames?.[jsonData?.frames?.length - 1];
-    if (lastAudio && lastFrame && lastAudio?.end < lastFrame.timestamp) {
-        let frameContent = {
-            startTimestamp: lastAudio?.end,
-            endTimestamp: lastFrame.timestamp,
-            audioTranscription: "",
-            onScreenTexts: new Set(),
-            detections: new Set(),
-        };
-
-        let frames = jsonData.frames.filter(frame => frame.timestamp > lastAudio?.end && frame.timestamp <= lastFrame.timestamp);
-
-        frames.forEach(frame => {
-            frame.texts.forEach(text => {
-                frameContent.onScreenTexts.add(text);
-            });
-            frame.detections.forEach(detection => {
-                frameContent.detections.add(detection);
-            });
-        });
-
-        frameContent.onScreenTexts = [...frameContent.onScreenTexts];
-        frameContent.detections = [...frameContent.detections];
-
-        // Push the merged result for this audio segment
-        refactoredData.push(frameContent);
-    }
-
-    // Return the merged data
-    return refactoredData;
-}
-
-function refactorMethod2(jsonData) {
-    let refactoredData = [];
-    let usedAudioTranscriptions = {};
-
-    // Merging frames and audio transcriptions
-    for (const frame of jsonData?.frames) {
-        let audioText = jsonData.audioTranscription.find(item => item.start <= frame.timestamp && item.end > frame.timestamp);
-
-        // Prevent duplicate audio transcriptions
-        if (audioText) {
-            if (usedAudioTranscriptions[audioText.start] == audioText.end) {
-                audioText.text = "";
+    let f = 0;
+    return windows
+        .map((window, index) => {
+            const isLast = index === windows.length - 1;
+            const texts = new Set();
+            const detections = new Set();
+            while (f < frames.length && (frames[f].timestamp < window.end || (isLast && frames[f].timestamp <= window.end))) {
+                if (frames[f].timestamp >= window.start) {
+                    (frames[f].texts ?? []).forEach((t) => !isBlank(t) && texts.add(String(t).trim()));
+                    (frames[f].detections ?? []).forEach((d) => !isBlank(d) && detections.add(String(d).trim()));
+                }
+                f++;
             }
-            else {
-                usedAudioTranscriptions[audioText.start] = audioText.end;
-            }
-        }
-
-        // If there is an audio transcription for the frame, merge it
-        let frameContent = {
-            timestamp: frame.timestamp,
-            audioTranscription: audioText ? audioText.text : "",
-            onScreenTexts: Array.from(new Set(frame.texts)),
-            detections: Array.from(new Set(frame.detections)),
-        };
-
-        let prevFrameContent = refactoredData[refactoredData.length - 1];
-
-        if (
-            (
-                (frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") &&
-                frameContent.onScreenTexts.length == 0 &&
-                frameContent.detections.length == 0
-            ) ||
-            (
-                prevFrameContent &&
-                (frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") &&
-                (
-                    (frameContent.onScreenTexts.length == 0 && prevFrameContent.onScreenTexts.length == 0) ||
-                    frameContent.onScreenTexts.every(item => prevFrameContent.onScreenTexts.includes(item))
-                ) &&
-                (
-                    (frameContent.detections.length == 0 && prevFrameContent.detections.length == 0) ||
-                    frameContent.detections.every(item => prevFrameContent.detections.includes(item))
-                )
-            )
-        ) {
-            continue;
-        }
-        else if (
-            prevFrameContent &&
-            (prevFrameContent.audioTranscription == "" || prevFrameContent?.audioTranscription == " ") &&
-            (
-                (prevFrameContent.onScreenTexts.length == 0 && frameContent.onScreenTexts.length == 0) ||
-                prevFrameContent.onScreenTexts.every(item => frameContent.onScreenTexts.includes(item))
-            ) && 
-            (
-                (prevFrameContent.detections.length == 0 && frameContent.detections.length == 0) ||
-                prevFrameContent.detections.every(item => frameContent.detections.includes(item))
-            )
-        ) {
-            refactoredData[refactoredData.length - 1] = frameContent;
-            continue;
-        }
-
-        refactoredData.push(frameContent);
-    }
-
-    // Return the merged data
-    return refactoredData;
+            return {
+                startTimestamp: window.start,
+                endTimestamp: window.end,
+                audioTranscription: window.text,
+                onScreenTexts: [...texts],
+                detections: [...detections],
+            };
+        })
+        .filter((s) => !isBlank(s.audioTranscription) || s.onScreenTexts.length > 0 || s.detections.length > 0);
 }
 
-function refactorMethod3(jsonData) {
-    let refactoredData = [];
-    let usedAudioTranscriptions = {};
-    let detections = [];
+/**
+ * Removes on-screen texts that are most likely static background (logos, watermarks, tickers):
+ * an individual text that appears in at least half of the windows that contain text at all.
+ * With fewer than 8 such windows there is not enough evidence, so nothing is removed.
+ */
+function clearBackgroundOnScreenTexts(segments) {
+    const withText = segments.filter((s) => s.onScreenTexts.length > 0);
+    if (withText.length < 8) return segments;
 
-    // Merging frames and audio transcriptions
-    for (const frame of jsonData?.frames) {
-        let audioText = jsonData.audioTranscription.find(item => item.start <= frame.timestamp && item.end > frame.timestamp);
-
-        // Prevent duplicate audio transcriptions
-        if (audioText) {
-            if (usedAudioTranscriptions[audioText.start] == audioText.end) {
-                audioText.text = "";
-            }
-            else {
-                usedAudioTranscriptions[audioText.start] = audioText.end;
-            }
+    const counts = new Map();
+    for (const segment of withText) {
+        for (const text of new Set(segment.onScreenTexts.map(normalizeText))) {
+            counts.set(text, (counts.get(text) ?? 0) + 1);
         }
-
-        // If there is an audio transcription for the frame, merge it
-        let frameContent = {
-            timestamp: frame.timestamp,
-            audioTranscription: audioText ? audioText.text : "",
-            onScreenTexts: Array.from(new Set(frame.texts)),
-        };
-
-        detections = detections.concat(frame.detections);
-
-        let prevFrameContent = refactoredData[refactoredData.length - 1];
-
-        if (
-            (
-                (frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") &&
-                frameContent.onScreenTexts.length == 0
-            ) ||
-            (
-                prevFrameContent &&
-                (frameContent.audioTranscription == "" || frameContent?.audioTranscription == " ") &&
-                (
-                    (frameContent.onScreenTexts.length == 0 && prevFrameContent.onScreenTexts.length == 0) ||
-                    frameContent.onScreenTexts.every(item => prevFrameContent.onScreenTexts.includes(item))
-                )
-            )
-        ) {
-            continue;
-        }
-        else if (
-            prevFrameContent &&
-            (prevFrameContent.audioTranscription == "" || prevFrameContent?.audioTranscription == " ") &&
-            (
-                (prevFrameContent.onScreenTexts.length == 0 && frameContent.onScreenTexts.length == 0) ||
-                prevFrameContent.onScreenTexts.every(item => frameContent.onScreenTexts.includes(item))
-            )
-        ) {
-            refactoredData[refactoredData.length - 1] = frameContent;
-            continue;
-        }
-
-        refactoredData.push(frameContent);
     }
-
-    // Return the merged data
-    return { refactoredData, detections: Array.from(new Set(detections)) };
+    const background = new Set([...counts].filter(([, count]) => count / withText.length >= 0.5).map(([text]) => text));
+    if (background.size === 0) return segments;
+    return segments.map((s) => ({ ...s, onScreenTexts: s.onScreenTexts.filter((t) => !background.has(normalizeText(t))) }));
 }
 
-function clearBackgroundOnScreenTextsData(refactoredData){
-    // Getting rid of onScreenTests that are too common // Possibly background Texts
-    let onScreenTextsToDiscard = {};
-    let onScreenTextsCount = 0;
-    for (let data of refactoredData) {
-        if(data.onScreenTexts.length > 0){
-            const text = data.onScreenTexts.join(", ");
-            if(onScreenTextsToDiscard[text])onScreenTextsToDiscard[text]++;
-            else onScreenTextsToDiscard[text] = 1;
-            onScreenTextsCount++;
-        }
+function generatePrompt(segments, labels) {
+    const lines = [labels.videoExplanation];
+    for (const s of segments) {
+        let line = `${labels.betweenSecond} ${formatSecond(s.startTimestamp)} ${labels.andSecond} ${formatSecond(s.endTimestamp)}`;
+        if (!isBlank(s.audioTranscription)) line += `, ${labels.audioTranscription}:${s.audioTranscription}`;
+        if (s.onScreenTexts.length > 0) line += `. ${labels.onScreenText}: ${s.onScreenTexts.join(", ")}.`;
+        if (s.detections.length > 0) line += `. ${labels.objectsDetected}: ${s.detections.join(", ")}.`;
+        lines.push(line);
     }
-
-    //console.log(onScreenTextsToDiscard, onScreenTextsCount);
-
-    let onScreenTextsToFinalize = [];
-    for(let text in onScreenTextsToDiscard){
-        //console.log(onScreenTextsCount / onScreenTextsToDiscard[text], onScreenTextsCount / onScreenTextsToDiscard[text] <= 4);
-        if(onScreenTextsCount / onScreenTextsToDiscard[text] <= 4){
-            onScreenTextsToFinalize.push(text);
-        }
-    }
-    
-    //console.log(onScreenTextsToFinalize);
-
-    if(onScreenTextsToFinalize.length > 0){
-        for (let data of refactoredData) {
-            if(data.onScreenTexts.length > 0){
-                const text = data.onScreenTexts.join(", ");
-                if(onScreenTextsToFinalize.includes(text)){
-                    data.onScreenTexts = [];
-                } 
-            }
-        }
-    }
-    // End of getting rid of onScreenTests that are too common // Possibly background Texts
-
-    return refactoredData;
+    return lines.join("\n");
 }
 
-function generatePrompt1(refactoredData, language) {
-    refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
-
-    let prompt = `${language.videoExplanation}`;
-    for (let data of refactoredData) {
-        prompt = `${prompt}
-${language.betweenSecond} ${data.startTimestamp} ${language.andSecond} ${data.endTimestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? `, ${language.audioTranscription}:` + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? `. ${language.onScreenText}: ` + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? `. ${language.objectsDetected}: ` + data.detections.join(", ") + "." : ""}`;
+function getPrompt(analysis, lang, videoExplanation) {
+    // Copy the label set: per-request values must never leak into later requests.
+    const labels = { ...(Object.hasOwn(languages, lang ?? "") ? languages[lang] : languages.en) };
+    if (typeof videoExplanation === "string" && videoExplanation.trim()) {
+        labels.videoExplanation = videoExplanation.trim();
     }
-
-    return prompt
+    return generatePrompt(clearBackgroundOnScreenTexts(buildSegments(analysis)), labels);
 }
 
-function generatePrompt2(refactoredData, language) {
-    refactoredData = clearBackgroundOnScreenTextsData(refactoredData);
-
-    let prompt = `${language.videoExplanation}`;
-    for (let data of refactoredData) {
-        prompt = `${prompt}
-${language.atSecond} ${data.timestamp}${data.audioTranscription != "" && data.audioTranscription != " " ? `, ${language.audioTranscription}:` + data.audioTranscription : ""}${data.onScreenTexts.length > 0 ? `. ${language.onScreenText}: ` + data.onScreenTexts.join(", ") + "." : ""}${data.detections.length > 0 ? `. ${language.objectsDetected}: ` + data.detections.join(", ") + "." : ""}`;
-    }
-
-    return prompt
-}
-
-function generatePrompt3(reworkedData, language) {
-    reworkedData.refactoredData = clearBackgroundOnScreenTextsData(reworkedData.refactoredData);
-
-    let prompt = `${language.videoExplanation}`;
-    
-    for (let data of reworkedData.refactoredData) {
-        if(data.audioTranscription != "" && data.audioTranscription != " "){
-            prompt = `${prompt}
-${language.atSecond} ${data.timestamp}, ${language.audioTranscription}:${data.audioTranscription}`;
-        }
-        if(data.onScreenTexts.length > 0){
-            prompt = `${prompt}
-${language.atSecond} ${data.timestamp}, ${language.onScreenText}: ${data.onScreenTexts.join(", ")}.`;
-        }
-    }
-
-    prompt = `${prompt}
-${language.detectedObjects}: ${reworkedData.detections.join(", ")}.`;
-    return prompt
-}
-
-function getPrompt(jsonData, lang, videoExplanation) {
-    if(!lang || !languages[lang]) lang = "en";
-    let language = languages[lang];
-    if(videoExplanation) language.videoExplanation = videoExplanation;
-
-    return generatePrompt1(refactorMethod1(jsonData), language);
-}
-
-module.exports = { getPrompt };
+module.exports = { getPrompt, buildSegments, clearBackgroundOnScreenTexts };

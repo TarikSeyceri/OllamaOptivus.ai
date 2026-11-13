@@ -2,9 +2,10 @@ const winston = require("winston");
 const winstonDailyRotateFile = require("winston-daily-rotate-file");
 const morgan = require("morgan");
 const fs = require("fs");
+const util = require("util");
 
 const LOG_DIR = process.env.LOG_DIR || "data/logs";
-const LOG_LEVEL = process.env.LOG_LEVEL || "warn";
+const LOG_LEVEL = process.env.LOG_LEVEL || "info";
 const LOG_FILE_MAX_SIZE = process.env.LOG_FILE_MAX_SIZE || "10m";
 const LOG_RETENTION_DAYS = parseInt(process.env.LOG_RETENTION_DAYS || 30);
 
@@ -53,22 +54,22 @@ function initWinston() {
     // Overriding console functions with winston logger
     console.log = (...messages) => {
         consoleLog(...messages);
-        winstonLogger.debug(JSON.stringify(messages));
+        winstonLogger.debug(util.format(...messages));
     };
 
     console.info = (...messages) => {
         consoleInfo(consoleColors.green, ...messages, consoleColors.reset);
-        winstonLogger.info(JSON.stringify(messages));
+        winstonLogger.info(util.format(...messages));
     };
 
     console.warn = (...messages) => {
         consoleWarn(consoleColors.yellow, ...messages, consoleColors.reset);
-        winstonLogger.warn(JSON.stringify(messages));
+        winstonLogger.warn(util.format(...messages));
     };
 
     console.error = (...messages) => {
         consoleError(consoleColors.red, ...messages, consoleColors.reset);
-        winstonLogger.error(JSON.stringify(messages));
+        winstonLogger.error(util.format(...messages));
     };
 }
 

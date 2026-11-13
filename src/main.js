@@ -4,7 +4,6 @@ import path from 'node:path';
 import { createApp } from './app.js';
 import { loadConfig, loadDotEnv } from './config.js';
 import { AnalysisCache } from './core/analysis/cache.js';
-import { SubprocessBackend } from './core/analysis/subprocess-backend.js';
 import { WorkerBackend } from './core/analysis/worker-backend.js';
 import { JobQueue } from './core/jobs/job-queue.js';
 import { JobStore } from './core/jobs/job-store.js';
@@ -38,10 +37,7 @@ async function main() {
   const jobStore = new JobStore({ jobsDir: storage.jobsDir, resultsDir: storage.resultsDir });
   await Promise.all([videoStore.init(), analysisCache.init(), jobStore.init()]);
 
-  const backend =
-    config.analysis.backend === 'worker'
-      ? new WorkerBackend({ analysis: config.analysis, storage, logger })
-      : new SubprocessBackend({ analysis: config.analysis, storage, logger });
+  const backend = new WorkerBackend({ analysis: config.analysis, logger });
   const ollama = new OllamaService({ ollama: config.ollama, logger });
   if (!config.ollama.disabled) ollama.init().catch((error) => logger.error({ err: error }, 'Ollama initialization stopped'));
 
@@ -64,7 +60,7 @@ async function main() {
 
   const server = app.listen(config.http.port, config.http.host, () => {
     logger.info(
-      { port: config.http.port, env: config.env, backend: config.analysis.backend, docs: config.docs.enabled },
+      { port: config.http.port, env: config.env, workers: config.analysis.workerUrls.length, docs: config.docs.enabled },
       'Ollama Optivus Server running',
     );
   });

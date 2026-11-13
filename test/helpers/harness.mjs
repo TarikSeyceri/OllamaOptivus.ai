@@ -1,7 +1,7 @@
 // Black-box test harness: runs the real API server (`node src/main.js`) as a child process with a
-// throw-away data directory, a fake Ollama and a fake analysis backend, then talks to it over HTTP.
+// throw-away data directory, a fake Ollama and a fake analysis worker, then talks to it over HTTP.
 // The server's working directory is the temp dir, so a developer's local .env never leaks into tests.
-import { spawn, spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
 import { once } from 'node:events';
 import { mkdtemp, mkdir, rm, readFile, writeFile } from 'node:fs/promises';
@@ -10,17 +10,12 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { startFakeOllama } from '../fakes/fake-ollama.mjs';
+import { startFakeWorker } from '../fakes/fake-worker.mjs';
 
 export const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const fixturesDir = path.join(repoRoot, 'test', 'fixtures');
 export const TEST_TOKEN = 'test-token-6f1c2a9b8e7d4c3b2a19f8e7d6c5b4a3';
-// Resolve the real interpreter once, with the full environment. Launcher shims (e.g. the Windows
-// Python install manager) misbehave when started with a reduced environment.
-const PYTHON = (() => {
-  const candidate = process.env.OPTIVUS_TEST_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
-  const probe = spawnSync(candidate, ['-c', 'import sys; print(sys.executable)'], { encoding: 'utf8' });
-  return probe.status === 0 && probe.stdout.trim() ? probe.stdout.trim() : candidate;
-})();
+export const WORKER_TOKEN = 'worker-token-0f1e2d3c4b5a69788796a5b4c3d2e1f0';
 
 async function freePort() {
   const srv = net.createServer();
@@ -60,13 +55,22 @@ const passthroughEnv = () =>
 
 /**
  * Starts the API with fakes. Returns helpers to call it and inspect side effects.
- * @param {{ env?: Record<string,string>, ollama?: Parameters<typeof startFakeOllama>[0], waitForReady?: boolean }} [opts]
+ * @param {{ env?: Record<string,string>, ollama?: Parameters<typeof startFakeOllama>[0], waitForReady?: boolean,
+ *           workerDelayMs?: number, workerFailCode?: string }} [opts]
  */
-export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady = true } = {}) {
+export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady = true, workerDelayMs = 0, workerFailCode } = {}) {
   const dataDir = await mkdtemp(path.join(tmpdir(), 'optivus-test-'));
   const fakeAnalysisDir = path.join(dataDir, 'fake-analysis');
   await mkdir(fakeAnalysisDir, { recursive: true });
   const ollama = await startFakeOllama(ollamaOptions);
+  const worker = await startFakeWorker({
+    token: WORKER_TOKEN,
+    dataDir,
+    fixturesDir: fakeAnalysisDir,
+    defaultFixture: path.join(fixturesDir, 'analysis-v1-sales-call.json'),
+    delayMs: workerDelayMs,
+    failCode: workerFailCode,
+  });
   const port = await freePort();
 
   const childEnv = {
@@ -78,19 +82,13 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
     HTTP_RATE_LIMIT_HEAVY_MAX_REQUESTS: '100000',
     DATA_DIR: dataDir,
     VIDEOS_DIR: path.join(dataDir, 'videos'),
-    AUDIOS_DIR: path.join(dataDir, 'audios'),
     JSON_DATA_DIR: path.join(dataDir, 'json'),
     PROMPTS_DIR: path.join(dataDir, 'prompts'),
-    LOG_DIR: path.join(dataDir, 'logs'),
     LOG_LEVEL: 'warn',
     PROCESSING_ONLY: 'false',
     ALLOW_PROCESS_VIDEOS_OUTSIDE_VIDEOS_DIR: 'false',
-    ENABLE_PROCESS_LOCK_MECHANISM: 'true',
-    PYTHON_BINARY_PATH: PYTHON,
-    PYTHONPATH: path.join(repoRoot, 'test', 'fakes', 'python'),
-    OPTIVUS_FAKE_ANALYSIS_DIR: fakeAnalysisDir,
-    OPTIVUS_FAKE_ANALYSIS_DEFAULT: path.join(fixturesDir, 'analysis-v1-sales-call.json'),
-    OPTIVUS_FAKE_PROCESSOR_LOG: path.join(dataDir, 'fake-processor.log'),
+    WORKER_URLS: worker.url,
+    WORKER_TOKEN,
     OLLAMA_AI_API_URL: ollama.url,
     OLLAMA_AI_MODEL: 'test-model',
     OLLAMA_AI_DISABLED: 'false',
@@ -117,6 +115,7 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
     dataDir,
     env: childEnv,
     ollama,
+    worker,
     child,
     logs: () => output,
 
@@ -161,12 +160,9 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
       await writeFile(path.join(fakeAnalysisDir, `${videoBaseName}.json`), JSON.stringify(analysis));
     },
 
+    /** How many analyses the (fake) worker has run. */
     async processorRuns() {
-      try {
-        return (await readFile(childEnv.OPTIVUS_FAKE_PROCESSOR_LOG, 'utf8')).split('\n').filter(Boolean).length;
-      } catch {
-        return 0;
-      }
+      return worker.state.runs;
     },
 
     async stop() {
@@ -175,6 +171,7 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
         await Promise.race([exited, new Promise((r) => setTimeout(r, 5000))]);
       }
       await ollama.close();
+      await worker.close();
       await rm(dataDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
     },
   };

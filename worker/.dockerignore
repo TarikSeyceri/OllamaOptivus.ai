@@ -1,0 +1,8 @@
+# Allowlist: the worker image only needs the Python package and its lockfile.
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!optivus_worker/
+**/__pycache__
+**/*.pyc

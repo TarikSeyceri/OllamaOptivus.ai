@@ -8,7 +8,7 @@ import { loadConfig } from '../../src/config.js';
 import { isInside, sanitizeFileName } from '../../src/core/storage/paths.js';
 
 const TOKEN = 'unit-test-token-0123456789abcdef0123456789';
-const load = (env) => loadConfig({ HTTP_BEARER_TOKEN: TOKEN, ...env }, { cwd: '/srv/optivus' });
+const load = (env) => loadConfig({ HTTP_BEARER_TOKEN: TOKEN, WORKER_TOKEN: `${TOKEN}w`, ...env }, { cwd: '/srv/optivus' });
 
 describe('config', () => {
   it('has secure, documented defaults', () => {
@@ -71,9 +71,13 @@ describe('config', () => {
     assert.deepEqual(config.ollama.allowedModels, ['qwen3.5:4b', 'qwen3-vl:4b', 'gemma4:e4b']);
   });
 
-  it('requires a worker token for the worker backend in production', () => {
-    assert.ok(load({ ANALYSIS_BACKEND: 'worker' }).errors.some((e) => /WORKER_TOKEN/.test(e)));
-    assert.deepEqual(load({ ANALYSIS_BACKEND: 'worker', WORKER_TOKEN: TOKEN }).errors, []);
+  it('requires a strong worker token in production and reports obsolete variables', () => {
+    assert.ok(load({ WORKER_TOKEN: '' }).errors.some((e) => /WORKER_TOKEN/.test(e)));
+    assert.ok(load({ WORKER_TOKEN: 'short' }).errors.some((e) => /WORKER_TOKEN #1 is too short/.test(e)));
+    assert.deepEqual(load({ WORKER_TOKEN: '', NODE_ENV: 'development' }).errors, []);
+    const { warnings } = load({ PYTHON_BINARY_PATH: 'python3', AUDIOS_DIR: 'data/audios' });
+    assert.ok(warnings.some((w) => /PYTHON_BINARY_PATH/.test(w)));
+    assert.ok(warnings.some((w) => /AUDIOS_DIR/.test(w)));
   });
 });
 

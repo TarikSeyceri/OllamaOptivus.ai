@@ -57,8 +57,7 @@ export function startRetention({ config, logger, videoStore, jobStore, jobQueue,
     const files =
       (await removeOldEntries(storage.analysisDir, { skip: activePrefix })) +
       (await removeOldEntries(storage.framesDir, { recursive: true, skip: activePrefix })) +
-      (await removeOldEntries(storage.promptsDir)) +
-      (await removeOldEntries(storage.audiosDir));
+      (await removeOldEntries(storage.promptsDir));
     if (videos || jobs || files) logger.info({ videos, jobs, files }, 'retention sweep removed expired data');
   }
 

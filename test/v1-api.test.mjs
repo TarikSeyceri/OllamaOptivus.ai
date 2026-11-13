@@ -154,9 +154,8 @@ describe('v1 jobs', () => {
   it('validates languages and formats', async () => {
     const unknown = await app.request('POST', '/v1/jobs', { json: { videoId, language: 'xx' } });
     assert.equal(unknown.status, 400);
-    const unsupported = await app.request('POST', '/v1/jobs', { json: { videoId, language: 'de' } });
-    assert.equal(unsupported.status, 400, 'the subprocess backend only supports en/tr');
-    assert.equal(unsupported.body.error.code, 'UNSUPPORTED_LANGUAGE');
+    const german = await app.request('POST', '/v1/jobs', { json: { videoId, language: 'de', noPrompting: true } });
+    assert.equal(german.status, 202, 'every Whisper language is accepted');
     let deep = { type: 'string' };
     for (let i = 0; i < 20; i++) deep = { type: 'object', properties: { x: deep } };
     const tooDeep = await app.request('POST', '/v1/jobs', { json: { videoId, format: deep } });
@@ -215,7 +214,7 @@ describe('queue behaviour', () => {
   let app;
   let ids;
   before(async () => {
-    app = await startApp({ env: { OPTIVUS_FAKE_PROCESSOR_DELAY_MS: '1500', JOBS_MAX_QUEUED: '2' } });
+    app = await startApp({ workerDelayMs: 1500, env: { JOBS_MAX_QUEUED: '2' } });
     ids = [];
     for (let i = 0; i < 4; i++) ids.push((await app.upload('/v1/videos', { filename: `v${i}.mp4`, unique: true })).body.payload.video.id);
   });

@@ -137,10 +137,7 @@ const ENV_SCHEMA = z.object({
   PROCESS_SYNC_TIMEOUT_MS: num(undefined, { min: 1000, int: true }),
   ENABLE_PROCESS_LOCK_MECHANISM: str(undefined),
 
-  // Analysis backend
-  ANALYSIS_BACKEND: oneOf(['worker', 'subprocess'], 'subprocess'),
-  PYTHON_BINARY_PATH: str(process.platform === 'win32' ? 'python' : 'python3'),
-  PROCESSING_TIMEOUT_MS: num(2 * 60 * 60_000, { min: 60_000, int: true }),
+  // Analysis worker(s)
   WORKER_URLS: list(['http://127.0.0.1:8000']),
   WORKER_IDLE_TIMEOUT_MS: num(120_000, { min: 5000, int: true }),
   PROCESSING_FPS: num(1, { min: 0.05, max: 10 }),
@@ -165,9 +162,13 @@ const ENV_SCHEMA = z.object({
   OLLAMA_AI_VISION_MAX_FRAMES: num(30, { min: 1, max: 500, int: true }),
   OLLAMA_AI_VISION_MIN_INTERVAL_SECONDS: num(10, { min: 0, max: 3600 }),
 
-  // Deprecated (still read)
+  // Deprecated v1 variables (reported at start-up, otherwise ignored)
   PROCESSING_VERBOSE: str(undefined),
+  PYTHON_BINARY_PATH: str(undefined),
+  PROCESSING_LOG_LEVEL: str(undefined),
 });
+
+const MOVED_TO_WORKER = ['PYTHON_BINARY_PATH', 'PROCESSING_LOG_LEVEL'];
 
 // ---------------------------------------------------------------------------------------------
 // Secrets: VAR or VAR_FILE (Docker/Kubernetes secrets). Lists are comma or newline separated.
@@ -241,8 +242,9 @@ export function loadConfig(env = process.env, { cwd = process.cwd() } = {}) {
     );
     roots.push({ name: 'filesystem', dir: path.parse(dataDir).root, legacyAnyPath: true });
   }
-  if (!blank(e.AUDIOS_DIR) && e.ANALYSIS_BACKEND === 'worker') {
-    warnings.push('AUDIOS_DIR is no longer used: audio is decoded in memory by the worker.');
+  if (!blank(e.AUDIOS_DIR)) warnings.push('AUDIOS_DIR is no longer used: audio is decoded in memory by the worker.');
+  for (const name of MOVED_TO_WORKER) {
+    if (!blank(e[name])) warnings.push(`${name} is no longer read by the API; configure the worker instead (see docs/configuration.md).`);
   }
   if (e.ENABLE_PROCESS_LOCK_MECHANISM !== undefined) {
     warnings.push('ENABLE_PROCESS_LOCK_MECHANISM is deprecated: jobs are queued; use JOBS_PIPELINED for overlap.');
@@ -263,10 +265,9 @@ export function loadConfig(env = process.env, { cwd = process.cwd() } = {}) {
   }
 
   const workerTokens = readSecretList(env, 'WORKER_TOKEN', errors);
-  if (e.ANALYSIS_BACKEND === 'worker') {
-    if (workerTokens.length === 0 && !isDev) errors.push('WORKER_TOKEN (or WORKER_TOKEN_FILE) is required with ANALYSIS_BACKEND=worker.');
-    else errors.push(...tokenProblems(workerTokens, 'WORKER_TOKEN'));
-  }
+  if (workerTokens.length === 0 && !isDev)
+    errors.push('WORKER_TOKEN (or WORKER_TOKEN_FILE) is required: the API authenticates to the worker with it.');
+  else errors.push(...tokenProblems(workerTokens, 'WORKER_TOKEN'));
   const ollamaApiKey = readSecretList(env, 'OLLAMA_AI_API_KEY', errors)[0];
 
   // --- misc -----------------------------------------------------------------------------------
@@ -320,7 +321,6 @@ export function loadConfig(env = process.env, { cwd = process.cwd() } = {}) {
       videosDirDisplay: e.VIDEOS_DIR ?? path.join(e.DATA_DIR, 'videos'),
       analysisDir: abs(e.JSON_DATA_DIR ?? path.join(e.DATA_DIR, 'json')),
       promptsDir: abs(e.PROMPTS_DIR ?? path.join(e.DATA_DIR, 'prompts')),
-      audiosDir: abs(e.AUDIOS_DIR ?? path.join(e.DATA_DIR, 'audios')),
       metaDir: path.join(dataDir, 'meta'),
       jobsDir: path.join(dataDir, 'jobs'),
       resultsDir: path.join(dataDir, 'results'),
@@ -342,9 +342,6 @@ export function loadConfig(env = process.env, { cwd = process.cwd() } = {}) {
       syncTimeoutMs: e.PROCESS_SYNC_TIMEOUT_MS ?? e.JOB_TIMEOUT_MS,
     },
     analysis: {
-      backend: e.ANALYSIS_BACKEND,
-      python: e.PYTHON_BINARY_PATH,
-      processingTimeoutMs: e.PROCESSING_TIMEOUT_MS,
       workerUrls: e.WORKER_URLS,
       workerToken: workerTokens[0],
       workerIdleTimeoutMs: e.WORKER_IDLE_TIMEOUT_MS,

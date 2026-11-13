@@ -7,6 +7,7 @@
               with the caption "INVOICE 4821". Synthetic speech starts at 1.5 s (exercises the
               "first speech does not start at 0" path) and is produced by the Windows speech synthesizer.
   silent.mp4  5 s, 320x240 test pattern without any audio stream (exercises the "no audio" path).
+  rotated.mp4 silent.mp4 with a 90 degree display-matrix rotation, like portrait phone videos.
 
   Everything is generated locally, so the fixtures carry no third-party media rights.
   Requirements: Windows PowerShell 5.1+ (System.Speech) and ffmpeg on PATH.
@@ -48,5 +49,8 @@ ffmpeg -y -hide_banner -loglevel error `
     -f lavfi -i 'testsrc2=s=320x240:r=15:d=5' `
     -c:v libx264 -preset veryslow -crf 32 -pix_fmt yuv420p -an -movflags +faststart (Join-Path $out 'silent.mp4')
 if ($LASTEXITCODE -ne 0) { throw "ffmpeg failed for silent.mp4 ($LASTEXITCODE)" }
+
+ffmpeg -y -hide_banner -loglevel error -display_rotation 90 -i (Join-Path $out 'silent.mp4') -c copy (Join-Path $out 'rotated.mp4')
+if ($LASTEXITCODE -ne 0) { throw "ffmpeg failed for rotated.mp4 ($LASTEXITCODE)" }
 
 Get-ChildItem $out -Filter *.mp4 | Select-Object Name, Length

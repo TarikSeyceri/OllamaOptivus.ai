@@ -269,3 +269,24 @@ describe('legacy uploads with the same name but different content', () => {
     assert.ok(existsSync(path.resolve(app.dataDir, second.body.payload.videoFilePath)));
   });
 });
+
+describe('restart recovery', () => {
+  it('resumes a job that was running when the API died', async () => {
+    const first = await startApp({ workerDelayMs: 4000 });
+    const videoId = (await first.upload('/v1/videos', { filename: 'crash.mp4' })).body.payload.video.id;
+    const created = await first.request('POST', '/v1/jobs', { json: { videoId, noPrompting: true } });
+    assert.equal(created.status, 202);
+    const { id } = created.body.payload.job;
+    await new Promise((r) => setTimeout(r, 1000)); // the job is now running
+    await first.stop({ keepData: true, signal: 'SIGKILL' }); // crash: no graceful shutdown
+
+    const second = await startApp({ dataDir: first.dataDir });
+    try {
+      const job = await waitForStatus(second, id, ['completed', 'failed']);
+      assert.equal(job.status, 'completed', JSON.stringify(job));
+      assert.equal(job.attempts, 2, 'the interrupted attempt is counted');
+    } finally {
+      await second.stop();
+    }
+  });
+});

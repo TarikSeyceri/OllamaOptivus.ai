@@ -8,6 +8,15 @@ import path from 'node:path';
 const STALE_MS = 90_000;
 const REFRESH_MS = 30_000;
 
+function isAlive(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return error.code === 'EPERM'; // exists, but belongs to another user
+  }
+}
+
 export async function acquireDataDirLock(dataDir) {
   await fs.promises.mkdir(dataDir, { recursive: true });
   const file = path.join(dataDir, '.api.lock');
@@ -18,7 +27,10 @@ export async function acquireDataDirLock(dataDir) {
     const current = JSON.parse(await fs.promises.readFile(file, 'utf8'));
     const fresh = Date.now() - stat.mtimeMs < STALE_MS;
     const self = current.pid === owner.pid && current.hostname === owner.hostname;
-    if (fresh && !self) {
+    // On the same host we can tell whether the owner still runs; across hosts/containers sharing a
+    // volume only the lock's freshness tells.
+    const ownerAlive = current.hostname === owner.hostname ? isAlive(current.pid) : fresh;
+    if (fresh && !self && ownerAlive) {
       throw new Error(
         `Another API instance (pid ${current.pid} on ${current.hostname}) is using ${dataDir}. Run a single API replica per data directory.`,
       );

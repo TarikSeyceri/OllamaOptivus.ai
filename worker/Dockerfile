@@ -47,6 +47,8 @@ RUN mkdir -p /models && \
         --yolo "${YOLO_MODEL}" \
         --faces ; \
     fi
+# Downloads run as root (some via 0600 temp files); the worker runs as uid 10001 and must read them.
+RUN chmod -R a+rX /models
 
 # ---------------------------------------------------------------------------
 # runtime: minimal image, non-root, no compilers, no package manager caches
@@ -97,6 +99,6 @@ ENV PATH=/opt/venv/bin:$PATH \
 WORKDIR /app
 USER 10001:10001
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --start-interval=5s --retries=3 \
   CMD ["python", "-c", "import sys,urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=4).status == 200 else 1)"]
 CMD ["python", "-m", "optivus_worker"]

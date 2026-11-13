@@ -160,7 +160,6 @@ const ENV_SCHEMA = z.object({
   OLLAMA_AI_VISION_ENABLED: bool(false),
   OLLAMA_AI_VISION_MODEL: str(undefined),
   OLLAMA_AI_VISION_MAX_FRAMES: num(30, { min: 1, max: 500, int: true }),
-  OLLAMA_AI_VISION_MIN_INTERVAL_SECONDS: num(10, { min: 0, max: 3600 }),
 
   // Deprecated v1 variables (reported at start-up, otherwise ignored)
   PROCESSING_VERBOSE: str(undefined),
@@ -367,7 +366,6 @@ export function loadConfig(env = process.env, { cwd = process.cwd() } = {}) {
         enabled: e.OLLAMA_AI_VISION_ENABLED,
         model: visionModel,
         maxFrames: e.OLLAMA_AI_VISION_MAX_FRAMES,
-        minIntervalSeconds: e.OLLAMA_AI_VISION_MIN_INTERVAL_SECONDS,
       },
     },
   };

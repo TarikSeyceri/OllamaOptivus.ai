@@ -48,7 +48,7 @@ export function createJobRunner({ config, logger, videoStore, backend, analysisC
 
     // 2) Analysis (content-addressed cache) -------------------------------------------------------
     const options = { language: request.language, sampleFps: request.sampleFps, features: request.features };
-    const capabilities = await backend.capabilities();
+    const capabilities = await backend.waitForCapabilities({ signal });
     const key = analysisCache.key({ sha256: video.sha256, backendVersion: capabilities.version ?? backend.version, options });
     let analysis = await analysisCache.get(key);
     const timings = {};

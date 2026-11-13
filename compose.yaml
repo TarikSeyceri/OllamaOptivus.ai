@@ -1,0 +1,121 @@
+# Ollama Optivus AI - production stack (NVIDIA GPU by default).
+#
+#   ./scripts/init.sh            # or scripts\init.ps1 on Windows: creates .env with random secrets
+#   docker compose up -d --build
+#
+# No NVIDIA GPU:      docker compose -f compose.yaml -f compose.cpu.yaml up -d --build
+# Ollama on the host: docker compose -f compose.yaml -f compose.host-ollama.yaml up -d --build
+# Every setting is documented in docs/configuration.md.
+
+name: optivus
+
+x-hardening: &hardening
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options: { max-size: "10m", max-file: "5" }
+
+x-gpu: &gpu
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
+
+services:
+  api:
+    <<: *hardening
+    build: { context: . }
+    image: optivus-api:2.0.0
+    init: true
+    env_file: [.env]
+    environment:
+      DATA_DIR: /data
+      HTTP_HOST: 0.0.0.0
+      HTTP_PORT: "3330"
+      WORKER_URLS: http://worker:8000
+      OLLAMA_AI_API_URL: http://ollama:11434
+      HTTP_BEARER_TOKEN: ${HTTP_BEARER_TOKEN:?Run scripts/init.sh (or scripts\init.ps1) to create .env}
+      WORKER_TOKEN: ${WORKER_TOKEN:?Run scripts/init.sh (or scripts\init.ps1) to create .env}
+    ports:
+      - "${OPTIVUS_BIND:-127.0.0.1}:${OPTIVUS_PORT:-3330}:3330"
+    volumes:
+      - data:/data
+    tmpfs: [/tmp]
+    networks: [frontend, backend]
+    depends_on:
+      worker: { condition: service_healthy }
+      ollama: { condition: service_healthy }
+    pids_limit: 256
+    mem_limit: ${API_MEM_LIMIT:-1g}
+
+  worker:
+    <<: [*hardening, *gpu]
+    build:
+      context: ./worker
+      args:
+        TORCH_VARIANT: ${TORCH_VARIANT:-cu126}
+        WHISPER_MODEL: ${PROCESSING_WHISPER_MODEL:-large-v3-turbo}
+        OCR_LANGUAGES: ${PROCESSING_OCR_LANGUAGES:-en,tr}
+    image: optivus-worker:2.0.0-${TORCH_VARIANT:-cu126}
+    init: true
+    environment:
+      WORKER_ENV: production
+      WORKER_HOST: 0.0.0.0
+      WORKER_TOKEN: ${WORKER_TOKEN:?Run scripts/init.sh (or scripts\init.ps1) to create .env}
+      DATA_DIR: /data
+      LOG_LEVEL: ${WORKER_LOG_LEVEL:-INFO}
+      PROCESSING_DEVICE: ${PROCESSING_DEVICE:-auto}
+      PROCESSING_FEATURES: ${PROCESSING_FEATURES:-objects,ocr,scenes}
+      PROCESSING_ROOTS: ${PROCESSING_ROOTS:-}
+      PROCESSING_WHISPER_MODEL: ${PROCESSING_WHISPER_MODEL:-large-v3-turbo}
+      PROCESSING_WHISPER_COMPUTE_TYPE: ${PROCESSING_WHISPER_COMPUTE_TYPE:-auto}
+      PROCESSING_OCR_LANGUAGES: ${PROCESSING_OCR_LANGUAGES:-en,tr}
+      PROCESSING_MAX_VIDEO_SECONDS: ${PROCESSING_MAX_VIDEO_SECONDS:-14400}
+      PROCESSING_KEYFRAME_MIN_INTERVAL_SECONDS: ${PROCESSING_KEYFRAME_MIN_INTERVAL_SECONDS:-10}
+      PROCESSING_RELEASE_VRAM: ${GPU_SHARED_LOW_VRAM:-true}
+    volumes:
+      - data:/data
+    tmpfs: ["/tmp:size=1g"]
+    shm_size: 1g
+    networks: [backend] # internal only: the worker never talks to the internet
+    pids_limit: 512
+    mem_limit: ${WORKER_MEM_LIMIT:-8g}
+
+  ollama:
+    <<: [*hardening, *gpu]
+    image: ollama/ollama:0.40.13
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+      OLLAMA_FLASH_ATTENTION: "1"
+      OLLAMA_KV_CACHE_TYPE: q8_0 # halves the KV-cache memory
+      OLLAMA_NUM_PARALLEL: "1"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_AI_KEEP_ALIVE:-5m}
+      OLLAMA_GPU_OVERHEAD: "268435456" # keep 256 MB headroom for the worker
+    volumes:
+      - ollama:/root/.ollama
+    tmpfs: [/tmp]
+    networks: [backend, egress] # egress only to pull models; never published
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      start_interval: 5s
+      retries: 5
+
+volumes:
+  data:
+  ollama:
+
+networks:
+  frontend:
+  backend:
+    internal: true
+  egress:

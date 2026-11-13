@@ -91,6 +91,20 @@ export class WorkerBackend {
     );
   }
 
+  /** Like capabilities(), but waits (with backoff) while the worker starts or loads its models. */
+  async waitForCapabilities({ signal, timeoutMs = 10 * 60_000 } = {}) {
+    const deadline = Date.now() + timeoutMs;
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await this.capabilities();
+      } catch (error) {
+        if (Date.now() > deadline) throw error;
+        if (attempt === 0) this.logger.info('waiting for the analysis worker to become ready');
+        await sleep(Math.min(10_000, 1000 * 2 ** Math.min(attempt, 4)), signal);
+      }
+    }
+  }
+
   async ready() {
     for (const url of this.urls) {
       try {

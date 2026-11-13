@@ -58,8 +58,15 @@ const passthroughEnv = () =>
  * @param {{ env?: Record<string,string>, ollama?: Parameters<typeof startFakeOllama>[0], waitForReady?: boolean,
  *           workerDelayMs?: number, workerFailCode?: string }} [opts]
  */
-export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady = true, workerDelayMs = 0, workerFailCode } = {}) {
-  const dataDir = await mkdtemp(path.join(tmpdir(), 'optivus-test-'));
+export async function startApp({
+  env = {},
+  ollama: ollamaOptions,
+  waitForReady = true,
+  workerDelayMs = 0,
+  workerFailCode,
+  dataDir: reuseDir,
+} = {}) {
+  const dataDir = reuseDir ?? (await mkdtemp(path.join(tmpdir(), 'optivus-test-')));
   const fakeAnalysisDir = path.join(dataDir, 'fake-analysis');
   await mkdir(fakeAnalysisDir, { recursive: true });
   const ollama = await startFakeOllama(ollamaOptions);
@@ -165,14 +172,15 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
       return worker.state.runs;
     },
 
-    async stop() {
+    /** Stops the server and the fakes; `keepData` leaves the data directory for a restart test. */
+    async stop({ keepData = false, signal } = {}) {
       if (child.exitCode === null) {
-        child.kill();
+        child.kill(signal);
         await Promise.race([exited, new Promise((r) => setTimeout(r, 5000))]);
       }
       await ollama.close();
       await worker.close();
-      await rm(dataDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
+      if (!keepData) await rm(dataDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
     },
   };
 

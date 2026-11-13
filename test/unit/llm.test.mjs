@@ -60,6 +60,16 @@ describe('timeline', () => {
     assert.ok(all.includes('slide 1'));
   });
 
+  it('keeps scene-specific text on the timeline (only cross-scene text is background)', () => {
+    const frames = Array.from({ length: 14 }, (_, i) =>
+      frame(i, { sceneCut: i === 0 || i === 7, texts: [i < 7 ? 'OPTIVUS DEMO' : 'INVOICE 4821'] }),
+    );
+    const tl = buildTimeline(analysis(frames));
+    assert.deepEqual(tl.background, []);
+    const shown = tl.windows.flatMap((w) => w.texts);
+    assert.ok(shown.includes('OPTIVUS DEMO') && shown.includes('INVOICE 4821'));
+  });
+
   it('drops one-frame object detections (false positives) and reports counts', () => {
     const frames = [
       frame(0, { objects: { person: 2 } }),

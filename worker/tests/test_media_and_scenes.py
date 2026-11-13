@@ -114,3 +114,15 @@ def test_keyframe_directories(tmp_path):
     for bad in ("frames/../x", "../frames/x", "videos/x", "frames/a/b"):
         with pytest.raises(AnalysisError):
             resolve_keyframes_dir(tmp_path, bad)
+
+
+def test_gpu_compatibility_rules():
+    from optivus_worker.device import gpu_supported
+
+    cu126 = ["sm_50", "sm_60", "sm_70", "sm_75", "sm_80", "sm_86", "sm_90"]
+    assert gpu_supported((8, 9), cu126), "RTX 40xx (sm_89) runs sm_86 kernels"
+    assert gpu_supported((8, 6), cu126)
+    assert not gpu_supported((12, 0), cu126), "RTX 50xx needs a build with sm_120 or PTX"
+    assert gpu_supported((12, 0), [*cu126, "compute_90"]), "PTX is JIT-compiled for newer GPUs"
+    assert not gpu_supported((6, 1), ["sm_75", "sm_80", "sm_86"]), "Pascal is not in CUDA 12.8+ builds"
+    assert gpu_supported((7, 5), [])

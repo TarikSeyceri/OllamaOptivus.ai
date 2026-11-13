@@ -31,6 +31,25 @@ class Device:
         }
 
 
+def gpu_supported(capability: tuple[int, int], arch_list: list[str]) -> bool:
+    """Whether a PyTorch build can run on a GPU of `capability`, following CUDA's compatibility rules.
+
+    Kernels compiled for sm_XY run on GPUs of the same major version X with minor version >= Y (an
+    sm_86 build runs on an sm_89 RTX 40xx), and PTX (compute_XY) is JIT-compiled for any newer GPU.
+    """
+    major, minor = capability
+    for arch in arch_list:
+        kind, _, number = arch.partition("_")
+        if not number.isdigit() or len(number) < 2:
+            continue  # e.g. "sm_90a" (architecture-specific features only)
+        arch_major, arch_minor = int(number[:-1]), int(number[-1])
+        if kind == "sm" and arch_major == major and arch_minor <= minor:
+            return True
+        if kind == "compute" and (arch_major, arch_minor) <= (major, minor):
+            return True
+    return not arch_list  # unknown build: let CUDA decide
+
+
 def select_device(preference: str) -> Device:
     """Picks the best available device. With "auto", an unusable GPU falls back to the CPU."""
     import torch
@@ -43,7 +62,7 @@ def select_device(preference: str) -> Device:
             # A wheel without kernels for this GPU fails later with "no kernel image is available".
             arch = f"sm_{capability[0]}{capability[1]}"
             supported = torch.cuda.get_arch_list()
-            if supported and arch not in supported and not any(a.startswith("compute_") for a in supported):
+            if not gpu_supported(capability, supported):
                 message = (
                     f"{name} ({arch}) is not supported by this PyTorch build ({', '.join(supported)}). "
                     "Rebuild the worker image with TORCH_VARIANT=cu126 for older GPUs or cu129 for RTX 50xx."

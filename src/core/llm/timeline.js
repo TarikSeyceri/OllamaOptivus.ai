@@ -130,25 +130,34 @@ export function buildTimeline(analysis, { compact = false } = {}) {
   const persistent = new Set([...objectFrames].filter(([, n]) => n >= minFrames).map(([label]) => label));
   const objects = Object.fromEntries(Object.entries(objectMax).filter(([label]) => persistent.has(label)));
 
-  // Background text: visible in at least half of the frames that show any text (needs >= 8 such frames).
+  // Background text (logos, watermarks, tickers): visible in at least half of the frames that show any
+  // text (needs >= 8 such frames) and - when scene cuts are known - in more than one scene. Text that
+  // belongs to a single scene is content, and keeps its place on the timeline.
+  const sceneCount = 1 + frames.filter((f) => f.sceneCut && f.t > 0).length;
   const framesWithText = frames.filter((f) => (f.texts ?? []).some((t) => meaningfulText(normalizeText(t))));
   const background = [];
   const backgroundKeys = [];
   if (framesWithText.length >= 8) {
-    const groups = []; // { key, display, frames }
-    for (const f of framesWithText) {
+    const groups = []; // { key, display, frames, scenes }
+    let scene = 0;
+    for (const f of frames) {
+      if (f.sceneCut && f.t > 0) scene++;
       const seen = [];
-      for (const raw of f.texts) {
+      for (const raw of f.texts ?? []) {
         const key = normalizeText(raw);
         if (!meaningfulText(key) || containsSimilar(seen, key)) continue;
         seen.push(key);
         const group = groups.find((g) => similarText(g.key, key));
-        if (group) group.frames++;
-        else groups.push({ key, display: String(raw).trim(), frames: 1 });
+        if (group) {
+          group.frames++;
+          group.scenes.add(scene);
+        } else {
+          groups.push({ key, display: String(raw).trim(), frames: 1, scenes: new Set([scene]) });
+        }
       }
     }
     for (const g of groups) {
-      if (g.frames / framesWithText.length >= 0.5) {
+      if (g.frames / framesWithText.length >= 0.5 && (sceneCount < 2 || g.scenes.size >= 2)) {
         background.push(g.display.slice(0, MAX_TEXT_LENGTH));
         backgroundKeys.push(g.key);
       }

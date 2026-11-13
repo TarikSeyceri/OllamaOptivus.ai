@@ -8,8 +8,10 @@ at run time; other request languages fall back to English OCR.
 from __future__ import annotations
 
 import logging
+import tempfile
 import threading
 from collections import OrderedDict
+from pathlib import Path
 
 import numpy as np
 
@@ -48,7 +50,9 @@ class TextReader:
                 list(languages),
                 gpu=self.gpu,
                 model_storage_directory=str(self.settings.models_dir / "easyocr"),
-                user_network_directory=str(self.settings.models_dir / "easyocr" / "user"),
+                # Only used for custom networks (none here), but EasyOCR creates it: keep it on tmpfs
+                # because the models directory is read-only in the container.
+                user_network_directory=str(Path(tempfile.gettempdir()) / "easyocr-user-networks"),
                 download_enabled=self.settings.processing_allow_downloads,
                 quantize=self.quantize,
                 verbose=False,
@@ -59,7 +63,10 @@ class TextReader:
             return reader
 
     def warm_up(self) -> None:
-        self._reader(self.languages_for("auto"))
+        # Preload the readers requests will use (English and the combined baked set), so the first
+        # job does not pay ~2-3 s of model loading.
+        for language in dict.fromkeys(("en", "auto")):
+            self._reader(self.languages_for(language))
 
     def read(self, image: np.ndarray, languages: tuple[str, ...]) -> list[str]:
         results = self._reader(languages).readtext(

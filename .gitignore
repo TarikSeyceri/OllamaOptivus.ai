@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,python,dotenv
 
 ### dotenv ###
-# .env
+.env
 
 ### Node ###
 # Logs
@@ -314,10 +314,23 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/node,python,dotenv
 
+# ---- Ollama Optivus AI ----
+# Media (test fixtures are small, synthetic and committed on purpose)
 *.mp4
 *.exe
 *.wav
 *.mp3
+!test/fixtures/*.mp4
 
-data/*
-data
+# Runtime data, secrets and local environments
+data/
+secrets/
+.env.*
+!.env.example
+.venv/
+worker/.venv/
+
+# Model weights are downloaded (and checksum-verified) at build time, never committed
+*.pt
+*.onnx
+*.safetensors

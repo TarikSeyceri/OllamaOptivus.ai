@@ -268,28 +268,4 @@ router.post("/process", async (req, res) => {
     }
 });
 
-if(NODE_ENV === 'development'){
-    router.post("/test", async (req, res) => {
-        const videoFilePath = "/dummy/location/video.mp4";
-
-        try {
-            const { stdout, stderr } = await execFilePromise(PYTHON_BINARY_PATH, [`${__dirname}/test/test.py`]);
-            if (stderr) {
-                console.error("Processing failed for video file", videoFilePath, stderr);
-                return res.status(500).json({ success: false, msg: "Processing failed" });
-            }
-
-            const jsonData = JSON.parse(stdout);
-            const prompt = dataRefactory.getPrompt(jsonData);
-
-            console.log("Processed video file", videoFilePath);
-            return res.status(200).json({ success: true, msg: "Processing completed", payload: { prompt } });
-        }
-        catch (error) {
-            console.error("Processing failed for video file", videoFilePath, error);
-            return res.status(500).json({ success: false, msg: "Processing failed" });
-        }
-    });
-}
-
 module.exports = router;

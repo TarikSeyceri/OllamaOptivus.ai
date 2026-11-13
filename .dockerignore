@@ -1,0 +1,7 @@
+# Allowlist: the API image only needs the Node sources and manifests.
+*
+!package.json
+!package-lock.json
+!src/
+src/**/*.py
+src/**/*.pt

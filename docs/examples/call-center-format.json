@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "summary": { "type": "string", "description": "Three to five sentence summary of the conversation." },
+    "isDisrespectfulConversation": { "type": "boolean", "description": "True if either party is rude, insulting or abusive." },
+    "customerFraud": {
+      "type": "object",
+      "properties": {
+        "percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+        "reason": { "type": "string" }
+      },
+      "required": ["percentage", "reason"]
+    },
+    "customerSatisfactionPercentage": { "type": "number", "minimum": 0, "maximum": 100 },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": { "type": "number", "description": "Seconds from the start of the video." },
+          "description": { "type": "string" }
+        },
+        "required": ["timestamp", "description"]
+      }
+    }
+  },
+  "required": ["summary", "isDisrespectfulConversation", "customerFraud", "customerSatisfactionPercentage", "events"]
+}

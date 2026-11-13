@@ -2,6 +2,7 @@
 // throw-away data directory, a fake Ollama and a fake analysis backend, then talks to it over HTTP.
 // The server's working directory is the temp dir, so a developer's local .env never leaks into tests.
 import { spawn, spawnSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import { once } from 'node:events';
 import { mkdtemp, mkdir, rm, readFile, writeFile } from 'node:fs/promises';
 import net from 'node:net';
@@ -30,12 +31,32 @@ async function freePort() {
   return port;
 }
 
-const passthroughEnv = () => Object.fromEntries(
-  ['PATH', 'Path', 'PATHEXT', 'SYSTEMROOT', 'SystemRoot', 'SYSTEMDRIVE', 'WINDIR', 'COMSPEC', 'TEMP', 'TMP', 'TMPDIR',
-    'HOME', 'USERPROFILE', 'HOMEDRIVE', 'HOMEPATH', 'APPDATA', 'LOCALAPPDATA', 'PROGRAMDATA', 'LANG']
-    .filter((k) => process.env[k] !== undefined)
-    .map((k) => [k, process.env[k]]),
-);
+const passthroughEnv = () =>
+  Object.fromEntries(
+    [
+      'PATH',
+      'Path',
+      'PATHEXT',
+      'SYSTEMROOT',
+      'SystemRoot',
+      'SYSTEMDRIVE',
+      'WINDIR',
+      'COMSPEC',
+      'TEMP',
+      'TMP',
+      'TMPDIR',
+      'HOME',
+      'USERPROFILE',
+      'HOMEDRIVE',
+      'HOMEPATH',
+      'APPDATA',
+      'LOCALAPPDATA',
+      'PROGRAMDATA',
+      'LANG',
+    ]
+      .filter((k) => process.env[k] !== undefined)
+      .map((k) => [k, process.env[k]]),
+  );
 
 /**
  * Starts the API with fakes. Returns helpers to call it and inspect side effects.
@@ -54,6 +75,7 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
     HTTP_PORT: String(port),
     HTTP_BEARER_TOKEN: TEST_TOKEN,
     HTTP_RATE_LIMIT_MAX_REQUESTS: '100000',
+    HTTP_RATE_LIMIT_HEAVY_MAX_REQUESTS: '100000',
     DATA_DIR: dataDir,
     VIDEOS_DIR: path.join(dataDir, 'videos'),
     AUDIOS_DIR: path.join(dataDir, 'audios'),
@@ -81,8 +103,12 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   let output = '';
-  child.stdout.on('data', (d) => { output += d; });
-  child.stderr.on('data', (d) => { output += d; });
+  child.stdout.on('data', (d) => {
+    output += d;
+  });
+  child.stderr.on('data', (d) => {
+    output += d;
+  });
   const exited = once(child, 'exit');
 
   const baseUrl = `http://127.0.0.1:${port}`;
@@ -107,13 +133,24 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
       const res = await fetch(baseUrl + urlPath, init);
       const text = await res.text();
       let data;
-      try { data = JSON.parse(text); } catch { data = text; }
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = text;
+      }
       return { status: res.status, headers: res.headers, body: data };
     },
 
-    /** Multipart upload of a fixture (or any buffer) under the given file name. */
-    async upload(urlPath, { file = 'speech.mp4', buffer, filename = 'call-001.mp4', type = 'video/mp4', field = 'video', token } = {}) {
-      const data = buffer ?? await readFile(path.join(fixturesDir, file));
+    /**
+     * Multipart upload of a fixture (or any buffer) under the given file name. `unique: true` appends
+     * random bytes so the upload is distinct content (videos and analyses are content-addressed).
+     */
+    async upload(
+      urlPath,
+      { file = 'speech.mp4', buffer, filename = 'call-001.mp4', type = 'video/mp4', field = 'video', token, unique = false } = {},
+    ) {
+      let data = buffer ?? (await readFile(path.join(fixturesDir, file)));
+      if (unique) data = Buffer.concat([data, Buffer.from(crypto.randomUUID())]);
       const form = new FormData();
       form.append(field, new Blob([data], { type }), filename);
       return app.request('POST', urlPath, { body: form, token });
@@ -152,7 +189,9 @@ export async function startApp({ env = {}, ollama: ollamaOptions, waitForReady =
       try {
         const res = await fetch(`${baseUrl}/`);
         if (res.ok) break;
-      } catch { /* not listening yet */ }
+      } catch {
+        /* not listening yet */
+      }
       if (Date.now() > deadline) {
         await app.stop();
         throw new Error(`API did not become ready in time:\n${output}`);

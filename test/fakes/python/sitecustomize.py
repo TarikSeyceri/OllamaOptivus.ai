@@ -10,6 +10,7 @@ Environment variables:
   OPTIVUS_FAKE_ANALYSIS_DEFAULT  fixture used when no per-video file exists
   OPTIVUS_FAKE_PROCESSOR_MODE    "ok" (default) or "fail" (exit 1 with a message on stderr)
   OPTIVUS_FAKE_PROCESSOR_LOG     if set, one line per invocation is appended (used to count runs)
+  OPTIVUS_FAKE_PROCESSOR_DELAY_MS  sleep this long before answering (to test queues and cancellation)
 """
 
 import os
@@ -27,6 +28,12 @@ def _main() -> None:
     if log_path:
         with open(log_path, "a", encoding="utf-8") as log:
             log.write(f"{video}\t{language}\n")
+
+    delay_ms = int(os.environ.get("OPTIVUS_FAKE_PROCESSOR_DELAY_MS", "0") or 0)
+    if delay_ms > 0:
+        import time
+
+        time.sleep(delay_ms / 1000)
 
     if os.environ.get("OPTIVUS_FAKE_PROCESSOR_MODE", "ok") == "fail":
         sys.stderr.write("fake processor failure\n")

@@ -81,7 +81,7 @@ export async function startFakeOllama({ models = ['test-model:latest'], result =
     if (!state.models.has(model)) return send(404, { error: `model '${body?.model}' not found` });
 
     // An empty prompt with keep_alive 0 is Ollama's "unload this model" request.
-    const emptyPrompt = isChat ? !(body?.messages?.length) : !body?.prompt;
+    const emptyPrompt = isChat ? !body?.messages?.length : !body?.prompt;
     if (body?.keep_alive === 0 || body?.keep_alive === '0' || body?.keep_alive === '0s') {
       state.loaded.delete(model);
       if (emptyPrompt) return send(200, { model, done: true, done_reason: 'unload' });
@@ -102,21 +102,30 @@ export async function startFakeOllama({ models = ['test-model:latest'], result =
 
     const meta = { model, created_at: new Date().toISOString(), prompt_eval_count: 100, eval_count: 50 };
     if (body?.stream === false) {
-      return send(200, isChat
-        ? { ...meta, message: { role: 'assistant', content }, done: true, done_reason: 'stop' }
-        : { ...meta, response: content, done: true, done_reason: 'stop' });
+      return send(
+        200,
+        isChat
+          ? { ...meta, message: { role: 'assistant', content }, done: true, done_reason: 'stop' }
+          : { ...meta, response: content, done: true, done_reason: 'stop' },
+      );
     }
 
     res.writeHead(200, { 'content-type': 'application/x-ndjson' });
     const pieces = content.match(/[\s\S]{1,16}/g) ?? [''];
     for (const piece of pieces) {
-      res.write(`${JSON.stringify(isChat
-        ? { ...meta, message: { role: 'assistant', content: piece }, done: false }
-        : { ...meta, response: piece, done: false })}\n`);
+      res.write(
+        `${JSON.stringify(
+          isChat ? { ...meta, message: { role: 'assistant', content: piece }, done: false } : { ...meta, response: piece, done: false },
+        )}\n`,
+      );
     }
-    return res.end(`${JSON.stringify(isChat
-      ? { ...meta, message: { role: 'assistant', content: '' }, done: true, done_reason: 'stop' }
-      : { ...meta, response: '', done: true, done_reason: 'stop' })}\n`);
+    return res.end(
+      `${JSON.stringify(
+        isChat
+          ? { ...meta, message: { role: 'assistant', content: '' }, done: true, done_reason: 'stop' }
+          : { ...meta, response: '', done: true, done_reason: 'stop' },
+      )}\n`,
+    );
   }
 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -125,9 +134,10 @@ export async function startFakeOllama({ models = ['test-model:latest'], result =
     url: `http://127.0.0.1:${port}`,
     state,
     requestsTo: (path) => state.requests.filter((r) => r.path === path),
-    close: () => new Promise((resolve) => {
-      server.closeAllConnections?.();
-      server.close(() => resolve());
-    }),
+    close: () =>
+      new Promise((resolve) => {
+        server.closeAllConnections?.();
+        server.close(() => resolve());
+      }),
   };
 }

@@ -7,9 +7,12 @@
   "scripts": {
     "start": "node src/main.js",
     "dev": "cross-env NODE_ENV=development AUTH_DISABLED=true node --watch src/main.js",
-    "test": "node --test --test-reporter=spec \"test/**/*.test.mjs\""
+    "test": "node --test --test-reporter=spec \"test/**/*.test.mjs\"",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
-  "type": "commonjs",
+  "type": "module",
   "keywords": [
     "node",
     "express",
@@ -33,18 +36,25 @@
   ],
   "author": "Tarik Seyceri",
   "dependencies": {
-    "dotenv": "16.6.1",
+    "cors": "2.8.6",
     "express": "5.3.0",
     "express-rate-limit": "8.7.2",
     "helmet": "8.3.0",
-    "morgan": "1.12.1",
     "multer": "2.5.0",
     "ollama": "0.6.4",
+    "pino": "10.4.0",
+    "pino-http": "11.0.0",
+    "pino-roll": "4.0.0",
     "swagger-ui-express": "5.0.1",
-    "winston": "3.19.0",
-    "winston-daily-rotate-file": "5.0.0"
+    "undici": "8.12.3",
+    "zod": "4.6.7"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "@eslint/js": "10.0.1",
+    "cross-env": "10.1.0",
+    "eslint": "10.14.0",
+    "globals": "17.13.0",
+    "pino-pretty": "13.2.0",
+    "prettier": "3.9.10"
   }
 }

@@ -1,0 +1,7 @@
+node_modules/
+data/
+worker/
+test/fixtures/
+docs/openapi.json
+package-lock.json
+*.md

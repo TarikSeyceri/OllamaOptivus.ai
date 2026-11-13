@@ -54,8 +54,12 @@ describe('authentication', () => {
 
 describe('hardened request handling', () => {
   let app;
-  before(async () => { app = await startApp(); });
-  after(async () => { await app?.stop(); });
+  before(async () => {
+    app = await startApp();
+  });
+  after(async () => {
+    await app?.stop();
+  });
 
   it('sets security headers and hides the framework', async () => {
     const res = await app.request('GET', '/');
@@ -75,10 +79,12 @@ describe('hardened request handling', () => {
   it('treats inherited object keys as an unknown language', async () => {
     const up = await app.upload('/upload', { filename: 'proto.mp4' });
     for (const language of ['constructor', '__proto__', 'toString']) {
-      const res = await app.request('POST', '/process', { json: { videoFilePath: up.body.payload.videoFilePath, language, noPrompting: true } });
+      const res = await app.request('POST', '/process', {
+        json: { videoFilePath: up.body.payload.videoFilePath, language, noPrompting: true },
+      });
       assert.equal(res.status, 200, `${language}: ${JSON.stringify(res.body)}`);
     }
-    assert.equal(({}).videoExplanation, undefined, 'Object.prototype is untouched');
+    assert.equal({}.videoExplanation, undefined, 'Object.prototype is untouched');
   });
 
   it('answers malformed JSON with a JSON 400', async () => {

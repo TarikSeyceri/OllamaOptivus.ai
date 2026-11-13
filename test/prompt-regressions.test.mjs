@@ -7,14 +7,20 @@ const frame = (timestamp, texts = [], detections = []) => ({ timestamp, texts, d
 
 describe('prompt construction', () => {
   let app;
-  before(async () => { app = await startApp(); });
-  after(async () => { await app?.stop(); });
+  before(async () => {
+    app = await startApp();
+  });
+  after(async () => {
+    await app?.stop();
+  });
 
   async function promptFor(name, analysis, extra = {}) {
     await app.setAnalysisFor(name, analysis);
-    const up = await app.upload('/upload', { filename: `${name}.mp4` });
+    const up = await app.upload('/upload', { filename: `${name}.mp4`, unique: true });
     assert.equal(up.status, 200, JSON.stringify(up.body));
-    const res = await app.request('POST', '/process', { json: { videoFilePath: up.body.payload.videoFilePath, noPrompting: true, ...extra } });
+    const res = await app.request('POST', '/process', {
+      json: { videoFilePath: up.body.payload.videoFilePath, noPrompting: true, ...extra },
+    });
     assert.equal(res.status, 200, JSON.stringify(res.body));
     return res.body.payload.prompt;
   }
@@ -41,7 +47,10 @@ describe('prompt construction', () => {
   it('keeps frames that fall into gaps between speech segments', async () => {
     const prompt = await promptFor('speech-gap', {
       frames: [frame(1), frame(6, ['GAP TEXT']), frame(9)],
-      audioTranscription: [{ start: 0, end: 5, text: ' First.' }, { start: 8, end: 10, text: ' Second.' }],
+      audioTranscription: [
+        { start: 0, end: 5, text: ' First.' },
+        { start: 8, end: 10, text: ' Second.' },
+      ],
     });
     assert.match(prompt, /GAP TEXT/);
   });
@@ -49,7 +58,10 @@ describe('prompt construction', () => {
   it('counts a frame on a segment boundary only once', async () => {
     const prompt = await promptFor('boundary', {
       frames: [frame(5, ['BOUNDARY TEXT'])],
-      audioTranscription: [{ start: 0, end: 5, text: ' One.' }, { start: 5, end: 10, text: ' Two.' }],
+      audioTranscription: [
+        { start: 0, end: 5, text: ' One.' },
+        { start: 5, end: 10, text: ' Two.' },
+      ],
     });
     assert.equal(prompt.match(/BOUNDARY TEXT/g)?.length, 1);
   });
@@ -65,7 +77,11 @@ describe('prompt construction', () => {
   it('keeps on-screen text in short videos', async () => {
     const prompt = await promptFor('short-ocr', {
       frames: [frame(0, ['INVOICE 4821']), frame(4, ['INVOICE 4821']), frame(8, ['INVOICE 4821'])],
-      audioTranscription: [{ start: 0, end: 3, text: ' a' }, { start: 3, end: 6, text: ' b' }, { start: 6, end: 9, text: ' c' }],
+      audioTranscription: [
+        { start: 0, end: 3, text: ' a' },
+        { start: 3, end: 6, text: ' b' },
+        { start: 6, end: 9, text: ' c' },
+      ],
     });
     assert.match(prompt, /INVOICE 4821/);
   });

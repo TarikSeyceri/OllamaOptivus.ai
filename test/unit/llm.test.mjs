@@ -6,8 +6,8 @@ import { describe, it } from 'node:test';
 import { fromLegacy, toLegacy } from '../../src/core/analysis/format.js';
 import { createJsonEndDetector, parseJsonLoose } from '../../src/core/llm/json-stream.js';
 import { answerInstruction, labelsFor } from '../../src/core/llm/languages.js';
-import { buildPrompt, chunkLines, effectiveLanguage } from '../../src/core/llm/prompt.js';
-import { clampTimestamps } from '../../src/core/llm/summarize.js';
+import { buildPrompt, chunkLines, effectiveLanguage, estimateTokens } from '../../src/core/llm/prompt.js';
+import { clampTimestamps, summarize } from '../../src/core/llm/summarize.js';
 import { buildTimeline, similarText, normalizeText } from '../../src/core/llm/timeline.js';
 import { fixturesDir } from '../helpers/harness.mjs';
 
@@ -143,6 +143,86 @@ describe('prompt', () => {
     if (process.env.UPDATE_GOLDEN === '1' || !existsSync(golden)) writeFileSync(golden, prompt.text);
     assert.equal(prompt.text, readFileSync(golden, 'utf8'), 'prompt format changed: review, then run with UPDATE_GOLDEN=1');
     assert.ok(prompt.estimatedTokens < 4000, `prompt is compact (${prompt.estimatedTokens} tokens)`);
+  });
+});
+
+describe('summarize', () => {
+  const logger = { info() {}, warn() {} };
+  const request = { language: 'en', model: 'test-model:latest', temperature: 0.2 };
+  const smallContext = { numCtx: 4096, numPredict: 512 };
+  // A 30-minute call: about 13,000 tokens of transcript, far more than a 4K context.
+  const longCall = () =>
+    analysis(
+      [frame(0)],
+      Array.from({ length: 300 }, (_, i) => ({
+        start: i * 6,
+        end: i * 6 + 5,
+        text: `Segment ${i}: the customer explains the problem with order ${1000 + i} and the agent answers in detail.`,
+      })),
+      { video: { duration: 1800, hasAudio: true } },
+    );
+  const shortClip = () => analysis([frame(0)], [{ start: 0, end: 4, text: 'Hello.' }], { video: { duration: 10, hasAudio: true } });
+
+  /** A scripted OllamaService: `reply(params, callNumber)` returns the model's answer for each chat call. */
+  const scriptedOllama = (reply) => {
+    const calls = [];
+    return {
+      calls,
+      async chat(params) {
+        calls.push(params);
+        return { text: reply(params, calls.length), stats: {} };
+      },
+      async checkOffload() {},
+    };
+  };
+  const isNotesCall = (params) => Boolean(params.format?.properties?.notes);
+
+  it('summarizes videos longer than the context window in parts (map-reduce)', async () => {
+    const ollama = scriptedOllama((params) =>
+      isNotesCall(params)
+        ? JSON.stringify({ notes: [{ timestamp: 12, note: 'The customer reports a broken order.' }] })
+        : JSON.stringify({ summary: 'A long support call.', events: [{ timestamp: 99999, description: 'The call ends.' }] }),
+    );
+    const result = await summarize({ ollama, cfg: smallContext, analysis: longCall(), request, logger });
+
+    assert.equal(result.chunked, true);
+    const notesCalls = ollama.calls.filter(isNotesCall);
+    assert.ok(notesCalls.length > 1, 'the timeline is split into several parts');
+    for (const call of notesCalls) {
+      const tokens = estimateTokens(call.messages.map((m) => m.content).join('\n'));
+      assert.ok(tokens <= smallContext.numCtx - smallContext.numPredict, `a part fits the context (${tokens} tokens)`);
+    }
+    const final = ollama.calls.at(-1);
+    assert.equal(isNotesCall(final), false, 'the last call answers with the requested schema');
+    assert.match(final.messages[1].content, /\[12\.0\] The customer reports a broken order\./);
+    assert.equal(result.json.events[0].timestamp, 1800, 'timestamps are clamped to the video');
+    assert.ok(result.warnings.some((w) => w.includes('map-reduce')));
+  });
+
+  it('retries once, at temperature 0, when the answer is not valid JSON', async () => {
+    const ollama = scriptedOllama((_params, n) => (n === 1 ? 'Sure! Here is the summary you asked for.' : '{"summary":"ok","events":[]}'));
+    const result = await summarize({ ollama, cfg: { numCtx: 16384, numPredict: 1024 }, analysis: shortClip(), request, logger });
+    assert.deepEqual(result.json, { summary: 'ok', events: [] });
+    assert.equal(ollama.calls.length, 2);
+    assert.equal(ollama.calls[1].options.temperature, 0);
+  });
+
+  it('fails with LLM_INVALID_JSON when the retry is not valid JSON either', async () => {
+    const ollama = scriptedOllama(() => 'still not JSON');
+    await assert.rejects(
+      summarize({ ollama, cfg: { numCtx: 16384, numPredict: 1024 }, analysis: shortClip(), request, logger }),
+      (error) => error.status === 502 && error.code === 'LLM_INVALID_JSON',
+    );
+  });
+
+  it('gives up with VIDEO_TOO_LONG_FOR_CONTEXT when the notes do not get shorter', async () => {
+    const wordy = Array.from({ length: 60 }, (_, i) => ({ timestamp: i, note: `${'a very detailed note '.repeat(10)}${i}` }));
+    const ollama = scriptedOllama((params) => (isNotesCall(params) ? JSON.stringify({ notes: wordy }) : '{}'));
+    await assert.rejects(
+      summarize({ ollama, cfg: smallContext, analysis: longCall(), request, logger }),
+      (error) => error.status === 413 && error.code === 'VIDEO_TOO_LONG_FOR_CONTEXT',
+    );
+    assert.ok(ollama.calls.every(isNotesCall), 'no final answer is attempted');
   });
 });
 

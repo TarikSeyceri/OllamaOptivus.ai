@@ -148,7 +148,7 @@ production, especially the responsible-use note on facial expressions. Report vu
 ## Development
 
 ```bash
-npm ci && npm test                          # API: 91 tests with fakes (no GPU needed)
+npm ci && npm test                          # API: 95 tests with fakes (no GPU needed)
 cd worker && uv sync && uv run pytest       # worker: 23 tests with fake models
 ```
 

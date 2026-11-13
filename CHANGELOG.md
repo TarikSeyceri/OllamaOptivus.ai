@@ -31,7 +31,7 @@ Compose deployment and much faster processing. The v1 HTTP endpoints remain comp
   - init scripts that generate secrets.
 - **Quality and tooling:**
   - an OpenAPI 3.1 document generated from the validation schemas, with Swagger UI;
-  - 91 Node and 23 Python tests;
+  - 95 Node and 23 Python tests;
   - CI (lint, tests, OSV, `npm audit`, Docker smoke test, Trivy), CodeQL and Dependabot;
   - smoke and model-benchmark scripts;
   - full documentation in `docs/`.

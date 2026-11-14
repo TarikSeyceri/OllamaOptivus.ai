@@ -1,11 +1,10 @@
-<a href="https://www.buymeacoffee.com/tarikseyceri" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" width="217" height="60" style="height: 60px !important;width: 217px !important;" ></a>
-
 # Ollama Optivus AI
 
 ![Ollama Optivus AI](cover.webp)
 
 [![CI](https://github.com/TarikSeyceri/OllamaOptivus.ai/actions/workflows/ci.yml/badge.svg)](https://github.com/TarikSeyceri/OllamaOptivus.ai/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=black)](https://www.buymeacoffee.com/tarikseyceri)
 
 **Self-hosted video understanding.** Optivus watches a video the way a person would: it transcribes the
 speech, reads the on-screen text, notices objects, scene changes and facial expressions, and hands that

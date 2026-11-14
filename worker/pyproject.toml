@@ -14,7 +14,7 @@ dependencies = [
     "pydantic-settings>=2.11,<3",
     "numpy>=2.2,<3",
     "av>=15,<20",
-    "opencv-python-headless>=4.13,<5",
+    "opencv-python-headless>=4.13,<6",
 ]
 
 # Exactly one hardware extra is installed in a real deployment.

@@ -2,9 +2,15 @@
 
 ![Ollama Optivus AI](cover.webp)
 
-[![CI](https://github.com/TarikSeyceri/OllamaOptivus.ai/actions/workflows/ci.yml/badge.svg)](https://github.com/TarikSeyceri/OllamaOptivus.ai/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/TarikSeyceri/OllamaOptivus.ai)](https://github.com/TarikSeyceri/OllamaOptivus.ai/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=black)](https://www.buymeacoffee.com/tarikseyceri)
+
+[![Ollama](https://img.shields.io/badge/Ollama-000000?logo=ollama&logoColor=white)](docs/models.md)
+[![Docker Compose](https://img.shields.io/badge/Docker%20Compose-2496ED?logo=docker&logoColor=white)](docs/deployment.md)
+[![NVIDIA CUDA 12](https://img.shields.io/badge/NVIDIA%20CUDA%2012-76B900?logo=nvidia&logoColor=white)](docs/deployment.md#requirements)
+[![Node.js 22.12+](https://img.shields.io/badge/Node.js%2022.12%2B-5FA04E?logo=nodedotjs&logoColor=white)](CONTRIBUTING.md#development-setup)
+[![Python 3.12+](https://img.shields.io/badge/Python%203.12%2B-3776AB?logo=python&logoColor=white)](CONTRIBUTING.md#development-setup)
 
 **Self-hosted video understanding.** Optivus watches a video the way a person would: it transcribes the
 speech, reads the on-screen text, notices objects, scene changes and facial expressions, and hands that

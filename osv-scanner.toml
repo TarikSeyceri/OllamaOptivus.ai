@@ -1,0 +1,7 @@
+# OSV-Scanner configuration for the "Dependency vulnerabilities (OSV)" CI job.
+# Every ignored vulnerability needs a reason and an expiry date, so that it is reviewed again.
+
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+ignoreUntil = 2026-12-15
+reason = "minimatch 10 (glob-pattern amplification, medium) is only a development dependency of ESLint, which matches the repository's own lint patterns; it is not part of the application. ESLint 10.15 moves to minimatch 11 and is adopted after the 14-day release-age window (Dependabot)."

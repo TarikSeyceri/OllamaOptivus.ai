@@ -1,21 +1,45 @@
-FROM python:3.11.9-slim
+# syntax=docker/dockerfile:1.10
+# Ollama Optivus AI - API service (Node.js). No GPU, no Python: the analysis runs in ./worker.
 
-# Install Node.js 18.x
-RUN apt-get update && apt-get install -y curl=7.88.1-10+deb12u8 && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs=18.20.5-1nodesource1
+ARG NODE_IMAGE=node:26-trixie-slim
 
-# Install system dependencies for Python packages
-RUN apt-get install -y \
-    ffmpeg=7:5.1.6-0+deb12u1 \
-    libgl1-mesa-glx=22.3.6-1+deb12u1 \
-    libglib2.0-0=2.74.6-2+deb12u5 
+# ---------------------------------------------------------------------------
+# deps: production dependencies only, install scripts disabled (supply-chain hardening)
+# ---------------------------------------------------------------------------
+FROM ${NODE_IMAGE} AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev --ignore-scripts --no-audit --no-fund
 
-# Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists
+# ---------------------------------------------------------------------------
+# runtime
+# ---------------------------------------------------------------------------
+FROM ${NODE_IMAGE} AS runtime
+LABEL org.opencontainers.image.title="optivus-api" \
+      org.opencontainers.image.description="Ollama Optivus AI API: uploads, jobs, prompts and the Ollama client" \
+      org.opencontainers.image.source="https://github.com/TarikSeyceri/OllamaOptivus.ai" \
+      org.opencontainers.image.licenses="MIT"
+
+# Same UID/GID as the worker: both write to the shared data volume. /data is created here so a new
+# named volume inherits this ownership.
+RUN groupadd --system --gid 10001 optivus \
+ && useradd --system --uid 10001 --gid optivus --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin optivus \
+ && mkdir -p /data \
+ && chown 10001:10001 /data
+
+ENV NODE_ENV=production \
+    DATA_DIR=/data \
+    HTTP_HOST=0.0.0.0 \
+    HTTP_PORT=3330
 
 WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json ./
+COPY src ./src
 
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+USER 10001:10001
+EXPOSE 3330
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --start-interval=3s --retries=3 \
+  CMD ["node", "-e", "fetch('http://127.0.0.1:3330/health/live').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+CMD ["node", "src/main.js"]

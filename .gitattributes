@@ -1,0 +1,10 @@
+# Normalize line endings: LF everywhere (shell scripts and container files break with CRLF),
+# CRLF only for Windows PowerShell scripts. Media and model files are binary.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.mp4 binary
+*.webp binary
+*.jpg binary
+*.png binary
+*.pt binary
+*.onnx binary

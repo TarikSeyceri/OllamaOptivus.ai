@@ -1,0 +1,19 @@
+# Run without an NVIDIA GPU (CPU only):
+#   docker compose -f compose.yaml -f compose.cpu.yaml up -d --build
+# Expect roughly 5-20x slower analysis than on a GPU; see docs/performance.md for CPU settings
+# (smaller Whisper model, lower PROCESSING_FPS, smaller language model).
+
+services:
+  worker:
+    build:
+      args:
+        TORCH_VARIANT: cpu
+        WHISPER_MODEL: ${PROCESSING_WHISPER_MODEL:-small}
+    image: optivus-worker:2.0.0-cpu
+    environment:
+      PROCESSING_DEVICE: cpu
+      PROCESSING_WHISPER_MODEL: ${PROCESSING_WHISPER_MODEL:-small}
+    deploy: !reset {}
+
+  ollama:
+    deploy: !reset {}

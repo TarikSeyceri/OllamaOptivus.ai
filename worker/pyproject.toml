@@ -1,0 +1,114 @@
+[project]
+name = "optivus-worker"
+version = "2.0.0"
+description = "Ollama Optivus AI video-analysis worker: speech-to-text, object detection, OCR, scene cuts and facial expressions on the GPU."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+# Light runtime dependencies. They are enough to run the API with fake models (OPTIVUS_FAKE_MODELS=1),
+# which is how the unit tests and CI run without a GPU or multi-GB ML wheels.
+dependencies = [
+    "fastapi>=0.120,<1",
+    "uvicorn>=0.38,<1",
+    "pydantic>=2.12,<3",
+    "pydantic-settings>=2.11,<3",
+    "numpy>=2.2,<3",
+    "av>=15,<17",
+    "opencv-python-headless>=4.13,<5",
+]
+
+# Exactly one hardware extra is installed in a real deployment.
+# The default Docker build uses `cu126`: CUDA 12.6 runs on NVIDIA driver >= 560, and faster-whisper
+# (CTranslate2) only supports CUDA 12 + cuDNN 9, so torch must stay on a CUDA 12 build.
+# `cu129` is for Blackwell (RTX 50xx) GPUs with driver >= 575. `cpu` is for machines without an NVIDIA GPU.
+[project.optional-dependencies]
+cu126 = [
+    "torch==2.14.1",
+    "torchvision==0.29.1",
+    "faster-whisper==1.2.1",
+    "ctranslate2>=4.6,<5",
+    "ultralytics-opencv-headless>=8.4,<8.5",
+    "easyocr==1.7.2",
+]
+cu129 = [
+    "torch==2.13.0",
+    "torchvision==0.28.0",
+    "faster-whisper==1.2.1",
+    "ctranslate2>=4.6,<5",
+    "ultralytics-opencv-headless>=8.4,<8.5",
+    "easyocr==1.7.2",
+]
+cpu = [
+    "torch==2.14.1",
+    "torchvision==0.29.1",
+    "faster-whisper==1.2.1",
+    "ctranslate2>=4.6,<5",
+    "ultralytics-opencv-headless>=8.4,<8.5",
+    "easyocr==1.7.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9,<10",
+    "httpx>=0.28,<1",
+    "ruff>=0.15,<1",
+]
+
+[tool.uv]
+required-version = ">=0.13"
+package = false
+# Supply-chain policy: only resolve releases that are at least 14 days old at lock time.
+exclude-newer = "2026-10-31T00:00:00Z"
+conflicts = [[{ extra = "cu126" }, { extra = "cu129" }, { extra = "cpu" }]]
+# Supported platforms: Linux x86_64 (Docker), Windows x86_64 and Apple Silicon (local development).
+environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "sys_platform == 'win32' and platform_machine == 'AMD64'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
+
+# CUDA wheels exist only for some platforms: cu126 for Linux + Windows, cu129 for Linux.
+# Elsewhere the same pinned version comes from PyPI (on macOS that build uses the Apple MPS GPU).
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu126", extra = "cu126", marker = "sys_platform != 'darwin'" },
+    { index = "pytorch-cu129", extra = "cu129", marker = "sys_platform == 'linux'" },
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+]
+torchvision = [
+    { index = "pytorch-cu126", extra = "cu126", marker = "sys_platform != 'darwin'" },
+    { index = "pytorch-cu129", extra = "cu129", marker = "sys_platform == 'linux'" },
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.ruff]
+line-length = 130
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = ["S101"]  # assert is fine in tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]

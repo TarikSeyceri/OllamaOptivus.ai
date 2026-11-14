@@ -1,0 +1,15 @@
+# Use an Ollama that already runs on the Docker host instead of the bundled container:
+#   docker compose -f compose.yaml -f compose.host-ollama.yaml up -d --build
+# On Linux, make Ollama listen on the Docker bridge (e.g. OLLAMA_HOST=0.0.0.0) and firewall it.
+
+services:
+  api:
+    environment:
+      OLLAMA_AI_API_URL: ${OLLAMA_HOST_URL:-http://host.docker.internal:11434}
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # needed on Linux; Docker Desktop provides it already
+    depends_on: !override
+      worker: { condition: service_healthy }
+
+  ollama:
+    profiles: [bundled-ollama] # not started unless this profile is enabled

@@ -89,7 +89,7 @@ services:
 
   ollama:
     <<: [*hardening, *gpu]
-    image: ollama/ollama:0.40.13
+    image: ollama/ollama:0.40.15
     environment:
       OLLAMA_HOST: 0.0.0.0:11434
       OLLAMA_FLASH_ATTENTION: "1"

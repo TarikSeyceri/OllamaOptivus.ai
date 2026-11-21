@@ -52,7 +52,7 @@
   "dependencies": {
     "cors": "2.8.6",
     "express": "5.3.0",
-    "express-rate-limit": "8.7.2",
+    "express-rate-limit": "8.7.3",
     "helmet": "8.3.0",
     "multer": "2.5.0",
     "ollama": "0.6.4",
@@ -60,14 +60,14 @@
     "pino-http": "11.0.0",
     "pino-roll": "4.0.0",
     "swagger-ui-express": "5.0.1",
-    "undici": "8.12.3",
+    "undici": "8.12.4",
     "zod": "4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "cross-env": "10.1.0",
     "eslint": "10.14.0",
-    "globals": "17.13.0",
+    "globals": "17.14.0",
     "pino-pretty": "13.2.0",
     "prettier": "3.9.10"
   }
